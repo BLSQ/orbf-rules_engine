@@ -1,3 +1,6 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/3efa31b8965568095798/maintainability)](https://codeclimate.com/github/BLSQ/orbf-rules_engine/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/3efa31b8965568095798/test_coverage)](https://codeclimate.com/github/BLSQ/orbf-rules_engine/test_coverage)
+
 # Orbf::RulesEngine
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/orbf/rules_engine`. To experiment with that code, run `bin/console` for an interactive prompt.
