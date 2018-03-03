@@ -1,5 +1,17 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.3.1
+- 2.3.1
 before_install: gem install bundler -v 1.16.1
+before_script:
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- "./cc-test-reporter before-build"
+script:
+- bundle exec rspec
+after_script:
+- "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+env:
+  global:
+    secure: Sey2paE5zxqyLWBq53OmYUpYzUve2LM2uvVfxzwN6KzskeeisFdEGJIFm65UHVa3zgxRsjIF5qmzcBEtwD8EvHqlZAXQ25sj/RoYanZK6Rb37JKaSZWJ+slMMq2qT0GsHY/aVNLG6dMOhBfN7tbhGiHbSjE4lGsRVEgOnXgp2SFqAJfDC++Z22k2N0OnofE2lwd3cxpLICk6hJElQmpc6RejHzsszvplsNKCg7sP2DDEflPyNaaG72y+osBH/Wh/AmDJdNVeKgerDfhPyQg31jd5F+OVmiWjCsMXhJUTthV0nnrIYOSvDGzATdXxnXqwQ3Rv42I+ucSURVfcVU+jCl+mrgzhnjp0CsGTlFZoQMhUurXkVbJ+xRLTV4NSQne2OUpLzI084zeqgU3QhQEMn5Wg61ZWKNxywG1s1Li+7VcmL6ejlUXv2YmQ6LVhlqlzpYrAzrtQs6YeykjykI/xz6aw7ChsHHw2kAAiEMa2QAXObQwbRUX5o8Hl8tfHUn8PK/PkWm4jKn6ATgcfaNhzIEufJ4qSGbHQSksJrMwd0dQrwe526XAO4/zHCDMufhcZdyuEFgmfNha9VVPRnyDg7OaRRzkKxLyzs2wUfPfs/m0N6kKS44yYxvnSBy0w+/FIGHUZ/jRZgTshs7pDlz4BeYyB1BHPrgcjAhf1/X0oh/s=
