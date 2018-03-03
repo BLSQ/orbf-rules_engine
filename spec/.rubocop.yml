@@ -1,0 +1,6 @@
+inherit_from: ../.rubocop.yml
+
+Metrics/LineLength:
+  Enabled: false  
+Metrics/BlockLength:
+  Enabled: false  
