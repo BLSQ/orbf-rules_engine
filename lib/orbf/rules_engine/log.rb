@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Rails/Output
 module Orbf
   module RulesEngine
     module Log
@@ -13,3 +14,4 @@ module Orbf
     end
   end
 end
+# rubocop:enable Rails/Output

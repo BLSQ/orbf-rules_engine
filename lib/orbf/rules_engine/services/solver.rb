@@ -69,6 +69,7 @@ module Orbf
         @solution = solution
       end
 
+      # rubocop:disable Rails/TimeZone
       def benchmark(message)
         start = Time.now
         value = nil
@@ -81,15 +82,25 @@ module Orbf
         end
         value
       end
+      # rubocop:enable Rails/TimeZone
 
       def benchmark_log
         timings.map { |k, timing| [k, timing.to_s].join(" ") }.join(", ")
       end
 
       def duplicate_message(duplicates, _vals)
-        message = duplicates.map { |key, vals| [key, "=", "\n\t\t", vals.map(&:expression).join("\n\t\t")].join("") }
+        message = duplicates.map { |key, vals| duplicate_key_message(key, vals) }
                             .join("\n")
         "Duplicates for #{message}\n"
+      end
+
+      def duplicate_key_message(key, vals)
+        [
+          key,
+          "=",
+          "\n\t\t",
+          vals.map(&:expression).join("\n\t\t")
+        ].join("")
       end
     end
   end

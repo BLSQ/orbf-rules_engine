@@ -17,7 +17,9 @@ RSpec.describe Orbf::RulesEngine::Solver do
 
   it "raise error on duplicate variables" do
     solver.register_variables([build_variable("key1")])
-    expect { solver.register_variables([build_variable("key1")]) }.to raise_error(/Duplicates for key1=/)
+    expect do
+      solver.register_variables([build_variable("key1")])
+    end.to raise_error(/Duplicates for key1=/)
   end
 
   it "throws error when equations don't match" do
