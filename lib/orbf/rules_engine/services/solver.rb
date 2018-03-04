@@ -14,7 +14,7 @@ module Orbf
       def register_variables(vars)
         @variables.push(*vars)
         duplicates = @variables.group_by(&:key).select { |_, vals| vals.size > 1 }
-        raise duplicate_message(duplicates, vals) if duplicates.any?
+        raise duplicate_message(duplicates, vars) if duplicates.any?
       end
 
       def build_problem
@@ -87,7 +87,9 @@ module Orbf
       end
 
       def duplicate_message(duplicates, _vals)
-        "Duplicates for \n#{duplicates.map { |key, vals| [key, '=', "\n\t\t", vals.map(&:expression).join("\n\t\t")].join('') }.join("\n")}"
+        message = duplicates.map { |key, vals| [key, "=", "\n\t\t", vals.map(&:expression).join("\n\t\t")].join("") }
+                            .join("\n")
+        "Duplicates for #{message}\n"
       end
     end
   end
