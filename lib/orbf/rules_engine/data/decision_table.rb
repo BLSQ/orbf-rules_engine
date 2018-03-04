@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'csv'
+require "csv"
 module Orbf
   module RulesEngine
     class DecisionTable
@@ -27,9 +27,7 @@ module Orbf
         matching_rules = @rules.select { |rule| rule.matches?(hash) }
 
         if matching_rules.any?
-          if matching_rules.size > 1
-            matching_rules = matching_rules.sort_by(&:specific_score)
-          end
+          matching_rules = matching_rules.sort_by(&:specific_score) if matching_rules.size > 1
           return matching_rules.last.apply
         end
 
@@ -38,7 +36,7 @@ module Orbf
 
       def headers(type = nil)
         if type
-          @headers.select { |header| header.start_with?(type.to_s) }.map { |h| h.split(':')[1] }
+          @headers.select { |header| header.start_with?(type.to_s) }.map { |h| h.split(":")[1] }
         else
           @headers
         end

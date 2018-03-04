@@ -3,10 +3,10 @@
 module Orbf
   module RulesEngine
     class DecisionRule
-      ANY = '*'
+      ANY = "*"
 
-      IN_HEADERS = 'in:'
-      OUT_HEADERS = 'out:'
+      IN_HEADERS = "in:"
+      OUT_HEADERS = "out:"
 
       def initialize(headers, row, index)
         @headers = headers
