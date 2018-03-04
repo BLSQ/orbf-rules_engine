@@ -179,6 +179,7 @@ RSpec.describe "Cameroon System" do
   def build_solver(orgunits, package_vars)
     pyramid = Orbf::RulesEngine::Pyramid.new(
       org_units:          orgunits,
+      org_unit_groups:    [],
       org_unit_groupsets: [groupset]
     )
     package_arguments = Orbf::RulesEngine::ResolveArguments.new(

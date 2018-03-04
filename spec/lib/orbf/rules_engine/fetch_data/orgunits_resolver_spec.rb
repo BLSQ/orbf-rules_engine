@@ -72,6 +72,7 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
   let(:pyramid) do
     Orbf::RulesEngine::Pyramid.new(
       org_units:          [orgunit1, orgunit2, orgunit3, orgunit4, orgunitx],
+      org_unit_groups:    [],
       org_unit_groupsets: [groupset]
     )
   end

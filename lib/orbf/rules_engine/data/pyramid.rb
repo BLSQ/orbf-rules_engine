@@ -5,7 +5,7 @@ module Orbf
     class Pyramid
       attr_reader :org_units, :org_unit_groupsets
 
-      def initialize(org_units:, org_unit_groupsets:)
+      def initialize(org_units:, org_unit_groups:, org_unit_groupsets:)
         @org_units = org_units
         @org_unit_groupsets = org_unit_groupsets
         @org_unit_groupsets_by_id = org_unit_groupsets.index_by(&:ext_id)

@@ -40,6 +40,7 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
 
   it "fetch pyramid and dhis2 values" do
     stub_orgunits
+    stub_orgunit_groups
     stub_orgunit_groupsets
 
     stub_values(

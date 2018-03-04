@@ -309,7 +309,11 @@ RSpec.describe "System" do
   end
 
   def build_solver(orgs, package_vars)
-    pyramid = Orbf::RulesEngine::Pyramid.new(org_units: orgs, org_unit_groupsets: [groupset])
+    pyramid = Orbf::RulesEngine::Pyramid.new(
+      org_units:          orgs,
+      org_unit_groups:    [],
+      org_unit_groupsets: [groupset]
+    )
     package_arguments = Orbf::RulesEngine::ResolveArguments.new(
       project:          project,
       pyramid:          pyramid,

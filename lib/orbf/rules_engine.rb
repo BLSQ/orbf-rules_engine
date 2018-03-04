@@ -14,6 +14,7 @@ require_relative "./rules_engine/services/period_converter"
 require_relative "./rules_engine/services/period_iterator"
 require_relative "./rules_engine/services/solver"
 require_relative "./rules_engine/services/value_formatter"
+require_relative "./rules_engine/services/codifier"
 
 require_relative "./rules_engine/data/activity"
 require_relative "./rules_engine/data/org_unit"

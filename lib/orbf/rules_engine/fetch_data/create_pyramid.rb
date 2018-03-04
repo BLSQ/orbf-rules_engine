@@ -10,6 +10,7 @@ module Orbf
       def call
         Orbf::RulesEngine::Pyramid.new(
           org_units:          org_units,
+          org_unit_groups:    org_unit_groups,
           org_unit_groupsets: org_unit_groupsets
         )
       end
@@ -36,10 +37,35 @@ module Orbf
         )
       end
 
+      def org_unit_groups
+        dhis2_connection.organisation_unit_groups
+                        .fetch_paginated_data(
+                          *default_params('id,code,shortName,displayName')
+                        ).map do |group|
+          to_org_unit_groups(group)
+        end
+      end
+
+      def to_org_unit_groups(group)
+        Orbf::RulesEngine::OrgUnitGroup.new(
+          ext_id:        group['id'],
+          name:          group['displayName'],
+          code:          to_code(group)
+        )        
+      end
+
+      def to_org_unit_group_set(gs)
+        Orbf::RulesEngine::OrgUnitGroupset.new(
+          ext_id:        gs['id'],
+          name:          gs['displayName'],
+          group_ext_ids: gs['organisationUnitGroups'].map { |oug| oug['id'] }
+        )
+      end
+
       def org_unit_groupsets
         dhis2_connection.organisation_unit_group_sets
                         .fetch_paginated_data(
-                          *default_params('id,displayName,organisationUnitGroups')
+                          *default_params('id,code,shortName,displayName,organisationUnitGroups')
                         ).map do |gs|
           to_org_unit_group_set(gs)
         end
@@ -49,8 +75,14 @@ module Orbf
         Orbf::RulesEngine::OrgUnitGroupset.new(
           ext_id:        gs['id'],
           name:          gs['displayName'],
+          code:          to_code(gs),
           group_ext_ids: gs['organisationUnitGroups'].map { |oug| oug['id'] }
         )
+      end
+
+      def to_code(dhis2_ressource)
+        code = dhis2_ressource["code"] || dhis2_ressource["shortName"] || dhis2_ressource["displayName"]
+        Codifier.codify(code)
       end
 
       def default_params(fields)

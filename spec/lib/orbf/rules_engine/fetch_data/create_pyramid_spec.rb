@@ -30,6 +30,7 @@ RSpec.describe Orbf::RulesEngine::CreatePyramid do
 
   it "fetch orgunits and groupsets and build a pyramid out of it" do
     stub_orgunits
+    stub_orgunit_groups
     stub_orgunit_groupsets
 
     pyramid = subject.call
