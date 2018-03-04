@@ -15,12 +15,6 @@ module Orbf
         end
       end
 
-      def find!(raw_hash)
-        values = find(raw_hash)
-        raise "no extra facts for #{raw_hash} in #{@headers}" unless values
-        values
-      end
-
       def find(raw_hash)
         hash = {}
         raw_hash.map { |k, v| hash[to_in_header(k)] = v }
