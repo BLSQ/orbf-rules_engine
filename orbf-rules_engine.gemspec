@@ -41,4 +41,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock"
   spec.add_development_dependency "byebug"
   spec.add_development_dependency "stackprof"
+  spec.add_development_dependency "pronto"
+  spec.add_development_dependency "pronto-rubocop"
+  spec.add_development_dependency "pronto-simplecov"
+  spec.add_development_dependency "pronto-flay"
+
 end

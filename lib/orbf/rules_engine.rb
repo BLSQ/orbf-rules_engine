@@ -27,6 +27,8 @@ require_relative "./rules_engine/data/project"
 require_relative "./rules_engine/data/pyramid"
 require_relative "./rules_engine/data/formula"
 require_relative "./rules_engine/data/package_arguments"
+require_relative "./rules_engine/data/decision_table"
+require_relative "./rules_engine/data/decision_rule"
 
 require_relative "./rules_engine/fetch_data/datasets_resolver"
 require_relative "./rules_engine/fetch_data/periods_resolver"
