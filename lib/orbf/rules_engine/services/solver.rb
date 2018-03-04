@@ -54,19 +54,22 @@ module Orbf
 
       def solve(problem)
         calc = CalculatorFactory.build
-        solution = nil
         @equations = {}
         begin
-          problem.map do |k, v|
-            if v.to_i.to_s == v || v.to_f.to_s == v
-              calc.store(k => v.to_f)
-            else
-              equations[k] = v
-            end
-          end
-          solution = calc.solve!(equations)
+          split_problem(problem, calc)
+          @solution = calc.solve!(equations)
         end
-        @solution = solution
+        @solution
+      end
+
+      def split_problem(problem, calc)
+        problem.map do |k, v|
+          if [v.to_i.to_s, v.to_f.to_s].include?(v)
+            calc.store(k => v.to_f)
+          else
+            equations[k] = v
+          end
+        end
       end
 
       # rubocop:disable Rails/TimeZone
