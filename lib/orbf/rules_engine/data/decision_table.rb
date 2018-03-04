@@ -17,7 +17,7 @@ module Orbf
 
       def find(raw_hash)
         hash = {}
-        raw_hash.map { |k, v| hash[to_in_header(k)] = v }
+        raw_hash.map { |k, v| hash[DecisionTable.to_in_header(k)] = v }
         matching_rules = @rules.select { |rule| rule.matches?(hash) }
 
         if matching_rules.any?
@@ -44,11 +44,12 @@ module Orbf
         to_s
       end
 
-      private
+      @headers ||= {}
 
-      def to_in_header(header)
-        @@headers ||= {}
-        @@headers[header] ||= "in:#{header}"
+      class << self
+        def to_in_header(header)
+          @headers[header] ||= "in:#{header}"
+        end
       end
     end
   end

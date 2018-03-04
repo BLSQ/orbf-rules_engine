@@ -11,9 +11,9 @@ module Orbf
       def initialize(headers, row, index)
         @headers = headers
         @index = index
-        @row = headers.map do |header|
-          [header, row[header] ? row[header].strip : nil]
-        end.to_h
+        @row = headers.each_with_object({}) do |header, hash|
+          hash[header] = row[header] ? row[header].strip : nil
+        end
         @headers_by_type = {}
       end
 
