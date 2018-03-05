@@ -8,6 +8,12 @@ RSpec.describe Orbf::RulesEngine::DecisionTable do
        ))
   end
 
+  describe "#to_s" do
+    it "help debugging" do
+      expect(table.to_s).to eq table.inspect
+    end
+  end
+
   describe "#headers" do
     it "get in headers" do
       expect(table.headers(:in)).to eq %w[level_1 level_2 level_3]
