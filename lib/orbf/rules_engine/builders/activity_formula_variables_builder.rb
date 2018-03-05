@@ -61,6 +61,7 @@ module Orbf
           .merge(level_substitions(activity_code))
           .merge(package_substitions)
           .merge(formulas_substitions(activity_code))
+          .merge(decision_table_substitions(activity_code))
       end
 
       def states_substitutions(activity_code)
@@ -74,7 +75,7 @@ module Orbf
 
       def level_substitions(activity_code)
         package.states.each_with_object({}) do |state, hash|
-          state_level1 = state + '_level1'
+          state_level1 = state + "_level1"
           hash[state_level1] = suffix_activity_pattern(package.code, activity_code, state_level1, :orgunit_parent_level1_id)
         end
       end
@@ -91,13 +92,23 @@ module Orbf
         end
       end
 
+      def decision_table_substitions(activity_code)
+        package.activity_rules
+               .flat_map(&:decision_tables)
+               .each_with_object({}) do |decisision_table, hash|
+          decisision_table.headers(:out).each do |header_out|
+            hash[header_out] = suffix_activity_pattern(package.code, activity_code, header_out)
+          end
+        end
+      end
+
       def activity_state_substitution(package_code, activity, activity_state)
         if activity_state.data_element?
           suffix_activity_pattern(package_code, activity.activity_code, activity_state.state)
         elsif activity_state.constant?
           name_constant(activity.activity_code, activity_state.state, period)
         else
-          raise 'Unsupported activity state'
+          raise "Unsupported activity state"
         end
       end
     end
