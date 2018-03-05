@@ -23,7 +23,7 @@ module Orbf
 
       def specific_score
         header_in = headers(IN_HEADER_PREFIX)
-        star_count = header_in.select { |header| @row[header] == ANY }.size
+        star_count = header_in.count { |header| @row[header] == ANY }
         [header_in.size - star_count, -1 * @index]
       end
 
