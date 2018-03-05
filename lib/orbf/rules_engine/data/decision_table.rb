@@ -23,7 +23,7 @@ module Orbf
         matching_rules = @rules.select { |rule| rule.matches?(hash) }
 
         if matching_rules.any?
-          matching_rules = matching_rules.sort_by(&:specific_score) if matching_rules.size > 1
+          matching_rules = matching_rules.sort_by(&:specific_score)
           return matching_rules.last.apply
         end
 

@@ -29,7 +29,7 @@ module Orbf
       end
 
       def groups(ext_ids)
-        ext_ids.map { |ext_id| org_unit_groups_by_id[ext_id] }
+        org_unit_groups_by_id.fetch_values(*ext_ids)
       end
 
       def orgunits_in_groups(group_ext_ids)

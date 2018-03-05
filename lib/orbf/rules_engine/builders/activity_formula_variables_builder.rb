@@ -95,8 +95,8 @@ module Orbf
       def decision_table_substitions(activity_code)
         package.activity_rules
                .flat_map(&:decision_tables)
-               .each_with_object({}) do |decisision_table, hash|
-          decisision_table.headers(:out).each do |header_out|
+               .each_with_object({}) do |decision_table, hash|
+          decision_table.headers(:out).each do |header_out|
             hash[header_out] = suffix_activity_pattern(package.code, activity_code, header_out)
           end
         end
