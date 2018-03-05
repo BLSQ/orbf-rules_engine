@@ -13,8 +13,8 @@ module Orbf
         @period = period
       end
 
-      def to_variables 
-        []       
+      def to_variables
+        []
       end
     end
   end

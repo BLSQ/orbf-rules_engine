@@ -252,7 +252,8 @@ RSpec.describe "System" do
     Orbf::RulesEngine::OrgUnitGroupset.with(
       name:          "groupset",
       ext_id:        "district_groupset_ext_id",
-      group_ext_ids: ["G_ID_1"]
+      group_ext_ids: ["G_ID_1"],
+      code:          "types"
     )
   end
 

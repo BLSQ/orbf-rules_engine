@@ -22,7 +22,7 @@ module Orbf
       def org_units
         dhis2_connection.organisation_units
                         .fetch_paginated_data(
-                          *default_params('id,displayName,path,organisationUnitGroups')
+                          *default_params("id,displayName,path,organisationUnitGroups")
                         ).map do |ou|
           to_org_unit(ou)
         end
@@ -30,17 +30,17 @@ module Orbf
 
       def to_org_unit(ou)
         Orbf::RulesEngine::OrgUnit.new(
-          ext_id:        ou['id'],
-          name:          ou['displayName'],
-          path:          ou['path'],
-          group_ext_ids: ou['organisationUnitGroups'].map { |oug| oug['id'] }
+          ext_id:        ou["id"],
+          name:          ou["displayName"],
+          path:          ou["path"],
+          group_ext_ids: ou["organisationUnitGroups"].map { |oug| oug["id"] }
         )
       end
 
       def org_unit_groups
         dhis2_connection.organisation_unit_groups
                         .fetch_paginated_data(
-                          *default_params('id,code,shortName,displayName')
+                          *default_params("id,code,shortName,displayName")
                         ).map do |group|
           to_org_unit_groups(group)
         end
@@ -48,24 +48,25 @@ module Orbf
 
       def to_org_unit_groups(group)
         Orbf::RulesEngine::OrgUnitGroup.new(
-          ext_id:        group['id'],
-          name:          group['displayName'],
-          code:          to_code(group)
-        )        
+          ext_id: group["id"],
+          name:   group["displayName"],
+          code:   to_code(group)
+        )
       end
 
       def to_org_unit_group_set(gs)
         Orbf::RulesEngine::OrgUnitGroupset.new(
-          ext_id:        gs['id'],
-          name:          gs['displayName'],
-          group_ext_ids: gs['organisationUnitGroups'].map { |oug| oug['id'] }
+          ext_id:        gs["id"],
+          name:          gs["displayName"],
+          code:          to_code(gs),
+          group_ext_ids: gs["organisationUnitGroups"].map { |oug| oug["id"] }
         )
       end
 
       def org_unit_groupsets
         dhis2_connection.organisation_unit_group_sets
                         .fetch_paginated_data(
-                          *default_params('id,code,shortName,displayName,organisationUnitGroups')
+                          *default_params("id,code,shortName,displayName,organisationUnitGroups")
                         ).map do |gs|
           to_org_unit_group_set(gs)
         end
@@ -73,10 +74,10 @@ module Orbf
 
       def to_org_unit_group_set(gs)
         Orbf::RulesEngine::OrgUnitGroupset.new(
-          ext_id:        gs['id'],
-          name:          gs['displayName'],
+          ext_id:        gs["id"],
+          name:          gs["displayName"],
           code:          to_code(gs),
-          group_ext_ids: gs['organisationUnitGroups'].map { |oug| oug['id'] }
+          group_ext_ids: gs["organisationUnitGroups"].map { |oug| oug["id"] }
         )
       end
 

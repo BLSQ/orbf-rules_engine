@@ -20,7 +20,8 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
     Orbf::RulesEngine::OrgUnitGroupset.with(
       name:          "groupset",
       ext_id:        "GROUPSET_ID",
-      group_ext_ids: %w[GROUP_1 GROUP_2]
+      group_ext_ids: %w[GROUP_1 GROUP_2],
+      code:          "contracts"
     )
   end
 

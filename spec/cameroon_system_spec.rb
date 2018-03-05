@@ -6,7 +6,8 @@ RSpec.describe "Cameroon System" do
     Orbf::RulesEngine::OrgUnitGroupset.with(
       name:          "contracts",
       ext_id:        "contracts_groupset_ext_id",
-      group_ext_ids: ["contracgroup1"]
+      group_ext_ids: ["contracgroup1"],
+      code:          "contracts"
     )
   end
 
