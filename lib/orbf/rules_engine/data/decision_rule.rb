@@ -38,10 +38,6 @@ module Orbf
         hash
       end
 
-      def [](key)
-        @row[key]
-      end
-
       def to_s
         @row
       end
