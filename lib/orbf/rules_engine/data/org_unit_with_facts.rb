@@ -8,7 +8,7 @@ module Orbf
 
       def method_missing(method, *args)
         if orgunit.respond_to?(method)
-            orgunit.send(method, *args)
+          orgunit.send(method, *args)
         else
           super
         end
