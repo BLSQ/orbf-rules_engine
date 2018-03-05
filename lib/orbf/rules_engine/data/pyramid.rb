@@ -39,7 +39,7 @@ module Orbf
       end
 
       def groupsets_for_group(group_ext_id)
-        org_unit_groupsets.select {|groupset| groupset.group_ext_ids.include?(group_ext_id) }
+        org_unit_groupsets.select { |groupset| groupset.group_ext_ids.include?(group_ext_id) }
       end
 
       private

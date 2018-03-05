@@ -66,6 +66,7 @@ module Orbf
         [
           Orbf::RulesEngine::ContractVariablesBuilder,
           Orbf::RulesEngine::ActivityConstantVariablesBuilder,
+          Orbf::RulesEngine::DecisionVariablesBuilder,
           Orbf::RulesEngine::ActivityFormulaVariablesBuilder,
           Orbf::RulesEngine::PackageVariablesBuilder,
           Orbf::RulesEngine::ZoneFormulaVariablesBuilder

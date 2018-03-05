@@ -54,15 +54,6 @@ module Orbf
         )
       end
 
-      def to_org_unit_group_set(gs)
-        Orbf::RulesEngine::OrgUnitGroupset.new(
-          ext_id:        gs["id"],
-          name:          gs["displayName"],
-          code:          to_code(gs),
-          group_ext_ids: gs["organisationUnitGroups"].map { |oug| oug["id"] }
-        )
-      end
-
       def org_unit_groupsets
         dhis2_connection.organisation_unit_group_sets
                         .fetch_paginated_data(

@@ -43,7 +43,7 @@ module Dhis2Stubs
     ).to_return(
       status: 200,
       body:   {
-        "pager"                 => {
+        "pager"                  => {
           "page"      => 1,
           "pageCount" => 1,
           "total"     => 1,
