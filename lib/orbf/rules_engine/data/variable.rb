@@ -8,10 +8,6 @@ module Orbf
 
       TYPES = %w[activity_constant activity_rule activity_rule_decision activity contract package_rule payment_rule zone_rule].freeze
 
-      def to_s
-        inspect
-      end
-
       def exportable?
         orgunit_ext_id && dhis2_data_element
       end
