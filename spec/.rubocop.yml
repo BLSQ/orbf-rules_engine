@@ -4,3 +4,8 @@ Metrics/LineLength:
   Enabled: false  
 Metrics/BlockLength:
   Enabled: false  
+Metrics/MethodLength:
+  Enabled: false  
+# expect to raise multi line
+Style/MethodCalledOnDoEndBlock:  
+  Enabled: false  
