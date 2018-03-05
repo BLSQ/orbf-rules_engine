@@ -35,7 +35,7 @@ RSpec.describe Orbf::RulesEngine::DecisionTable do
     end
 
     it "locate best rule for the rest of belgium" do
-      expect(table.find(level_1: "belgium", level_2: "houtsiplou")["equity_bonus"]).to eq "11"
+      expect(table.find("level_1" => "belgium", "level_2" => "houtsiplou")["equity_bonus"]).to eq "11"
     end
 
     it "return nil if none matching" do
