@@ -5,8 +5,8 @@ module Orbf
     class DecisionRule
       ANY = "*"
 
-      IN_HEADERS = "in:"
-      OUT_HEADERS = "out:"
+      IN_HEADER_PREFIX = "in:"
+      OUT_HEADERS_PREFIX = "out:"
 
       def initialize(headers, row, index)
         @headers = headers
@@ -18,11 +18,11 @@ module Orbf
       end
 
       def matches?(hash)
-        headers(IN_HEADERS).all? { |header| hash[header] == @row[header] || @row[header] == ANY }
+        headers(IN_HEADER_PREFIX).all? { |header| hash[header] == @row[header] || @row[header] == ANY }
       end
 
       def specific_score
-        header_in = headers(IN_HEADERS)
+        header_in = headers(IN_HEADER_PREFIX)
         star_count = header_in.select { |header| @row[header] == ANY }.size
         [header_in.size - star_count, -1 * @index]
       end
@@ -32,7 +32,7 @@ module Orbf
       end
 
       def apply(hash = {})
-        headers(OUT_HEADERS).each do |header|
+        headers(OUT_HEADERS_PREFIX).each do |header|
           hash[to_out_header(header)] = @row[header]
         end
         hash
@@ -49,7 +49,7 @@ module Orbf
       private
 
       def to_out_header(header)
-        header.slice(OUT_HEADERS.length..-1)
+        header.slice(OUT_HEADERS_PREFIX.length..-1)
       end
     end
   end

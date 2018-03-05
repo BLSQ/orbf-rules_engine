@@ -6,6 +6,8 @@ module Orbf
     class DecisionTable
       attr_reader :rules
 
+      HEADER_SEPERATOR = ":"
+
       def initialize(csv_string)
         csv = CSV.parse(csv_string, headers: true)
         @headers = csv.headers.compact.map(&:freeze)
@@ -30,7 +32,7 @@ module Orbf
 
       def headers(type = nil)
         if type
-          @headers.select { |header| header.start_with?(type.to_s) }.map { |h| h.split(":")[1] }
+          @headers.select { |header| header.start_with?(type.to_s) }.map { |h| h.split(HEADER_SEPERATOR)[1] }
         else
           @headers
         end
