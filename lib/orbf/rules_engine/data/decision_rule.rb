@@ -33,7 +33,7 @@ module Orbf
 
       def apply(hash = {})
         headers(OUT_HEADERS).each do |header|
-          hash[header.slice(4..-1)] = @row[header]
+          hash[to_out_header(header)] = @row[header]
         end
         hash
       end
@@ -44,6 +44,12 @@ module Orbf
 
       def inspect
         to_s
+      end
+
+      private
+
+      def to_out_header(header)
+        header.slice(OUT_HEADERS.length..-1)
       end
     end
   end
