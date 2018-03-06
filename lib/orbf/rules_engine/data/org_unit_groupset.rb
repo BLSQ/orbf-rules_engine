@@ -3,7 +3,7 @@
 module Orbf
   module RulesEngine
     class OrgUnitGroupset < Orbf::RulesEngine::ValueObject
-      attributes :ext_id, :name, :group_ext_ids
+      attributes :ext_id, :name, :group_ext_ids, :code
     end
   end
 end

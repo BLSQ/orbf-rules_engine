@@ -48,6 +48,16 @@ RSpec.describe "System" do
     end
   end
 
+  let(:org_unit_groups) do
+    [
+      Orbf::RulesEngine::OrgUnitGroup.with(
+        ext_id: "G_ID_1",
+        name:   "group health center",
+        code:   "health_center"
+      )
+    ]
+  end
+
   let(:states) { %i[weight achieved target active cap health_clynic_type allowed regional_bonus] }
 
   let(:activities) do
@@ -252,7 +262,8 @@ RSpec.describe "System" do
     Orbf::RulesEngine::OrgUnitGroupset.with(
       name:          "groupset",
       ext_id:        "district_groupset_ext_id",
-      group_ext_ids: ["G_ID_1"]
+      group_ext_ids: ["G_ID_1"],
+      code:          "types"
     )
   end
 
@@ -309,7 +320,11 @@ RSpec.describe "System" do
   end
 
   def build_solver(orgs, package_vars)
-    pyramid = Orbf::RulesEngine::Pyramid.new(org_units: orgs, org_unit_groupsets: [groupset])
+    pyramid = Orbf::RulesEngine::Pyramid.new(
+      org_units:          orgs,
+      org_unit_groups:    org_unit_groups,
+      org_unit_groupsets: [groupset]
+    )
     package_arguments = Orbf::RulesEngine::ResolveArguments.new(
       project:          project,
       pyramid:          pyramid,

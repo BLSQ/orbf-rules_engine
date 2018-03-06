@@ -29,7 +29,7 @@ module Orbf
 
           hash[package] = PackageArguments.with(
             periods:          PeriodsResolver.new(package, invoicing_period).call,
-            orgunits:         OrgunitsResolver.new(package, pyramid, main_orgunit).call,
+            orgunits:         decorate_with_facts(OrgunitsResolver.new(package, pyramid, main_orgunit).call),
             datasets_ext_ids: DatasetsResolver.dataset_extids(package),
             package:          package
           )
@@ -38,6 +38,15 @@ module Orbf
 
       def match_group?(package)
         (package.org_unit_group_ext_ids & main_orgunit.group_ext_ids).any?
+      end
+
+      def decorate_with_facts(orgunits)
+        orgunits.map do |org_unit|
+          OrgUnitWithFacts.new(
+            orgunit: org_unit,
+            facts:   OrgunitFacts.new(org_unit, pyramid).to_facts
+          )
+        end
       end
     end
   end

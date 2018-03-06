@@ -5,15 +5,11 @@ module Orbf
     class ActivityState < Orbf::RulesEngine::ValueObject
       attributes :state, :ext_id, :name, :kind, :formula
 
-      KIND_CONSTANT = 'constant'
-      KIND_DATA_ELEMENT = 'data_element'
-      KIND_INDICATOR = 'indicator'
+      KIND_CONSTANT = "constant"
+      KIND_DATA_ELEMENT = "data_element"
+      KIND_INDICATOR = "indicator"
 
       KINDS = [KIND_CONSTANT, KIND_DATA_ELEMENT, KIND_INDICATOR].freeze
-
-      def to_s
-        inspect
-      end
 
       def self.new_constant(state:, name:, formula:)
         with(
@@ -60,10 +56,6 @@ module Orbf
 
     class Activity < RulesEngine::ValueObject
       attributes :activity_code, :activity_states
-
-      def to_s
-        inspect
-      end
 
       def states
         activity_states.map(&:state)

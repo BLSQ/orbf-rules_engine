@@ -6,8 +6,29 @@ RSpec.describe "Cameroon System" do
     Orbf::RulesEngine::OrgUnitGroupset.with(
       name:          "contracts",
       ext_id:        "contracts_groupset_ext_id",
-      group_ext_ids: ["contracgroup1"]
+      group_ext_ids: ["contracgroup1"],
+      code:          "contracts"
     )
+  end
+
+  let(:orgunit_groups) do
+    [
+      Orbf::RulesEngine::OrgUnitGroup.with(
+        ext_id: "contracgroup1",
+        code:   "contract group 1",
+        name:   "contract group 1"
+      ),
+      Orbf::RulesEngine::OrgUnitGroup.with(
+        ext_id: "primary",
+        code:   "primary",
+        name:   "Primary"
+      ),
+      Orbf::RulesEngine::OrgUnitGroup.with(
+        ext_id: "cs",
+        code:   "cs",
+        name:   "cs"
+      )
+    ]
   end
 
   let(:orgunits) do
@@ -179,6 +200,7 @@ RSpec.describe "Cameroon System" do
   def build_solver(orgunits, package_vars)
     pyramid = Orbf::RulesEngine::Pyramid.new(
       org_units:          orgunits,
+      org_unit_groups:    orgunit_groups,
       org_unit_groupsets: [groupset]
     )
     package_arguments = Orbf::RulesEngine::ResolveArguments.new(

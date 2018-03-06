@@ -20,7 +20,8 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
     Orbf::RulesEngine::OrgUnitGroupset.with(
       name:          "groupset",
       ext_id:        "GROUPSET_ID",
-      group_ext_ids: %w[GROUP_1 GROUP_2]
+      group_ext_ids: %w[GROUP_1 GROUP_2],
+      code:          "contracts"
     )
   end
 
@@ -72,6 +73,7 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
   let(:pyramid) do
     Orbf::RulesEngine::Pyramid.new(
       org_units:          [orgunit1, orgunit2, orgunit3, orgunit4, orgunitx],
+      org_unit_groups:    [],
       org_unit_groupsets: [groupset]
     )
   end

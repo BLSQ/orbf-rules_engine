@@ -21,10 +21,6 @@ module Orbf
       def monthly?
         frequency == 'monthly'
       end
-
-      def quarterly?
-        frequency == 'quarterly'
-      end
     end
   end
 end

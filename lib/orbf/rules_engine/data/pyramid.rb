@@ -3,10 +3,11 @@
 module Orbf
   module RulesEngine
     class Pyramid
-      attr_reader :org_units, :org_unit_groupsets
+      attr_reader :org_units, :org_unit_groupsets, :org_unit_groups
 
-      def initialize(org_units:, org_unit_groupsets:)
+      def initialize(org_units:, org_unit_groups:, org_unit_groupsets:)
         @org_units = org_units
+        @org_unit_groups_by_id = org_unit_groups.index_by(&:ext_id)
         @org_unit_groupsets = org_unit_groupsets
         @org_unit_groupsets_by_id = org_unit_groupsets.index_by(&:ext_id)
         @org_units_by_group_id = org_units.each_with_object({}) do |ou, hash|
@@ -27,15 +28,23 @@ module Orbf
         org_unit_groupsets_by_id[ext_id]
       end
 
+      def groups(ext_ids)
+        org_unit_groups_by_id.fetch_values(*ext_ids)
+      end
+
       def orgunits_in_groups(group_ext_ids)
         group_ext_ids.each_with_object(Set.new) do |ext_id, set|
           set.merge(org_units_by_group_id[ext_id])
         end
       end
 
+      def groupsets_for_group(group_ext_id)
+        org_unit_groupsets.select { |groupset| groupset.group_ext_ids.include?(group_ext_id) }
+      end
+
       private
 
-      attr_reader :org_units_by_group_id, :org_unit_groupsets_by_id, :org_units_by_ext_id
+      attr_reader :org_unit_groups_by_id, :org_units_by_group_id, :org_unit_groupsets_by_id, :org_units_by_ext_id
     end
   end
 end

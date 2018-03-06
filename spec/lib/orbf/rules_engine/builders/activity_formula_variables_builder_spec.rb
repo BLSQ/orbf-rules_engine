@@ -36,8 +36,6 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     ]
   end
 
-  let(:project) { Orbf::RulesEngine::Project.new(packages: [package]) }
-
   let(:package) do
     Orbf::RulesEngine::Package.new(
       code:       :facility,
@@ -62,9 +60,9 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     )
   end
 
-  let(:basic_formula) { package.formula.last }
+  let(:basic_formula) { package.activity_rules.first.formulas.last }
 
-  let(:formula_with_span) { package.formula.first }
+  let(:formula_with_span) { package.activity_rules.first.formulas.first }
 
   let(:expected_results) do
     [
@@ -76,7 +74,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
         state:          "percent_achieved",
         activity_code:  "act1",
         orgunit_ext_id: "1",
-        formula:        package.rules.first.formulas.first,
+        formula:        formula_with_span,
         package:        package
       ),
 
@@ -88,14 +86,14 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
         state:          "allowed",
         activity_code:  "act1",
         orgunit_ext_id: "1",
-        formula:        project.packages.first.rules.first.formulas.last,
+        formula:        basic_formula,
         package:        package
       )
     ]
   end
 
   it "does the susbstitions of spans and instantiate other states for activity variable" do
-    results = described_class.new(project.packages.first, orgunits, "2016Q1").to_variables
+    results = described_class.new(package, orgunits, "2016Q1").to_variables
     expect(results).to eq_vars(expected_results)
   end
 
@@ -173,7 +171,75 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     end
 
     it "does the susbstitions of spans and instantiate other states for activity variable" do
-      results = described_class.new(project.packages.first, orgunits, "2016Q1").to_variables
+      results = described_class.new(package, orgunits, "2016Q1").to_variables
+      expect(results).to eq_vars(expected_results)
+    end
+  end
+
+  describe "decision_table substitutions" do
+    let(:activities) do
+      [
+        Orbf::RulesEngine::Activity.with(
+          activity_code:   "act1",
+          activity_states: [
+            Orbf::RulesEngine::ActivityState.new_data_element(
+              state:  :achieved,
+              ext_id: "dhis2_act1_achieved",
+              name:   "act1_achieved"
+            ),
+            Orbf::RulesEngine::ActivityState.new_constant(
+              state:   :price,
+              name:    "act1_price",
+              formula: "100"
+            )
+          ]
+        )
+      ]
+    end
+
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:       :facility,
+        kind:       :single,
+        activities: activities,
+        frequency:  :quarterly,
+        rules:      [
+          Orbf::RulesEngine::Rule.new(
+            kind:            :activity,
+            formulas:        [
+              Orbf::RulesEngine::Formula.new(
+                "equity_price", "price * equity_bonus"
+              )
+            ],
+            decision_tables: [
+              Orbf::RulesEngine::DecisionTable.new(%(in:activity_code,in:level_2,out:equity_bonus
+                act1,county_id,1
+                act2,county_id,2
+              ))
+            ]
+          )
+        ]
+      )
+    end
+
+    let(:expected_results) do
+      [
+        Orbf::RulesEngine::Variable.with(
+          key:            "facility_act1_equity_price_for_1_and_2016q1",
+          period:         "2016Q1",
+          expression:     "act1_price_for_2016q1 * facility_act1_equity_bonus_for_1_and_2016q1",
+          type:           :activity_rule,
+          state:          "equity_price",
+          activity_code:  "act1",
+          orgunit_ext_id: "1",
+          formula:        package.rules.first.formulas.first,
+          package:        package
+        )
+      ]
+    end
+
+    it "substitute decision tables variables" do
+      results = described_class.new(package, orgunits, "2016Q1").to_variables
       expect(results).to eq_vars(expected_results)
     end
   end

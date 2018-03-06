@@ -3,18 +3,18 @@
 module Orbf
   module RulesEngine
     class Rule
-      attr_reader :formulas, :kind
+      attr_reader :formulas, :kind, :decision_tables
       attr_accessor :package
 
       KINDS = %w[activity package zone payment].freeze
 
       def initialize(args)
         @kind = args[:kind].to_s
-
         @formulas = args[:formulas]
         @formulas.each do |formula|
           formula.rule = self
         end
+        @decision_tables = Array(args[:decision_tables])
         validate
       end
 

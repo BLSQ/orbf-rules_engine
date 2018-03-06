@@ -24,12 +24,14 @@ RSpec.describe Orbf::RulesEngine::CreatePyramid do
     Orbf::RulesEngine::OrgUnitGroupset.with(
       ext_id:        "uIuxlbV1vRT",
       group_ext_ids: %w[nlX2VoouN63 jqBqIXoXpfy J40PpdN4Wkk b0EsAxm8Nge],
-      name:          "Area"
+      name:          "Area",
+      code:          "area"
     )
   end
 
   it "fetch orgunits and groupsets and build a pyramid out of it" do
     stub_orgunits
+    stub_orgunit_groups
     stub_orgunit_groupsets
 
     pyramid = subject.call
