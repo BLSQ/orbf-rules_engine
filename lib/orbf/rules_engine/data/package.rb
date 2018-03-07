@@ -14,15 +14,15 @@ module Orbf
 
       def initialize(args)
         Assertions.known_args_keys(args, KNOWN_ATTRIBUTES)
-        @kind = args[:kind].to_s if args[:kind]
         @rules = Array(args[:rules])
-        @code  = args[:code].to_s
+        @org_unit_group_ext_ids = Array(args[:org_unit_group_ext_ids])
+        @activities = Array(args[:activities])
+        @kind = args[:kind].to_s if args[:kind]
+        @code = args[:code].to_s
         @rules.each do |rule|
           rule.package = self
         end
-        @activities = args[:activities]
         @frequency = args[:frequency].to_s if args[:frequency]
-        @org_unit_group_ext_ids = Array(args[:org_unit_group_ext_ids])
         @groupset_ext_id = args[:groupset_ext_id]
         @dataset_ext_ids = args[:dataset_ext_ids]
         validate

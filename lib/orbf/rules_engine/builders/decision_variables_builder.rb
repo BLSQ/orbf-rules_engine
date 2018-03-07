@@ -27,6 +27,8 @@ module Orbf
 
       private
 
+      attr_reader :package, :orgunits, :period
+
       def decision_variables(decision_table)
         package.all_activities_codes
                .each_with_object([]) do |activity_code, array|
@@ -62,8 +64,6 @@ module Orbf
           package:        package
         )
       end
-
-      attr_reader :package, :orgunits, :period
     end
   end
 end
