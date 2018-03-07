@@ -5,8 +5,7 @@ module Orbf
     class PaymentRule
       KNOWN_ATTRIBUTES = %i[packages rule frequency code].freeze
 
-      attr_reader *KNOWN_ATTRIBUTES
-
+      attr_reader(*KNOWN_ATTRIBUTES)
 
       def initialize(args)
         Assertions.known_args_keys(args, KNOWN_ATTRIBUTES)

@@ -42,7 +42,7 @@ module Orbf
       # achieved_for_2_and_2016, achieved_for_4_and_2016
       def org_units_expression(package, activity, activity_state, period)
         orgunits.each_with_object([]) do |orgunit, array|
-          next unless SumIf.sum_if(package, activity, orgunit)
+          next unless SumIf.new(package, activity, orgunit).sum_if
           array.push suffix_for_activity(
             package.code,
             activity.activity_code,
@@ -52,8 +52,6 @@ module Orbf
           )
         end
       end
-
-
 
       def build_key(package, activity, activity_state, period)
         suffix_for_id(

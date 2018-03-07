@@ -22,7 +22,8 @@ module Orbf
         ].freeze
 
         def self.assert_valid(rule_kind)
-          raise "Invalid rule kind '#{rule_kind}' only supports #{KINDS}" unless KINDS.include?(rule_kind)
+          return if KINDS.include?(rule_kind)
+          raise "Invalid rule kind '#{rule_kind}' only supports #{KINDS}"
         end
       end
 

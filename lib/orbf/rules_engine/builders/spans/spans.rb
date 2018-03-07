@@ -4,7 +4,7 @@ module Orbf
   module RulesEngine
     module Spans
       def self.matching_span(name, rule_kind)
-        RulesEngine::Rule::Kinds::assert_valid(rule_kind)
+        RulesEngine::Rule::Kinds.assert_valid(rule_kind)
         SPANS.find do |span|
           span.supports?(rule_kind) && span.frequencies(name).any?
         end
@@ -12,10 +12,10 @@ module Orbf
 
       class Span
         FREQUENCIES = {
-          ''           => %w[monthly quarterly yearly],
-          '_yearly'    => ['yearly'],
-          '_quarterly' => ['quarterly'],
-          '_monthly'   => ['monthly']
+          ""           => %w[monthly quarterly yearly],
+          "_yearly"    => ["yearly"],
+          "_quarterly" => ["quarterly"],
+          "_monthly"   => ["monthly"]
         }.freeze
 
         def prefix(name)
@@ -35,13 +35,13 @@ module Orbf
         end
 
         def supports?(rule_kind)
-          rule_kind == 'activity'
+          rule_kind == "activity"
         end
       end
 
       class PreviousYear < Span
         def suffix
-          'previous_year'
+          "previous_year"
         end
 
         def periods(invoicing_period, name)
@@ -59,7 +59,7 @@ module Orbf
 
       class PreviousYearSameQuarter < PreviousYear
         def suffix
-          'previous_year_same_quarter'
+          "previous_year_same_quarter"
         end
 
         def periods(invoicing_period, name)
@@ -74,17 +74,17 @@ module Orbf
 
       class PreviousCycle < Span
         def suffix
-          'previous'
+          "previous"
         end
 
         def periods(invoicing_period, _name)
-          quarter = PeriodIterator.periods(invoicing_period, 'quarterly').first
-          PeriodIterator.periods(quarter, 'monthly')
+          quarter = PeriodIterator.periods(invoicing_period, "quarterly").first
+          PeriodIterator.periods(quarter, "monthly")
                         .select { |period| period < invoicing_period }
         end
 
         def supports?(rule_kind)
-          rule_kind == 'payment'
+          rule_kind == "payment"
         end
       end
 

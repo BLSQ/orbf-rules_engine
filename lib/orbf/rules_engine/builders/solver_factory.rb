@@ -8,7 +8,7 @@ module Orbf
         @invoice_period = invoice_period
         @package_vars = package_vars
         @package_arguments = package_arguments
-        raise 'package_arguments should be a hash[Package]=PackageArguments' unless package_arguments.is_a?(Hash)
+        raise "package_arguments should be a hash[Package]=PackageArguments" unless package_arguments.is_a?(Hash)
         @package_builders = package_builders || default_package_builders
       end
 
