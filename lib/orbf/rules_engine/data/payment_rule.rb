@@ -3,15 +3,19 @@
 module Orbf
   module RulesEngine
     class PaymentRule
-      attr_reader :packages, :frequency, :rule, :code
+      KNOWN_ATTRIBUTES = %i[packages rule frequency code].freeze
+
+      attr_reader *KNOWN_ATTRIBUTES
+
 
       def initialize(args)
+        Assertions.known_args_keys(args, KNOWN_ATTRIBUTES)
         @packages = args[:packages]
         @rule = args[:rule]
         @frequency = args[:frequency].to_s
         @code = args[:code].to_s
-        raise 'rule must be kind payment' unless rule.kind == 'payment'
-        raise 'no frequency' unless Package::FREQUENCIES.include?(@frequency)
+        raise "rule must be kind payment" unless rule.kind == "payment"
+        raise "no frequency" unless Package::FREQUENCIES.include?(@frequency)
       end
 
       def frequency=(f)
@@ -19,7 +23,7 @@ module Orbf
       end
 
       def monthly?
-        frequency == 'monthly'
+        frequency == "monthly"
       end
     end
   end

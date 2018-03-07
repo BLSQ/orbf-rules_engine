@@ -32,7 +32,7 @@ module Orbf
           expression:     "SUM(#{org_units_expression(package, activity, activity_state, period).join(', ')})",
           state:          activity_state.state.to_s,
           activity_code:  activity.activity_code,
-          type:           'contract',
+          type:           "contract",
           orgunit_ext_id: ref_orgunit.ext_id,
           formula:        nil,
           package:        package
@@ -41,8 +41,9 @@ module Orbf
 
       # achieved_for_2_and_2016, achieved_for_4_and_2016
       def org_units_expression(package, activity, activity_state, period)
-        orgunits.map do |orgunit|
-          suffix_for_activity(
+        orgunits.each_with_object([]) do |orgunit, array|
+          next unless sum_if(package, activity, orgunit)
+          array.push suffix_for_activity(
             package.code,
             activity.activity_code,
             suffix_raw(activity_state.state),
@@ -52,9 +53,25 @@ module Orbf
         end
       end
 
+      def sum_if(package, activity, orgunit)
+        return true unless package.entities_aggregation_rules.any?
+        package.entities_aggregation_rules
+               .flat_map(&:decision_tables).each do |decision_table|
+
+          input_facts = orgunit.facts
+                               .merge("activity_code" => activity.activity_code)
+
+          output_facts = decision_table.find(input_facts)
+          next unless output_facts
+
+          return false unless output_facts["sum_if"] == "true"
+        end
+        true
+      end
+
       def build_key(package, activity, activity_state, period)
         suffix_for_id(
-          [package.code, activity.activity_code, activity_state.state].join('_'),
+          [package.code, activity.activity_code, activity_state.state].join("_"),
           ref_orgunit.ext_id,
           period
         )

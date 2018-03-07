@@ -8,6 +8,7 @@ require "active_support/time"
 require "active_support/core_ext/enumerable"
 
 require_relative "./rules_engine/value_object"
+require_relative "./rules_engine/assertions.rb"
 require_relative "./rules_engine/log"
 require_relative "./rules_engine/services/tokenizer"
 require_relative "./rules_engine/services/period_converter"

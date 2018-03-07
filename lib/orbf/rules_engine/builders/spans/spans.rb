@@ -4,7 +4,7 @@ module Orbf
   module RulesEngine
     module Spans
       def self.matching_span(name, rule_kind)
-        raise "invalid rule_kind #{rule_kind}" unless RulesEngine::Rule::KINDS.include?(rule_kind)
+        RulesEngine::Rule::Kinds::assert_valid(rule_kind)
         SPANS.find do |span|
           span.supports?(rule_kind) && span.frequencies(name).any?
         end
