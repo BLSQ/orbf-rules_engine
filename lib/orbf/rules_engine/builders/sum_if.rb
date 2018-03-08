@@ -18,6 +18,15 @@ module Orbf
         true
       end
 
+      class << self
+        def org_units(orgunits, package, activity)
+          orgunits.each_with_object([]) do |orgunit, array|
+            next unless SumIf.new(package, activity, orgunit).sum_if
+            array.push orgunit
+          end
+        end
+      end
+
       private
 
       attr_reader :package, :activity, :orgunit

@@ -94,6 +94,28 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
           package:        package
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "quality_eval_subcontract_act1_org_units_count_for_1_and_2016",
+          expression:     "3",
+          state:          "org_units_count",
+          activity_code:  "act1",
+          type:           "contract",
+          orgunit_ext_id: district_orgunit1.ext_id,
+          formula:        nil,
+          package:        package
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "quality_eval_subcontract_act1_org_units_sum_if_count_for_1_and_2016",
+          expression:     "3",
+          state:          "org_units_sum_if_count",
+          activity_code:  "act1",
+          type:           "contract",
+          orgunit_ext_id: district_orgunit1.ext_id,
+          formula:        nil,
+          package:        package
         )
       ]
     end
@@ -146,6 +168,28 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           key:            "#{package.code}_act1_target_for_1_and_2016",
           expression:     "SUM(#{package.code}_act1_target_raw_for_2_and_2016, #{package.code}_act1_target_raw_for_4_and_2016)",
           state:          "target",
+          activity_code:  "act1",
+          type:           "contract",
+          orgunit_ext_id: district_orgunit1.ext_id,
+          formula:        nil,
+          package:        package
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "quality_eval_subcontract_act1_org_units_count_for_1_and_2016",
+          expression:     "3",
+          state:          "org_units_count",
+          activity_code:  "act1",
+          type:           "contract",
+          orgunit_ext_id: district_orgunit1.ext_id,
+          formula:        nil,
+          package:        package
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "quality_eval_subcontract_act1_org_units_sum_if_count_for_1_and_2016",
+          expression:     "2",
+          state:          "org_units_sum_if_count",
           activity_code:  "act1",
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
