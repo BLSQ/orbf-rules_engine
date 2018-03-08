@@ -62,6 +62,15 @@ module Orbf
           .merge(package_substitions)
           .merge(formulas_substitions(activity_code))
           .merge(decision_table_substitions(activity_code))
+          .merge(orgunit_counts_substitions(activity_code))
+      end
+
+      def orgunit_counts_substitions(activity_code)
+        return {} unless package.subcontract?
+        counts = Orbf::RulesEngine::ContractVariablesBuilder::COUNTS
+        counts.each_with_object({}) do |count, hash|
+          hash[count] = suffix_activity_pattern(package.code, activity_code, count)
+        end
       end
 
       def states_substitutions(activity_code)

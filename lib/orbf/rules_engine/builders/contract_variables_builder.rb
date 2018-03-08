@@ -5,6 +5,15 @@ module Orbf
     class ContractVariablesBuilder
       include VariablesBuilderSupport
 
+      ORG_UNITS_COUNT = "org_units_count"
+
+      ORG_UNITS_SUM_IF_COUNT = "org_units_sum_if_count"
+
+      COUNTS = [
+        ORG_UNITS_COUNT,
+        ORG_UNITS_SUM_IF_COUNT
+      ].freeze
+
       def initialize(package, orgunits, period)
         @package = package
         @ref_orgunit = orgunits[0]
@@ -19,8 +28,8 @@ module Orbf
           activity.activity_states.each do |activity_state|
             array.push(build_variable(filtered_orgunits, activity, activity_state))
           end
-          array.push(build_count("org_units_count", orgunits.size, activity))
-          array.push(build_count("org_units_sum_if_count", filtered_orgunits.size, activity))
+          array.push(build_count(ORG_UNITS_COUNT, orgunits.size, activity))
+          array.push(build_count(ORG_UNITS_SUM_IF_COUNT, filtered_orgunits.size, activity))
         end
       end
 
@@ -37,7 +46,7 @@ module Orbf
           expression:     "SUM(#{expressions.join(', ')})",
           state:          activity_state.state.to_s,
           activity_code:  activity.activity_code,
-          type:           "contract",
+          type:           Orbf::RulesEngine::Variable::Types::CONTRACT,
           orgunit_ext_id: ref_orgunit.ext_id,
           formula:        nil,
           package:        package
@@ -66,7 +75,7 @@ module Orbf
           expression:     count.to_s,
           state:          count_code.to_s,
           activity_code:  activity.activity_code,
-          type:           "contract",
+          type:           Orbf::RulesEngine::Variable::Types::CONTRACT,
           orgunit_ext_id: ref_orgunit.ext_id,
           formula:        nil,
           package:        package

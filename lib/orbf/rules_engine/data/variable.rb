@@ -6,7 +6,26 @@ module Orbf
       attributes  :key, :period, :expression, :type, :state, :activity_code,
                   :orgunit_ext_id, :formula, :package
 
-      TYPES = %w[activity_constant activity_rule activity_rule_decision activity contract package_rule payment_rule zone_rule].freeze
+      module Types
+        ACTIVITY_CONSTANT = "activity_constant"
+        ACTIVITY_RULE = "activity_rule"
+        ACTIVITY_RULE_DECISION = "activity_rule_decision"
+        ACTIVITY = "activity"
+        CONTRACT = "contract"
+        PACKAGE_RULE = "package_rule"
+        PAYMENT_RULE = "payment_rule"
+        ZONE_RULE = "zone_rule"
+        TYPES = [
+          ACTIVITY_CONSTANT,
+          ACTIVITY_RULE,
+          ACTIVITY_RULE_DECISION,
+          ACTIVITY,
+          CONTRACT,
+          PACKAGE_RULE,
+          PAYMENT_RULE,
+          ZONE_RULE
+        ].freeze
+      end
 
       def exportable?
         orgunit_ext_id && dhis2_data_element
@@ -19,7 +38,7 @@ module Orbf
       private
 
       def after_init
-        raise "Variable type '#{type}' must be one of #{TYPES}" unless TYPES.include?(type.to_s)
+        raise "Variable type '#{type}' must be one of #{Types::TYPES}" unless Types::TYPES.include?(type.to_s)
       end
     end
   end
