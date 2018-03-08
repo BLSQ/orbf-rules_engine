@@ -44,7 +44,7 @@ RSpec.describe Orbf::RulesEngine::ActivityConstantVariablesBuilder do
         key:            "act1_active_for_2016q1",
         period:         "2016Q1",
         expression:     "10",
-        type:           :activity_constant,
+        type:           "activity_constant",
         state:          "active",
         activity_code:  "act1",
         orgunit_ext_id: nil,

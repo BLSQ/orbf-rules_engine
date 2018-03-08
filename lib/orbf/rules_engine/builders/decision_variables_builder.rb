@@ -57,7 +57,7 @@ module Orbf
           ),
           expression:     value,
           state:          code,
-          type:           :activity_rule_decision,
+          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE_DECISION,
           activity_code:  activity_code,
           orgunit_ext_id: orgunit.ext_id,
           formula:        nil,

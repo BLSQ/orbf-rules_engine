@@ -25,7 +25,7 @@ module Orbf
                     expression:     expression,
                     state:          state,
                     activity_code:  activity.activity_code,
-                    type:           :activity,
+                    type:           Orbf::RulesEngine::Variable::Types::ACTIVITY,
                     orgunit_ext_id: orgunit_id,
                     formula:        nil,
                     package:        package

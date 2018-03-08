@@ -48,7 +48,7 @@ module Orbf
             period:                   period.downcase
           ),
           state:          formula.code,
-          type:           :activity_rule,
+          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
           activity_code:  activity_code,
           orgunit_ext_id: orgunit.ext_id,
           formula:        formula,
