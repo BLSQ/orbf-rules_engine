@@ -11,10 +11,11 @@ module Orbf
         expression.split(/(,|\/|-|\*|\ |%{|}|\+|\)|\()/)
       end
 
-      def self.replace_token_from_expression(expression_template, substitions_template, template_vars)
-        tokenize(expression_template).map do |token|
-          substitions_template[token] ? format(substitions_template[token], template_vars) : token
-        end.join('')
+      def self.replace_token_from_expression(expression_template, substitutions_template, template_vars)
+        tokens = tokenize(expression_template).map do |token|
+          substitutions_template[token] ? format(substitutions_template[token], template_vars) : token
+        end
+        tokens.join("")
       end
     end
   end

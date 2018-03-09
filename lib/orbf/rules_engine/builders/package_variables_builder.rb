@@ -35,7 +35,7 @@ module Orbf
             array.push Orbf::RulesEngine::Variable.with(
               period:         period,
               key:            suffix_for(package.code, formula.code, orgunit, period),
-              expression:     format(substitued, activity_substitions(orgunit)),
+              expression:     format(substitued, activity_substitutions(orgunit)),
               state:          formula.code,
               type:           Orbf::RulesEngine::Variable::Types::PACKAGE_RULE,
               activity_code:  nil,
@@ -76,7 +76,7 @@ module Orbf
         end
       end
 
-      def activity_substitions(orgunit)
+      def activity_substitutions(orgunit)
         package.activity_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |v, hash|
