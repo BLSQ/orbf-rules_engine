@@ -8,7 +8,7 @@ module Orbf
       attr_reader(*KNOWN_ATTRIBUTES)
 
       def initialize(args)
-        Assertions.known_args_keys(args, KNOWN_ATTRIBUTES)
+        Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
         @packages = args[:packages]
         @rule = args[:rule]
         @frequency = args[:frequency].to_s

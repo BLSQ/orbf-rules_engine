@@ -30,7 +30,7 @@ module Orbf
       KNOWN_ATTRIBUTES = %i[kind formulas decision_tables].freeze
 
       def initialize(args)
-        Assertions.known_args_keys(args, KNOWN_ATTRIBUTES)
+        Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
         @kind = args[:kind].to_s
         @formulas = Array(args[:formulas])
         @formulas.each do |formula|

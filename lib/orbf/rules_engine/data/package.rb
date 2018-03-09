@@ -13,7 +13,7 @@ module Orbf
                             org_unit_group_ext_ids groupset_ext_id dataset_ext_ids].freeze
 
       def initialize(args)
-        Assertions.known_args_keys(args, KNOWN_ATTRIBUTES)
+        Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
         @rules = Array(args[:rules])
         @org_unit_group_ext_ids = Array(args[:org_unit_group_ext_ids])
         @activities = Array(args[:activities])
