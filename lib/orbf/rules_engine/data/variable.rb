@@ -35,6 +35,11 @@ module Orbf
         formula&.dhis2_mapping(activity_code)
       end
 
+      def inspect
+        ["variable", key, period, expression, type, state, activity_code,
+         orgunit_ext_id].join("-")
+      end
+
       private
 
       def after_init

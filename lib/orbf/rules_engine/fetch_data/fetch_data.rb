@@ -12,10 +12,10 @@ module Orbf
         periods = package_arguments.flat_map(&:periods).uniq
         dhis2_connection.data_value_sets.list(
           {
-            organisation_unit: orgunit_ext_ids,
-            data_set:          dataset_ext_ids,
-            period:            periods,
-            children:          false
+            org_unit: orgunit_ext_ids,
+            data_set: dataset_ext_ids,
+            period:   periods,
+            children: false
           }, true
         )
       end

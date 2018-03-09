@@ -21,17 +21,27 @@ module Orbf
           invoicing_period: invoicing_period
         ).call
 
-        dhis2_values = FetchData.new(dhis2_connection, package_arguments).call
+        dhis2_values = FetchData.new(dhis2_connection, package_arguments.values).call
 
         # TODO: I think it's the other branch
         # dhis2_values +=  RulesEngine::IndicatorEvaluator.new(project, dhis2_values).call
 
         # orgs from package arguments ?
-        package_vars = RulesEngine::ActivityVariablesBuilder.new(
-          project,
-          package_arguments.map(&:orgunits).uniq,
-          dhis2_values
-        ).convert(invoicing_period)
+
+        periods = PeriodIterator.periods(invoicing_period, "monthly")
+
+        periods.push(invoicing_period)
+
+        package_vars = []
+        periods.each do |period|
+          package_vars.push(*RulesEngine::ActivityVariablesBuilder.new(
+            project,
+            package_arguments.values.flat_map(&:orgunits).uniq.group_by(&:ext_id).map do |_ext_id, orgs|
+              orgs.first
+            end,
+            dhis2_values
+          ).convert(period))
+        end
 
         # adapt solver factory to receive package_arguments and replace filtered_packages with it
         solver = SolverFactory.new(
@@ -47,7 +57,7 @@ module Orbf
         exported_values = RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print
 
         # TODO: create an entry in dhis2_logs and push to dhis2
-        dhis2_connection.data_value_sets.bulk_create(exported_values) if exported_values.any?
+        # dhis2_connection.data_value_sets.bulk_create(exported_values) if exported_values.any?
 
         exported_values
       end

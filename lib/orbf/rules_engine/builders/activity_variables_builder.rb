@@ -9,7 +9,7 @@ module Orbf
         @project = project
         @orgunits = orgunits
         @lookup = dhis2_values
-                  .group_by { |v| [v['orgUnit'], v['period'], v['dataElement']] }
+                  .group_by { |v| [v["orgUnit"], v["period"], v["dataElement"]] }
       end
 
       def convert(period)
@@ -19,6 +19,7 @@ module Orbf
               SOURCES.each do |source|
                 send(source, activity_state, period, package.activity_dependencies) do |orgunit_id, state, expression|
                   state = suffix_raw(state) if package.subcontract?
+                  puts suffix_for_id_activity(package.code, activity.activity_code, state, orgunit_id, period) if activity.activity_code.include?("pma_1_1")
                   array.push Orbf::RulesEngine::Variable.with(
                     period:         period,
                     key:            suffix_for_id_activity(package.code, activity.activity_code, state, orgunit_id, period),
@@ -47,7 +48,8 @@ module Orbf
         orgunits.each do |orgunit|
           key = [orgunit.ext_id, period, activity_state.ext_id]
           current_value = lookup[key]
-          yield(orgunit.ext_id, activity_state.state, current_value.first['value']) if current_value
+          var = current_value ? current_value.first["value"] : 0
+          yield(orgunit.ext_id, activity_state.state, var)
         end
       end
 
@@ -56,7 +58,7 @@ module Orbf
           code = "#{activity_state.state}_level#{hash[:level]}"
           next unless dependencies.include?(code)
           key = [hash[:id], period, activity_state.ext_id]
-          hash_value = lookup[key] ? lookup[key].first['value'].to_s : '0'
+          hash_value = lookup[key] ? lookup[key].first["value"].to_s : "0"
 
           yield(hash[:id], code, hash_value)
         end
