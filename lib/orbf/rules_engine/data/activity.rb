@@ -50,7 +50,7 @@ module Orbf
       end
 
       def after_init
-        raise "Kind #{kind} must be one of #{TYPES}" unless KINDS.include?(kind.to_s)
+        raise "Kind #{kind} must be one of #{KINDS}" unless KINDS.include?(kind.to_s)
       end
     end
 
