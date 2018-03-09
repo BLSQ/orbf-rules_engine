@@ -48,8 +48,8 @@ module Orbf
       end
 
       def values(orgunit)
-        values_substitutions(orgunit).merge(substitions_package(orgunit))
-                                     .merge(zone_subsititions)
+        values_substitutions(orgunit).merge(package_substitutions(orgunit))
+                                     .merge(zone_substitutions)
       end
 
       def values_substitutions(orgunit)
@@ -60,7 +60,7 @@ module Orbf
         end
       end
 
-      def zone_subsititions
+      def zone_substitutions
         package.zone_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |formula, hash|
@@ -68,7 +68,7 @@ module Orbf
         end
       end
 
-      def substitions_package(orgunit)
+      def package_substitutions(orgunit)
         package.package_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |formula, hash|
@@ -80,9 +80,10 @@ module Orbf
         package.activity_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |v, hash|
-          hash[suffix_for(package.code, v.code + "_values", orgunit, period).to_sym] = package.all_activities_codes.map do |activity_code|
+          subs = package.all_activities_codes.map do |activity_code|
             suffix_for_activity(package.code, activity_code, v.code, orgunit, period)
-          end.join(", ")
+          end
+          hash[suffix_for(package.code, v.code + "_values", orgunit, period).to_sym] = subs.join(", ")
         end
       end
     end

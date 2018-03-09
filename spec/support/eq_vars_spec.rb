@@ -45,7 +45,7 @@ RSpec.describe "eq_vars" do
       begin
         expect([build_variable, build_variable(key: "extra")]).to eq_vars([build_variable(key: "missing"), build_variable])
         raise("should have thrown an exception")
-      rescue Exception => e
+      rescue RSpec::Expectations::ExpectationNotMetError => e
         # I know there's a expect to raise_error but error message were unusable on failure
         # so went on comparing line by line
         e.message.split("\n").each_with_index do |got_line, index|
