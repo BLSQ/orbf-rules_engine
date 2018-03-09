@@ -55,11 +55,13 @@ module Orbf
 
       # achieved_for_2_and_2016, achieved_for_4_and_2016
       def org_units_expression(filtered_orgunits, activity, activity_state, period)
-        filtered_orgunits.each_with_object([]) do |orgunit, array|
-          array.push suffix_for_activity(
-            package.code, activity.activity_code,
+        filtered_orgunits.map do |orgunit|
+          suffix_for_activity(
+            package.code,
+            activity.activity_code,
             suffix_raw(activity_state.state),
-            orgunit, period
+            orgunit,
+            period
           )
         end
       end
