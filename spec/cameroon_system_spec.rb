@@ -48,7 +48,7 @@ RSpec.describe "Cameroon System" do
     ]
   end
 
-  let(:states) { %i[verified price] }
+  let(:states) { %i[verified] }
 
   let(:activities) do
     (1..2).map do |activity_index|
@@ -60,6 +60,13 @@ RSpec.describe "Cameroon System" do
           name:   "#{activity_code}_#{state}"
         )
       end
+      activity_states.push(
+        Orbf::RulesEngine::ActivityState.new_constant(
+          state:   "price",
+          name:    "#{activity_code}_price",
+          formula: (10 * activity_index).to_s
+        )
+      )
       Orbf::RulesEngine::Activity.with(
         activity_code:   activity_code,
         activity_states: activity_states
@@ -135,14 +142,10 @@ RSpec.describe "Cameroon System" do
   let(:dhis2_values) do
     [
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "33", "period" => "2016Q1", "orgUnit" => "1" },
-      { "dataElement" => "dhis2_act1_price", "categoryOptionCombo" => "default", "value" => "5", "period" => "2016Q1", "orgUnit" => "1" },
       { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "80", "period" => "2016Q1", "orgUnit" => "1" },
-      { "dataElement" => "dhis2_act2_price", "categoryOptionCombo" => "default", "value" => "0.6", "period" => "2016Q1", "orgUnit" => "1" },
 
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "12", "period" => "2016Q1", "orgUnit" => "2" },
-      { "dataElement" => "dhis2_act1_price", "categoryOptionCombo" => "default", "value" => "245", "period" => "2016Q1", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "2016Q1", "orgUnit" => "2" },
-      { "dataElement" => "dhis2_act2_price", "categoryOptionCombo" => "default", "value" => "0.9", "period" => "2016Q1", "orgUnit" => "2" }
     ]
   end
 
@@ -171,8 +174,8 @@ RSpec.describe "Cameroon System" do
   it "should register activity_variables" do
     solver = Orbf::RulesEngine::Solver.new
     solver.register_variables(package_vars)
-    expect(solver.build_problem["quantity_act1_verified_for_2_and_2016q1"]).to eq("12")
-    expect(solver.build_problem["quantity_act2_price_for_1_and_2016q1"]).to eq("0.6")
+    problem = solver.build_problem
+    expect(problem["quantity_act1_verified_for_2_and_2016q1"]).to eq("12")
   end
 
   let(:expected_problem) { JSON.parse(fixture_content(:rules_engine, "cameroon_problem.json")) }

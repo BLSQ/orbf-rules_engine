@@ -19,7 +19,6 @@ module Orbf
               SOURCES.each do |source|
                 send(source, activity_state, period, package.activity_dependencies) do |orgunit_id, state, expression|
                   state = suffix_raw(state) if package.subcontract?
-                  puts suffix_for_id_activity(package.code, activity.activity_code, state, orgunit_id, period) if activity.activity_code.include?("pma_1_1")
                   array.push Orbf::RulesEngine::Variable.with(
                     period:         period,
                     key:            suffix_for_id_activity(package.code, activity.activity_code, state, orgunit_id, period),

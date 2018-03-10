@@ -56,13 +56,17 @@ module Orbf
       # achieved_for_2_and_2016, achieved_for_4_and_2016
       def org_units_expression(filtered_orgunits, activity, activity_state, period)
         filtered_orgunits.map do |orgunit|
-          suffix_for_activity(
-            package.code,
-            activity.activity_code,
-            suffix_raw(activity_state.state),
-            orgunit,
-            period
-          )
+          if activity_state.constant?
+            name_constant(activity.activity_code, activity_state.state, period)
+          else
+            suffix_for_activity(
+              package.code,
+              activity.activity_code,
+              suffix_raw(activity_state.state),
+              orgunit,
+              period
+            )
+          end
         end
       end
 
