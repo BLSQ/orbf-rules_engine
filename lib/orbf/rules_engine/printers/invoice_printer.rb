@@ -15,7 +15,7 @@ module RulesEngine
       variables.group_by { |v| [v.package, v.orgunit_ext_id] }
                .each do |package_orgunit, vars|
         package, orgunit = package_orgunit
-        Orbf::RulesEngine::Log.call "---------- #{package} #{orgunit}"
+        Orbf::RulesEngine::Log.call "---------- #{package.code} #{orgunit} #{vars.first.period}"
         package.activities.each_with_index do |activity, index|
           codes = (package.activity_rules.flat_map(&:formulas).map(&:code) + activity.states)
           values = codes.each_with_object({}) do |state, hash|
