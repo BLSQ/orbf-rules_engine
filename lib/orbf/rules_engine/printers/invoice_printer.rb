@@ -12,10 +12,11 @@ module RulesEngine
 
     def print
       solution_as_string = solution.each_with_object({}) { |(k, v), hash| hash[k] = d_to_s(v, 10) }
-      variables.group_by { |v| [v.package, v.orgunit_ext_id] }
-               .each do |package_orgunit, vars|
-        package, orgunit = package_orgunit
-        Orbf::RulesEngine::Log.call "---------- #{package.code} #{orgunit} #{vars.first.period}"
+      variables.group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
+               .each do |package_orgunit_period, vars|
+        package, orgunit, period = package_orgunit_period
+        Orbf::RulesEngine::Log.call "---------- #{package.code} #{orgunit} #{period}"
+     
         package.activities.each_with_index do |activity, index|
           codes = (package.activity_rules.flat_map(&:formulas).map(&:code) + activity.states)
           values = codes.each_with_object({}) do |state, hash|
@@ -39,7 +40,7 @@ module RulesEngine
     end
 
     def explanation_package(var, solution_as_string)
-      Orbf::RulesEngine::Log.call " ---- " + var.state +
+      Orbf::RulesEngine::Log.call " ---- " + var.state + "#{var.package.code} #{var.orgunit_ext_id} #{var.period}"
                             "\n\t" + d_to_s(solution[var.key]) +
                             "\n\t" + var.formula.expression +
                             "\n\t" + Tokenizer.replace_token_from_expression(var.expression, solution_as_string, {}) +

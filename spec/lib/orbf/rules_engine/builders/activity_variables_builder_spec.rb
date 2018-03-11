@@ -48,27 +48,23 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
       ]
     end
 
-    let(:project) do
-      Orbf::RulesEngine::Project.new(
-        packages: [
-          Orbf::RulesEngine::Package.new(
-            code:       :facility,
-            kind:       :single,
-            frequency:  :quarterly,
-            activities: activities,
-            rules:      [
-              Orbf::RulesEngine::Rule.new(
-                kind:     :activity,
-                formulas: [
-                  Orbf::RulesEngine::Formula.new(
-                    "percent_achieved", "active * safe_div(achieved,target)",
-                    "% of Target Achieved [B / C], B and C are from activity states"
-                  ),
-                  Orbf::RulesEngine::Formula.new(
-                    "allowed", "if (percent_achieved < 0.75, 0, percent_achieved)",
-                    "Allowed [E] : should achieve at least 75% and can not go further than the cap"
-                  )
-                ]
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:       :facility,
+        kind:       :single,
+        frequency:  :quarterly,
+        activities: activities,
+        rules:      [
+          Orbf::RulesEngine::Rule.new(
+            kind:     :activity,
+            formulas: [
+              Orbf::RulesEngine::Formula.new(
+                "percent_achieved", "active * safe_div(achieved,target)",
+                "% of Target Achieved [B / C], B and C are from activity states"
+              ),
+              Orbf::RulesEngine::Formula.new(
+                "allowed", "if (percent_achieved < 0.75, 0, percent_achieved)",
+                "Allowed [E] : should achieve at least 75% and can not go further than the cap"
               )
             ]
           )
@@ -95,7 +91,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        project.packages.first
+          package:        package
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
@@ -106,7 +102,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        project.packages.first
+          package:        package
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
@@ -117,13 +113,13 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        project.packages.first
+          package:        package
         )
       ]
     end
 
     it "registers activity_variables" do
-      result = described_class.new(project, orgunits, dhis2_values).convert("2016Q1")
+      result = described_class.new(package, orgunits, dhis2_values).convert("2016Q1")
       expect(result).to eq_vars(expected_vars)
     end
   end
@@ -144,22 +140,18 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
       ]
     end
 
-    let(:project) do
-      Orbf::RulesEngine::Project.new(
-        packages: [
-          Orbf::RulesEngine::Package.new(
-            code:       :facility,
-            kind:       :single,
-            frequency:  :quarterly,
-            activities: activities,
-            rules:      [
-              Orbf::RulesEngine::Rule.new(
-                kind:     :activity,
-                formulas: [
-                  Orbf::RulesEngine::Formula.new("allowed",  "cap_level1", ""),
-                  Orbf::RulesEngine::Formula.new("allowed2", "cap_level2", "")
-                ]
-              )
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:       :facility,
+        kind:       :single,
+        frequency:  :quarterly,
+        activities: activities,
+        rules:      [
+          Orbf::RulesEngine::Rule.new(
+            kind:     :activity,
+            formulas: [
+              Orbf::RulesEngine::Formula.new("allowed",  "cap_level1", ""),
+              Orbf::RulesEngine::Formula.new("allowed2", "cap_level2", "")
             ]
           )
         ]
@@ -184,7 +176,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: "country_id",
           formula:        nil,
-          package:        project.packages.first
+          package:        package
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -195,13 +187,13 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: "county_id",
           formula:        nil,
-          package:        project.packages.first
+          package:        package
         )
       ]
     end
 
     it "registers activity_variables" do
-      result = described_class.new(project, orgunits, dhis2_values).convert("2016")
+      result = described_class.new(package, orgunits, dhis2_values).convert("2016")
       expect(result).to eq_vars(expected_vars)
     end
   end

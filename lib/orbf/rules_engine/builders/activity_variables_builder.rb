@@ -5,15 +5,15 @@ module Orbf
     class ActivityVariablesBuilder
       include VariablesBuilderSupport
 
-      def initialize(project, orgunits, dhis2_values)
-        @project = project
+      def initialize(package, orgunits, dhis2_values)
+        @package = package
         @orgunits = orgunits
         @lookup = dhis2_values
                   .group_by { |v| [v["orgUnit"], v["period"], v["dataElement"]] }
       end
 
       def convert(period)
-        project.packages.each_with_object([]) do |package, array|
+        [package].each_with_object([]) do |package, array|
           package.activities.each do |activity|
             activity.activity_states.select(&:data_element?).each do |activity_state|
               SOURCES.each do |source|
@@ -39,7 +39,7 @@ module Orbf
 
       private
 
-      attr_reader :project, :orgunits, :lookup
+      attr_reader :package, :orgunits, :lookup
 
       SOURCES = %i[de_values parent_values].freeze
 

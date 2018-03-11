@@ -33,16 +33,16 @@ module Orbf
         periods.push(invoicing_period)
 
         package_vars = []
-        periods.each do |period|
-          package_vars.push(*RulesEngine::ActivityVariablesBuilder.new(
-            project,
-            package_arguments.values.flat_map(&:orgunits).uniq.group_by(&:ext_id).map do |_ext_id, orgs|
-              orgs.first
-            end,
-            dhis2_values
-          ).convert(period))
-        end
 
+        package_arguments.values.each do |package_argument|
+          package_argument.periods.each do |period|
+            package_vars.push(*RulesEngine::ActivityVariablesBuilder.new(
+              package_argument.package,
+              package_argument.orgunits,
+              dhis2_values
+            ).convert(period))
+          end
+        end
         # adapt solver factory to receive package_arguments and replace filtered_packages with it
         solver = SolverFactory.new(
           project,
