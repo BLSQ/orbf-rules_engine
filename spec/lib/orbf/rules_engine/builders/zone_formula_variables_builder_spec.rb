@@ -55,7 +55,8 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
         activity_code:  nil,
         orgunit_ext_id: nil,
         formula:        package.rules.last.formulas.first,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       )
     ]
   end

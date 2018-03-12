@@ -42,7 +42,6 @@ module Orbf
 
       def check_args_present!(hash)
         return if (hash.keys & self.class._attributes).count == self.class._attributes.count
-        byebug
         raise "#{self.class} : incorrect number of args no such attributes: extra : #{hash.keys - self.class._attributes} missing: #{self.class._attributes - hash.keys}  possible attributes: #{self.class._attributes}"
       end
 

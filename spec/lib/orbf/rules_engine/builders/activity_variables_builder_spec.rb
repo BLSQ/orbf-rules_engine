@@ -91,7 +91,8 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
@@ -102,7 +103,8 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
@@ -113,7 +115,8 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         )
       ]
     end
@@ -176,7 +179,8 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: "country_id",
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -187,7 +191,8 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           type:           "activity",
           orgunit_ext_id: "county_id",
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         )
       ]
     end

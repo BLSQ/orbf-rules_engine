@@ -46,7 +46,7 @@ module Orbf
       end
 
       def build_variable(orgunit, activity_code, code, value)
-        Orbf::RulesEngine::Variable.with(
+        Orbf::RulesEngine::Variable.new_activity_decision_table(
           period:         period,
           key:            suffix_for_activity(
             package.code,
@@ -57,10 +57,8 @@ module Orbf
           ),
           expression:     value,
           state:          code,
-          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE_DECISION,
           activity_code:  activity_code,
           orgunit_ext_id: orgunit.ext_id,
-          formula:        nil,
           package:        package
         )
       end

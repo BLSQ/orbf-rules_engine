@@ -40,15 +40,13 @@ module Orbf
       def build_variable(filtered_orgunits, activity, activity_state)
         expressions = org_units_expression(filtered_orgunits, activity, activity_state, period)
 
-        Orbf::RulesEngine::Variable.with(
+        Orbf::RulesEngine::Variable.new_contract(
           period:         period,
           key:            build_key(package, activity, activity_state, period),
           expression:     "SUM(#{expressions.join(', ')})",
           state:          activity_state.state.to_s,
           activity_code:  activity.activity_code,
-          type:           Orbf::RulesEngine::Variable::Types::CONTRACT,
           orgunit_ext_id: ref_orgunit.ext_id,
-          formula:        nil,
           package:        package
         )
       end
@@ -71,7 +69,7 @@ module Orbf
       end
 
       def build_count(count_code, count, activity)
-        Orbf::RulesEngine::Variable.with(
+        Orbf::RulesEngine::Variable.new_contract(
           period:         period,
           key:            suffix_for_id(
             [package.code, activity.activity_code, count_code].join("_"),
@@ -81,9 +79,7 @@ module Orbf
           expression:     count.to_s,
           state:          count_code.to_s,
           activity_code:  activity.activity_code,
-          type:           Orbf::RulesEngine::Variable::Types::CONTRACT,
           orgunit_ext_id: ref_orgunit.ext_id,
-          formula:        nil,
           package:        package
         )
       end

@@ -43,12 +43,12 @@ RSpec.describe Orbf::RulesEngine::PeriodsResolver do
   end
 
   it "resolve periods from package frequency" do
-    expect(described_class.new(quality_package, "2016Q1").call).to eq(["2016Q1"])
+    expect(described_class.new(quality_package, "2016Q1").call).to eq(["2016Q1",'2016'])
   end
 
   it "resolve periods from package frequency and activity span _values" do
     expect(described_class.new(quantity_package, "2016Q1").call).to eq(
-      %w[201501 201502 201503 201601 201602 201603]
+      %w[201501 201502 201503 201601 201602 201603 2016]
     )
   end
 end

@@ -9,7 +9,8 @@ RSpec.describe Orbf::RulesEngine::Solver do
       type:           "contract",
       orgunit_ext_id: "district_orgunit1.ext_id",
       formula:        nil,
-      package:        nil
+      package:        nil,
+      payment_rule:   nil
     )
   end
 

@@ -4,7 +4,7 @@ RSpec::Matchers.define :eq_vars do |expected|
   end
 
   def var_to_log(r)
-    " #{r.key} = #{r.expression}, #{r.type}, #{r.period}, #{r.state}, #{r.activity_code}, #{r.orgunit_ext_id}"
+    " #{r.key} = #{r.expression}, #{r.type}, #{r.period}, #{r.state}, #{r.activity_code}, #{r.orgunit_ext_id}, #{r.package&.code}, #{r.payment_rule&.code}"
   end
 
   failure_message do |actual|

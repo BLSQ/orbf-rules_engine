@@ -6,44 +6,80 @@ module Orbf
       attributes  :key, :period, :expression, :type, :state, :activity_code,
                   :orgunit_ext_id, :formula, :package, :payment_rule
 
-      def self.new_activity_rule(params)
-        Variable.with(
-          params.merge!(
-            type:          Orbf::RulesEngine::Variable::Types::PACKAGE_RULE,
-            activity_code: nil,
-            payment_rule:  nil
-          )
-        )
-      end
+      class << self
 
-      def self.new_package_rule(params)
-        Variable.with(
-          params.merge!(
-            type:         Orbf::RulesEngine::Variable::Types::ACTIVITY,
-            payment_rule: nil
+        def new_activity_decision_table(params)
+          Variable.with(
+            params.merge!(
+              type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE_DECISION,
+              formula:        nil,
+              payment_rule:   nil    
+            )
           )
-        )
-      end
+        end
 
-      def self.new_activity_constant(params)
-        Variable.with(
-          params.merge!(
-            type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
-            orgunit_ext_id: nil,
-            formula:        nil,
-            payment_rule:   nil
+        def new_payment(params)
+          Variable.with(
+            params.merge!(
+              type:          Orbf::RulesEngine::Variable::Types::PAYMENT_RULE,
+              activity_code: nil,
+              formula:       nil,
+              package:       nil,
+              payment_rule:  nil
+            )
           )
-        )
-      end
+        end
 
-      def self.new_activity(params)
-        attrib = params.merge!(
-          type:         Orbf::RulesEngine::Variable::Types::ACTIVITY,
-          formula:      nil,
-          payment_rule: nil
-        )
-        Variable.with(attrib)
-       end
+        def new_contract(params)
+          Variable.with(
+            params.merge!(
+              type:         Orbf::RulesEngine::Variable::Types::CONTRACT,
+              formula:      nil,
+              payment_rule: nil
+            )
+          )
+            end
+
+        def new_package_rule(params)
+          Variable.with(
+            params.merge!(
+              type:          Orbf::RulesEngine::Variable::Types::PACKAGE_RULE,
+              activity_code: nil,
+              payment_rule:  nil
+            )
+          )
+        end
+
+        def new_activity_rule(params)
+          Variable.with(
+            params.merge!(
+              type:         Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
+              payment_rule: nil
+            )
+          )
+        end
+
+        def new_activity_constant(params)
+          Variable.with(
+            params.merge!(
+              type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
+              orgunit_ext_id: nil,
+              formula:        nil,
+              payment_rule:   nil
+            )
+          )
+        end
+
+        def new_activity(params)
+          Variable.with(
+            params.merge!(
+              type:         Orbf::RulesEngine::Variable::Types::ACTIVITY,
+              formula:      nil,
+              payment_rule: nil
+            )
+          )
+        end
+      end
 
       module Types
         ACTIVITY_CONSTANT = "activity_constant"

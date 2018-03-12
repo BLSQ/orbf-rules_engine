@@ -70,7 +70,8 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
         type:           "activity_rule_decision",
         orgunit_ext_id: "1",
         formula:        nil,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       ),
 
       Orbf::RulesEngine::Variable.with(
@@ -82,7 +83,8 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
         type:           "activity_rule_decision",
         orgunit_ext_id: "1",
         formula:        nil,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       )
     ]
   end

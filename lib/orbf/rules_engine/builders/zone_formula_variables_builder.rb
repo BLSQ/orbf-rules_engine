@@ -33,7 +33,8 @@ module Orbf
             activity_code:  nil,
             orgunit_ext_id: nil,
             formula:        zone_formula,
-            package:        package
+            package:        package,
+            payment_rule:   nil
           )
         end
       end

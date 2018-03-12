@@ -49,7 +49,8 @@ RSpec.describe Orbf::RulesEngine::ActivityConstantVariablesBuilder do
         activity_code:  "act1",
         orgunit_ext_id: nil,
         formula:        nil,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       )
     ]
   end

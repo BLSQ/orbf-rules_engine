@@ -36,16 +36,12 @@ module Orbf
               end
               var_key = suffix_for_package(package.code, formula.code, orgunit, @invoice_period)
 
-              array.push RulesEngine::Variable.with(
+              array.push RulesEngine::Variable.new_payment(
                 period:         @invoice_period,
                 key:            var_key,
                 expression:     "SUM(#{var_dependencies.join(',')})",
                 state:          formula.code,
-                type:           Orbf::RulesEngine::Variable::Types::PAYMENT_RULE,
-                activity_code:  nil,
                 orgunit_ext_id: orgunit.ext_id,
-                formula:        nil,
-                package:        nil
               )
             end
           end
@@ -73,16 +69,12 @@ module Orbf
               PeriodIterator.each_periods(@invoice_period, 'monthly') do |period|
                 var_key = suffix_for_package(package.code, formula.code, orgunit, period)
                 expression = index != 2 ? '0' : suffix_for_package(package.code, formula.code, orgunit, @invoice_period)
-                array.push RulesEngine::Variable.with(
+                array.push RulesEngine::Variable.new_payment(
                   period:         period,
                   key:            var_key,
                   expression:     expression,
                   state:          formula.code,
-                  type:           Orbf::RulesEngine::Variable::Types::PAYMENT_RULE,
-                  activity_code:  nil,
                   orgunit_ext_id: orgunit.ext_id,
-                  formula:        nil,
-                  package:        nil
                 )
                 index += 1
               end

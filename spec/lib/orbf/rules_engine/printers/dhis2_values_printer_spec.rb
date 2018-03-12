@@ -80,7 +80,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         activity_code:  nil,
         orgunit_ext_id: "1",
         formula:        package.rules.first.formulas.first,
-        package:        package
+        package:        package,
+        payment_rule: nil
       )
     end
 
@@ -166,7 +167,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         type:           :activity,
         orgunit_ext_id: orgunit.ext_id,
         formula:        package.rules.first.formulas.first,
-        package:        package
+        package:        package,
+        payment_rule: nil
       )
     end
 
