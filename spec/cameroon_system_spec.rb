@@ -74,67 +74,97 @@ RSpec.describe "Cameroon System" do
     end
   end
 
-  let(:project) do
-    Orbf::RulesEngine::Project.new(
-      packages: [
-        Orbf::RulesEngine::Package.new(
-          code:                   :quantity,
-          kind:                   :single,
-          frequency:              :quarterly,
-          org_unit_group_ext_ids: %w[cs],
-          groupset_ext_id:        nil,
-          activities:             activities,
-          rules:                  [
-            Orbf::RulesEngine::Rule.new(
-              kind:     :activity,
-              formulas: [
-                build_activity_formula(
-                  "verified_price", "verified * price",
-                  "Activity amount"
-                )
-              ]
-            ),
-            Orbf::RulesEngine::Rule.new(
-              kind:     :package,
-              formulas: [
-                build_formula(
-                  "fosa_package_total", "SUM(%{verified_price_values})"
-                )
-              ]
+  let(:single_package) do
+    Orbf::RulesEngine::Package.new(
+      code:                   :quantity,
+      kind:                   :single,
+      frequency:              :quarterly,
+      org_unit_group_ext_ids: %w[cs],
+      groupset_ext_id:        nil,
+      activities:             activities,
+      rules:                  [
+        Orbf::RulesEngine::Rule.new(
+          kind:     :activity,
+          formulas: [
+            build_activity_formula(
+              "verified_price", "verified * price",
+              "Activity amount"
             )
           ]
         ),
-        Orbf::RulesEngine::Package.new(
-          code:                   :quantity_subcontract,
-          kind:                   :subcontract,
-          frequency:              :quarterly,
-          org_unit_group_ext_ids: ["primary"],
-          groupset_ext_id:        "contracts_groupset_ext_id",
-          activities:             activities,
-          rules:                  [
-            Orbf::RulesEngine::Rule.new(
-              kind:     :activity,
-              formulas: [
-                build_activity_formula(
-                  "verified_price", "verified * price",
-                  "Activity amount"
-                ),
-                build_activity_formula(
-                  "average_amount", "(verified * price) / org_units_count",
-                  "average amount"
-                )
-              ]
-            ),
-            Orbf::RulesEngine::Rule.new(
-              kind:     :package,
-              formulas: [
-                build_formula(
-                  "fosa_package_total", "SUM(%{verified_price_values})"
-                )
-              ]
+        Orbf::RulesEngine::Rule.new(
+          kind:     :package,
+          formulas: [
+            build_formula(
+              "fosa_package_total", "SUM(%{verified_price_values})"
             )
           ]
         )
+      ]
+    )
+  end
+
+  let(:subcontract_package) do
+    Orbf::RulesEngine::Package.new(
+      code:                   :quantity_subcontract,
+      kind:                   :subcontract,
+      frequency:              :quarterly,
+      org_unit_group_ext_ids: ["primary"],
+      groupset_ext_id:        "contracts_groupset_ext_id",
+      activities:             activities,
+      rules:                  [
+        Orbf::RulesEngine::Rule.new(
+          kind:     :activity,
+          formulas: [
+            build_activity_formula(
+              "verified_price", "verified * price",
+              "Activity amount"
+            ),
+            build_activity_formula(
+              "average_amount", "(verified * price) / org_units_count",
+              "average amount"
+            )
+          ]
+        ),
+        Orbf::RulesEngine::Rule.new(
+          kind:     :package,
+          formulas: [
+            build_formula(
+              "fosa_package_total", "SUM(%{verified_price_values})"
+            )
+          ]
+        )
+      ]
+    )
+  end
+
+  let(:single_payment_rule) do
+    Orbf::RulesEngine::PaymentRule.new(
+      code:      "pbf_payment",
+      frequency: :monthly,
+      packages:  [
+        single_package
+      ],
+      rule:      Orbf::RulesEngine::Rule.new(
+        kind:     "payment",
+        formulas: [
+          Orbf::RulesEngine::Formula.new(
+            "quaterly_quantity_production",
+            "SUM(%{verified_price_previous_values}, verified_price)"
+          )
+        ]
+      )
+    )
+  end
+
+  let(:project) do
+    Orbf::RulesEngine::Project.new(
+      packages:      [
+        single_package,
+        subcontract_package
+      ],
+      payment_rules: [
+        single_payment_rule
       ]
     )
   end
@@ -145,7 +175,7 @@ RSpec.describe "Cameroon System" do
       { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "80", "period" => "2016Q1", "orgUnit" => "1" },
 
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "12", "period" => "2016Q1", "orgUnit" => "2" },
-      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "2016Q1", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "2016Q1", "orgUnit" => "2" }
     ]
   end
 
@@ -204,7 +234,6 @@ RSpec.describe "Cameroon System" do
       org_unit_groupsets: [groupset]
     )
 
-
     package_arguments = Orbf::RulesEngine::ResolveArguments.new(
       project:          project,
       pyramid:          pyramid,
@@ -213,7 +242,6 @@ RSpec.describe "Cameroon System" do
     ).call
 
     package_vars = Orbf::RulesEngine::ActivityVariablesBuilder.to_variables(package_arguments, dhis2_values)
-
 
     Orbf::RulesEngine::SolverFactory.new(
       project,

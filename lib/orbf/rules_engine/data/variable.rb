@@ -40,6 +40,10 @@ module Orbf
          orgunit_ext_id].join("-")
       end
 
+      def payment_rule_type?
+        type == Types::PAYMENT_RULE
+      end
+
       private
 
       def after_init

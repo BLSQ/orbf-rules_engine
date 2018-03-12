@@ -33,6 +33,18 @@ module Orbf
             explanation_package(var, solution_as_string)
           end
         end
+        print_payments
+      end
+
+      def print_payments
+        byebug
+        variables.select(&:payment_rule_type?).group_by { |v| [v.orgunit_ext_id, v.period] }.each do |org_unit_period, vars|
+          org_unit, period = org_unit_period
+          Orbf::RulesEngine::Log.call "---------- Payments for #{org_unit} #{period}"
+          vars.each do |var|
+            Orbf::RulesEngine::Log.call "#{var.formula.code} #{solution[var.key]}"
+          end
+        end
       end
 
       def headers(values)

@@ -59,10 +59,8 @@ module Orbf
 
       def de_values(activity_state, period, _dependencies)
         orgunits.each do |orgunit|
-          key = [orgunit.ext_id, period, activity_state.ext_id]
-          current_value = lookup[key]
-          var = current_value ? current_value.first["value"] : 0
-          yield(orgunit.ext_id, activity_state.state, var)
+          current_value = lookup_value(build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id]))
+          yield(orgunit.ext_id, activity_state.state, current_value)
         end
       end
 
@@ -70,9 +68,7 @@ module Orbf
         parents_with_level.each do |hash|
           code = "#{activity_state.state}_level#{hash[:level]}"
           next unless dependencies.include?(code)
-          key = [hash[:id], period, activity_state.ext_id]
-          hash_value = lookup[key] ? lookup[key].first["value"].to_s : "0"
-
+          hash_value = lookup_value(build_keys_with_yearly([hash[:id], period, activity_state.ext_id]))
           yield(hash[:id], code, hash_value)
         end
       end
@@ -86,6 +82,20 @@ module Orbf
             )
           end
         end.uniq
+      end
+
+      def lookup_value(keys)
+        keys.each do |key|
+          return lookup[key].first["value"] if lookup[key]
+        end
+        "0"
+      end
+
+      def build_keys_with_yearly(key)
+        [
+          key,
+          [key[0], PeriodIterator.periods(key[1], "yearly").first, key[2]]
+        ]
       end
     end
   end
