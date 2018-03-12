@@ -4,7 +4,46 @@ module Orbf
   module RulesEngine
     class Variable < Orbf::RulesEngine::ValueObject
       attributes  :key, :period, :expression, :type, :state, :activity_code,
-                  :orgunit_ext_id, :formula, :package
+                  :orgunit_ext_id, :formula, :package, :payment_rule
+
+      def self.new_activity_rule(params)
+        Variable.with(
+          params.merge!(
+            type:          Orbf::RulesEngine::Variable::Types::PACKAGE_RULE,
+            activity_code: nil,
+            payment_rule:  nil
+          )
+        )
+      end
+
+      def self.new_package_rule(params)
+        Variable.with(
+          params.merge!(
+            type:         Orbf::RulesEngine::Variable::Types::ACTIVITY,
+            payment_rule: nil
+          )
+        )
+      end
+
+      def self.new_activity_constant(params)
+        Variable.with(
+          params.merge!(
+            type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
+            orgunit_ext_id: nil,
+            formula:        nil,
+            payment_rule:   nil
+          )
+        )
+      end
+
+      def self.new_activity(params)
+        attrib = params.merge!(
+          type:         Orbf::RulesEngine::Variable::Types::ACTIVITY,
+          formula:      nil,
+          payment_rule: nil
+        )
+        Variable.with(attrib)
+       end
 
       module Types
         ACTIVITY_CONSTANT = "activity_constant"

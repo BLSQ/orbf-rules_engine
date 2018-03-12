@@ -118,7 +118,8 @@ module Orbf
                 activity_code:  nil,
                 orgunit_ext_id: orgunit.ext_id,
                 formula:        formula,
-                package:        nil
+                package:        nil,
+                payment_rule:   payment_rule
               )
             end
           end

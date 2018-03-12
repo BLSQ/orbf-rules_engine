@@ -37,7 +37,7 @@ module Orbf
       end
 
       def build_variable(orgunit, activity_code, formula, substitued)
-        Orbf::RulesEngine::Variable.with(
+        Orbf::RulesEngine::Variable.new_activity_rule(
           period:         period,
           key:            suffix_for_activity(package.code, activity_code, formula.code, orgunit, period),
           expression:     Tokenizer.replace_token_from_expression(

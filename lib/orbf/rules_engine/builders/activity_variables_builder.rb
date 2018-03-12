@@ -33,16 +33,15 @@ module Orbf
               SOURCES.each do |source|
                 send(source, activity_state, period, package.activity_dependencies) do |orgunit_id, state, expression|
                   state = suffix_raw(state) if package.subcontract?
-                  array.push Orbf::RulesEngine::Variable.with(
+                  array.push Orbf::RulesEngine::Variable.new_activity(
                     period:         period,
                     key:            suffix_for_id_activity(package.code, activity.activity_code, state, orgunit_id, period),
                     expression:     expression,
                     state:          state,
                     activity_code:  activity.activity_code,
-                    type:           Orbf::RulesEngine::Variable::Types::ACTIVITY,
                     orgunit_ext_id: orgunit_id,
                     formula:        nil,
-                    package:        package
+                    package:        package,
                   )
                 end
               end
