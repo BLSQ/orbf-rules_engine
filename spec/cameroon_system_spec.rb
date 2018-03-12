@@ -149,10 +149,6 @@ RSpec.describe "Cameroon System" do
     ]
   end
 
-  let(:package_vars) do
-    Orbf::RulesEngine::ActivityVariablesBuilder.new(project, orgunits, dhis2_values).convert(period)
-  end
-
   def build_formula(code, expression, comment = nil)
     Orbf::RulesEngine::Formula.new(code, expression, comment, single_mapping: "dhis2_dataelement_id_#{code}")
   end
@@ -168,20 +164,17 @@ RSpec.describe "Cameroon System" do
   end
 
   let(:solver) do
-    build_solver(orgunits, package_vars)
+    build_solver(orgunits, dhis2_values)
   end
 
   it "should register activity_variables" do
-    solver = Orbf::RulesEngine::Solver.new
-    solver.register_variables(package_vars)
-    problem = solver.build_problem
-    expect(problem["quantity_act1_verified_for_2_and_2016q1"]).to eq("12")
+    problem = build_solver(orgunits, dhis2_values).build_problem
+    expect(problem["quantity_act1_verified_for_1_and_2016q1"]).to eq("33")
   end
 
   let(:expected_problem) { JSON.parse(fixture_content(:rules_engine, "cameroon_problem.json")) }
   it "should build problem based on variables" do
-    package_vars = Orbf::RulesEngine::ActivityVariablesBuilder.new(project, orgunits, dhis2_values).convert(period)
-    solver = build_solver(orgunits, package_vars)
+    solver = build_solver(orgunits, dhis2_values)
     problem = solver.build_problem
     puts JSON.pretty_generate(problem) if problem != expected_problem
     expect(problem).to eq(expected_problem)
@@ -204,18 +197,23 @@ RSpec.describe "Cameroon System" do
     # )
   end
 
-  def build_solver(orgunits, package_vars)
+  def build_solver(orgunits, dhis2_values)
     pyramid = Orbf::RulesEngine::Pyramid.new(
       org_units:          orgunits,
       org_unit_groups:    orgunit_groups,
       org_unit_groupsets: [groupset]
     )
+
+
     package_arguments = Orbf::RulesEngine::ResolveArguments.new(
       project:          project,
       pyramid:          pyramid,
       orgunit_ext_id:   orgunits[0].ext_id,
       invoicing_period: "2016Q1"
     ).call
+
+    package_vars = Orbf::RulesEngine::ActivityVariablesBuilder.to_variables(package_arguments, dhis2_values)
+
 
     Orbf::RulesEngine::SolverFactory.new(
       project,

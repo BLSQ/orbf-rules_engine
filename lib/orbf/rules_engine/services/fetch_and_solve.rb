@@ -24,25 +24,11 @@ module Orbf
         dhis2_values = FetchData.new(dhis2_connection, package_arguments.values).call
 
         # TODO: I think it's the other branch
-        # dhis2_values +=  RulesEngine::IndicatorEvaluator.new(project, dhis2_values).call
+        dhis2_values += RulesEngine::IndicatorEvaluator.new(project, dhis2_values).call
 
         # orgs from package arguments ?
 
-        periods = PeriodIterator.periods(invoicing_period, "monthly")
-
-        periods.push(invoicing_period)
-
-        package_vars = []
-
-        package_arguments.values.each do |package_argument|
-          package_argument.periods.each do |period|
-            package_vars.push(*RulesEngine::ActivityVariablesBuilder.new(
-              package_argument.package,
-              package_argument.orgunits,
-              dhis2_values
-            ).convert(period))
-          end
-        end
+        package_vars = ActivityVariablesBuilder.to_variables(package_arguments, dhis2_values)
         # adapt solver factory to receive package_arguments and replace filtered_packages with it
         solver = SolverFactory.new(
           project,

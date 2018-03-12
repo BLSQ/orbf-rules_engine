@@ -5,6 +5,20 @@ module Orbf
     class ActivityVariablesBuilder
       include VariablesBuilderSupport
 
+      class << self
+        def to_variables(package_arguments, dhis2_values)
+          package_arguments.values.each_with_object([]) do |package_argument, package_vars|
+            package_argument.periods.each do |period|
+              package_vars.push(*RulesEngine::ActivityVariablesBuilder.new(
+                package_argument.package,
+                package_argument.orgunits,
+                dhis2_values
+              ).convert(period))
+            end
+          end
+        end
+      end
+
       def initialize(package, orgunits, dhis2_values)
         @package = package
         @orgunits = orgunits
