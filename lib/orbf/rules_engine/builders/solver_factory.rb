@@ -51,6 +51,11 @@ module Orbf
                                .flat_map { |package| package_arguments[package]&.orgunits }
                                .compact
                                .uniq
+
+        matching_packages = payment_rule.packages.flat_map { |package| package_arguments[package] }.compact
+        return unless matching_packages.size == payment_rule.packages.size
+
+
         PeriodIterator.each_periods(invoice_period, payment_rule.frequency) do |period|
           variables = Orbf::RulesEngine::PaymentFormulaVariablesBuilder.new(
             payment_rule,

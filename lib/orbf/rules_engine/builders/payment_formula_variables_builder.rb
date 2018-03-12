@@ -108,6 +108,7 @@ module Orbf
                 orgunit_id: orgunit.ext_id,
                 period:     period.downcase
               )
+
               array.push RulesEngine::Variable.with(
                 period:         period,
                 key:            suffix_for(payment_rule.code, formula.code, orgunit, period),

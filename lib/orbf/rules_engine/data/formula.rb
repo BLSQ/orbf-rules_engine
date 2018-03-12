@@ -8,7 +8,7 @@ module Orbf
 
       def initialize(code, expression, comment = '', single_mapping: nil, activity_mappings: nil)
         @code = code
-        @expression = expression
+        @expression = expression.strip
         @comment = comment
         @single_mapping = single_mapping
         @activity_mappings = activity_mappings

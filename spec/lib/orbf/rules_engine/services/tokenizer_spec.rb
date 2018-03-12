@@ -10,13 +10,30 @@ RSpec.describe Orbf::RulesEngine::Tokenizer do
     expression = "number_of_indicators_reported * Max(%{actual_health_clynic_type_values})"
     tokens = described_class.tokenize(expression)
     expect(tokens.join("")).to eq(expression)
-    expect(tokens).to eq([
-      "number_of_indicators_reported", 
-      " ", "", "*", "", " ",
-       "Max", "(", "", "%{",
-        "actual_health_clynic_type_values", 
+    expect(tokens).to eq(
+      [
+        "number_of_indicators_reported",
+        " ", "", "*", "", " ",
+        "Max", "(", "", "%{",
+        "actual_health_clynic_type_values",
         "}", "", ")"
-      ])
+      ]
+    )
+  end
+
+  it "tokenize carriage returns" do
+    pending
+    tokens = described_class.tokenize("(equity_bonus/100) * pma_quantity_total\r\n")
+    expect(tokens).to eq [
+      "(",
+      "equity_bonus",
+      "/",
+      "100",
+      ")",
+      "*",
+      "pma_quantity_total",
+      "\r\n"
+    ]
   end
 
   describe "#format_keys" do
