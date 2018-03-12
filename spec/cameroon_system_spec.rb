@@ -74,11 +74,45 @@ RSpec.describe "Cameroon System" do
     end
   end
 
+  let(:quality_package) do
+    Orbf::RulesEngine::Package.new(
+      code:                   :quality,
+      kind:                   :single,
+      frequency:              :quarterly,
+      org_unit_group_ext_ids: %w[cs],
+      groupset_ext_id:        nil,
+      activities:             activities,
+      rules:                  [
+        Orbf::RulesEngine::Rule.new(
+          kind:     :activity,
+          formulas: [
+            build_activity_formula(
+              "obtained", "10",
+              "obtained score"
+            ),
+            build_activity_formula(
+              "max", "50",
+              "max score"
+            )
+          ]
+        ),
+        Orbf::RulesEngine::Rule.new(
+          kind:     :package,
+          formulas: [
+            build_formula(
+              "quality_score", "SUM(%{obtained_values})/SUM(%{max_values})"
+            )
+          ]
+        )
+      ]
+    )
+  end
+
   let(:single_package) do
     Orbf::RulesEngine::Package.new(
       code:                   :quantity,
       kind:                   :single,
-      frequency:              :quarterly,
+      frequency:              :monthly,
       org_unit_group_ext_ids: %w[cs],
       groupset_ext_id:        nil,
       activities:             activities,
@@ -108,7 +142,7 @@ RSpec.describe "Cameroon System" do
     Orbf::RulesEngine::Package.new(
       code:                   :quantity_subcontract,
       kind:                   :subcontract,
-      frequency:              :quarterly,
+      frequency:              :monthly,
       org_unit_group_ext_ids: ["primary"],
       groupset_ext_id:        "contracts_groupset_ext_id",
       activities:             activities,
@@ -143,14 +177,19 @@ RSpec.describe "Cameroon System" do
       code:      "pbf_payment",
       frequency: :monthly,
       packages:  [
-        single_package
+        single_package,
+        quality_package
       ],
       rule:      Orbf::RulesEngine::Rule.new(
         kind:     "payment",
         formulas: [
           Orbf::RulesEngine::Formula.new(
-            "quaterly_quantity_production",
-            "SUM(%{verified_price_previous_values}, verified_price)"
+            "monthly_quantity_production",
+            "fosa_package_total + (fosa_package_total * quality_score)"
+          ),
+          Orbf::RulesEngine::Formula.new(
+            "quarterly_quantity_production",
+            "SUM(%{monthly_quantity_production_previous_values}, fosa_package_total)"
           )
         ]
       )
@@ -161,7 +200,8 @@ RSpec.describe "Cameroon System" do
     Orbf::RulesEngine::Project.new(
       packages:      [
         single_package,
-        subcontract_package
+        subcontract_package,
+        quality_package
       ],
       payment_rules: [
         single_payment_rule
@@ -171,11 +211,20 @@ RSpec.describe "Cameroon System" do
 
   let(:dhis2_values) do
     [
-      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "33", "period" => "2016Q1", "orgUnit" => "1" },
-      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "80", "period" => "2016Q1", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "33", "period" => "201601", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "80", "period" => "201601", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "41", "period" => "201602", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "32", "period" => "201602", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "32", "period" => "201603", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "41", "period" => "201603", "orgUnit" => "1" },
 
-      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "12", "period" => "2016Q1", "orgUnit" => "2" },
-      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "2016Q1", "orgUnit" => "2" }
+
+      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "12", "period" => "201601", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "201601", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "31", "period" => "201602", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "201602", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "41", "period" => "201603", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "11", "period" => "201603", "orgUnit" => "2" },
     ]
   end
 
@@ -199,7 +248,7 @@ RSpec.describe "Cameroon System" do
 
   it "should register activity_variables" do
     problem = build_solver(orgunits, dhis2_values).build_problem
-    expect(problem["quantity_act1_verified_for_1_and_2016q1"]).to eq("33")
+    expect(problem["quantity_act1_verified_for_1_and_201601"]).to eq("33")
   end
 
   let(:expected_problem) { JSON.parse(fixture_content(:rules_engine, "cameroon_problem.json")) }

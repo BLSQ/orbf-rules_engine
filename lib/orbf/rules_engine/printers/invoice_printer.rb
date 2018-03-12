@@ -12,7 +12,7 @@ module Orbf
 
       def print
         solution_as_string = solution.each_with_object({}) { |(k, v), hash| hash[k] = d_to_s(v, 10) }
-        variables.select(&:orgunit_ext_id).group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
+        variables.select(&:orgunit_ext_id).select(&:package).group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
                  .each do |package_orgunit_period, vars|
           package, orgunit, period = package_orgunit_period
 
@@ -37,8 +37,7 @@ module Orbf
       end
 
       def print_payments
-        byebug
-        variables.select(&:payment_rule_type?).group_by { |v| [v.orgunit_ext_id, v.period] }.each do |org_unit_period, vars|
+        variables.select(&:payment_rule_type?).select(&:formula).group_by { |v| [v.orgunit_ext_id, v.period] }.each do |org_unit_period, vars|
           org_unit, period = org_unit_period
           Orbf::RulesEngine::Log.call "---------- Payments for #{org_unit} #{period}"
           vars.each do |var|

@@ -12,9 +12,9 @@ module Orbf
       end
 
       def to_variables
-        payment_rule_variables(payment_rule) +
-          temp_variable_quarterly_sum(payment_rule) +
-          temp_variable_monthly_zero_or_quarter_value(payment_rule)
+        payment_rule_variables +
+          temp_variable_quarterly_sum +
+          temp_variable_monthly_zero_or_quarter_value
       end
 
       private
@@ -25,7 +25,7 @@ module Orbf
       # generated variables like
       #    key : quantity_amount_for_1_and_2016q1",
       #    expression : SUM(quantity_amount_for_1_and_201601,quantity_amount_for_1_and_201602,quantity_amount_for_1_and_201603)
-      def temp_variable_quarterly_sum(payment_rule)
+      def temp_variable_quarterly_sum
         return [] if payment_rule.monthly?
         orgunits.each_with_object([]) do |orgunit, array|
           payment_rule.packages.select(&:monthly?).each do |package|
@@ -64,7 +64,7 @@ module Orbf
       #    key : quantity_amount_for_1_and_2016Q1",
       #    expression : 0
       #
-      def temp_variable_monthly_zero_or_quarter_value(payment_rule)
+      def temp_variable_monthly_zero_or_quarter_value
         return [] unless payment_rule.monthly?
         orgunits.each_with_object([]) do |orgunit, array|
           payment_rule.packages.select(&:quarterly?).each do |package|
@@ -91,7 +91,7 @@ module Orbf
         end
       end
 
-      def payment_rule_variables(payment_rule)
+      def payment_rule_variables
         substitutions = values(payment_rule)
         orgunits.each_with_object([]) do |orgunit, array|
           PeriodIterator.each_periods(@invoice_period, payment_rule.frequency) do |period|
@@ -141,6 +141,7 @@ module Orbf
           end
         end
       end
+
     end
   end
 end
