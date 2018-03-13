@@ -96,6 +96,18 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
+          key:            "facility_act1_achieved_for_2_and_2016q1",
+          expression:     "0",
+          state:          "achieved",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.last.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
           key:            "facility_act1_target_for_1_and_2016q1",
           expression:     "34",
           state:          "target",
@@ -108,12 +120,36 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
+          key:            "facility_act1_target_for_2_and_2016q1",
+          expression:     "0",
+          state:          "target",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.last.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
           key:            "facility_act2_achieved_for_1_and_2016q1",
           expression:     "80",
           state:          "achieved",
           activity_code:  "act2",
           type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
+          key:            "facility_act2_achieved_for_2_and_2016q1",
+          expression:     "0",
+          state:          "achieved",
+          activity_code:  "act2",
+          type:           "activity",
+          orgunit_ext_id: orgunits.last.ext_id,
           formula:        nil,
           package:        package,
           payment_rule:   nil
@@ -184,12 +220,35 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
+          key:            "facility_act1_cap_for_1_and_2016",
+          expression:     "0",
+          state:          "cap",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: "1",
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
           key:            "facility_act1_cap_level2_for_county_id_and_2016",
           expression:     "12",
           state:          "cap_level2",
           activity_code:  "act1",
           type:           "activity",
           orgunit_ext_id: "county_id",
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ), Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "facility_act1_cap_for_2_and_2016",
+          expression:     "0",
+          state:          "cap",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: "2",
           formula:        nil,
           package:        package,
           payment_rule:   nil
