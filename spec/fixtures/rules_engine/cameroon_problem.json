@@ -96,5 +96,5 @@
   "quality_quality_score_for_1_and_201602": "0",
   "pbf_payment_monthly_quantity_production_for_1_and_201603": "quantity_fosa_package_total_for_1_and_201603 + (quantity_fosa_package_total_for_1_and_201603 * quality_quality_score_for_1_and_201603)",
   "pbf_payment_quarterly_quantity_production_for_1_and_201603": "SUM(pbf_payment_monthly_quantity_production_for_1_and_201601, pbf_payment_monthly_quantity_production_for_1_and_201602, quantity_fosa_package_total_for_1_and_201603)",
-  "quality_quality_score_for_1_and_201603": "0"
+  "quality_quality_score_for_1_and_201603": "quality_quality_score_for_1_and_2016q1"
 }

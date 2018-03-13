@@ -294,8 +294,8 @@ RSpec.describe "System" do
     Orbf::RulesEngine::InvoicePrinter.new(solver.variables, solver.solution).print
     exported_values = Orbf::RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print
     expect(exported_values).to include(
-      data_element: "dhis2_dataelement_id_fosa_indicators_reported_weighted",
-      org_unit:     "14",
+      dataElement: "dhis2_dataelement_id_fosa_indicators_reported_weighted",
+      orgUnit:     "14",
       period:       "2016Q1",
       value:        9,
       comment:      "facility_fosa_indicators_reported_weighted_for_14_and_2016q1"
