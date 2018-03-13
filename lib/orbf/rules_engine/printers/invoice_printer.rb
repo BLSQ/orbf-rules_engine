@@ -26,6 +26,7 @@ module Orbf
                 hash[state] = solution[activity_variable.key]
               end
             end
+            next if values.values.compact.any?
             headers(values) if index.zero?
             Orbf::RulesEngine::Log.call "#{values.values.map { |v| d_to_s(v) }.join("\t")}\t#{activity.activity_code}"
           end
@@ -33,10 +34,10 @@ module Orbf
             explanation_package(var, solution_as_string)
           end
         end
-        print_payments
+        print_payments(solution_as_string)
       end
 
-      def print_payments
+      def print_payments(solution_as_string)
         payment_variables = variables.select(&:payment_rule_type?)
                                      .select(&:formula)
         puts "no payment" if payment_variables.none?
@@ -45,7 +46,7 @@ module Orbf
           payment_rule, org_unit, period = org_unit_period
           Orbf::RulesEngine::Log.call "---------- Payments for #{payment_rule.code} #{org_unit} #{period}"
           vars.each do |var|
-            Orbf::RulesEngine::Log.call "#{var.formula.code} #{solution[var.key]}"
+            explanation_package(var, solution_as_string)
           end
         end
       end
@@ -57,7 +58,7 @@ module Orbf
 
       def explanation_package(var, solution_as_string)
         Orbf::RulesEngine::Log.call(
-          " ---- " + var.state + " (#{var.package.code} #{var.orgunit_ext_id} #{var.period}) " \
+          "  ---- " + var.state + " (#{var.package&.code || var.payment_rule&.code} #{var.orgunit_ext_id} #{var.period} #{var.key}) " \
                               "\n\t" + d_to_s(solution[var.key]) +
                               "\n\t" + var.formula.expression +
                               "\n\t" + Tokenizer.replace_token_from_expression(var.expression, solution_as_string, {}) +
