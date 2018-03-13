@@ -69,6 +69,7 @@ module Orbf
               PeriodIterator.each_periods(@invoice_period, 'monthly') do |period|
                 var_key = suffix_for_package(package.code, formula.code, orgunit, period)
                 expression = index != 2 ? '0' : suffix_for_package(package.code, formula.code, orgunit, @invoice_period)
+                
                 array.push RulesEngine::Variable.new_payment(
                   period:         period,
                   key:            var_key,

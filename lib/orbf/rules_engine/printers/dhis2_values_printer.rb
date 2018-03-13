@@ -14,11 +14,11 @@ module Orbf
         variables.select(&:exportable?)
                  .map do |variable|
           {
-            data_element: variable.dhis2_data_element,
-            org_unit:     variable.orgunit_ext_id,
-            period:       variable.period,
-            value:        ValueFormatter.format(solution[variable.key]),
-            comment:      variable.key
+            dataElement: variable.dhis2_data_element,
+            orgUnit:     variable.orgunit_ext_id,
+            period:      variable.period,
+            value:       ValueFormatter.format(solution[variable.key]),
+            comment:     variable.key
           }
         end
       end

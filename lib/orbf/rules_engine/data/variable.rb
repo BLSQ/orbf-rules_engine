@@ -13,7 +13,7 @@ module Orbf
             params.merge!(
               type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE_DECISION,
               formula:        nil,
-              payment_rule:   nil    
+              payment_rule:   nil
             )
           )
         end
@@ -122,6 +122,7 @@ module Orbf
       private
 
       def after_init
+        
         raise "Variable type '#{type}' must be one of #{Types::TYPES}" unless Types::TYPES.include?(type.to_s)
       end
     end
