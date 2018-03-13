@@ -9,7 +9,8 @@ RSpec.describe "eq_vars" do
       type:           "contract",
       orgunit_ext_id: "ref_orgunit.ext_id",
       formula:        nil,
-      package:        "package"
+      package:        nil,
+      payment_rule:   nil
     }
   end
   def build_variable(args = {})
@@ -26,18 +27,18 @@ RSpec.describe "eq_vars" do
       [
         "-------------------- Common keys",
         "*** OK key",
-        "    got :      key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, true, true, true",
-        "    expected:  key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id",
+        "    got :      key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , , true, true, true",
+        "    expected:  key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , ",
         "",
         "-------------------- missing expected keys",
         "missing",
         "-------------------- non expected keys",
         "extra",
         "-------------------- ALL got and all expected",
-        "got      :  key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id",
-        "got      :  extra = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id",
-        "expected :  missing = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id",
-        "expected :  key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id"
+        "got      :  key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , ",
+        "got      :  extra = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , ",
+        "expected :  missing = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , ",
+        "expected :  key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , "
       ]
     end
 
