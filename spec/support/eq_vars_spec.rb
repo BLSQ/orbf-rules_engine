@@ -27,7 +27,7 @@ RSpec.describe "eq_vars" do
       [
         "-------------------- Common keys",
         "*** OK key",
-        "    got :      key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , , true, true, true",
+        "    got :      key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , , true, true, true, true",
         "    expected:  key = expression, contract, 2016Q1, state_code, activity.activity_code, ref_orgunit.ext_id, , ",
         "",
         "-------------------- missing expected keys",

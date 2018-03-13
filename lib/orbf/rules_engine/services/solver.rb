@@ -101,7 +101,8 @@ module Orbf
           key,
           "=",
           "\n\t\t",
-          vals.map(&:expression).join("\n\t\t")
+          vals.map(&:expression).join("\n\t\t"),
+          "  "+vals.size.to_s 
         ].join("")
       end
     end

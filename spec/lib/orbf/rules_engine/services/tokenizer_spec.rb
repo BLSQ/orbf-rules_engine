@@ -22,19 +22,15 @@ RSpec.describe Orbf::RulesEngine::Tokenizer do
   end
 
   it "tokenize carriage returns" do
-    pending
     tokens = described_class.tokenize("(equity_bonus/100) * pma_quantity_total\r\n")
-    expect(tokens).to eq [
-      "(",
-      "equity_bonus",
-      "/",
-      "100",
-      ")",
-      "*",
-      "pma_quantity_total",
-      "\r\n"
-    ]
+    expect(tokens).to eq ["", "(", "equity_bonus", "/", "100", ")", "", " ", "", "*", "", " ", "pma_quantity_total", "\r\n"]
   end
+
+  it "tokenize carriage returns" do
+    tokens = described_class.tokenize("(equity_bonus/100) * pma_quantity_total\n")
+    expect(tokens).to eq ["", "(", "equity_bonus", "/", "100", ")", "", " ", "", "*", "", " ", "pma_quantity_total", "\n"]
+  end
+
 
   describe "#format_keys" do
     it "extract format_keys" do

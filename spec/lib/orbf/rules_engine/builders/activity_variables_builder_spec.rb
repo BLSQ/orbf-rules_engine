@@ -208,36 +208,12 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
       [
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
-          key:            "facility_act1_cap_level1_for_country_id_and_2016",
-          expression:     "33",
-          state:          "cap_level1",
-          activity_code:  "act1",
-          type:           "activity",
-          orgunit_ext_id: "country_id",
-          formula:        nil,
-          package:        package,
-          payment_rule:   nil
-        ),
-        Orbf::RulesEngine::Variable.with(
-          period:         "2016",
           key:            "facility_act1_cap_for_1_and_2016",
           expression:     "0",
           state:          "cap",
           activity_code:  "act1",
           type:           "activity",
           orgunit_ext_id: "1",
-          formula:        nil,
-          package:        package,
-          payment_rule:   nil
-        ),
-        Orbf::RulesEngine::Variable.with(
-          period:         "2016",
-          key:            "facility_act1_cap_level2_for_county_id_and_2016",
-          expression:     "12",
-          state:          "cap_level2",
-          activity_code:  "act1",
-          type:           "activity",
-          orgunit_ext_id: "county_id",
           formula:        nil,
           package:        package,
           payment_rule:   nil
@@ -249,6 +225,28 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           activity_code:  "act1",
           type:           "activity",
           orgunit_ext_id: "2",
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ), Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "facility_act1_cap_level1_for_country_id_and_2016",
+          expression:     "33",
+          state:          "cap_level1",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: "country_id",
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ), Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "facility_act1_cap_level2_for_county_id_and_2016",
+          expression:     "12",
+          state:          "cap_level2",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: "county_id",
           formula:        nil,
           package:        package,
           payment_rule:   nil
