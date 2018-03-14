@@ -9,16 +9,20 @@ module Orbf
       attr_reader :activities, :kind, :rules, :frequency, :code,
                   :org_unit_group_ext_ids, :groupset_ext_id, :dataset_ext_ids
 
+      KNOWN_ATTRIBUTES = %i[kind rules code activities frequency
+                            org_unit_group_ext_ids groupset_ext_id dataset_ext_ids].freeze
+
       def initialize(args)
+        Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
+        @rules = Array(args[:rules])
+        @org_unit_group_ext_ids = Array(args[:org_unit_group_ext_ids])
+        @activities = Array(args[:activities])
         @kind = args[:kind].to_s if args[:kind]
-        @rules = args[:rules]
-        @code  = args[:code].to_s
+        @code = args[:code].to_s
         @rules.each do |rule|
           rule.package = self
         end
-        @activities = args[:activities]
         @frequency = args[:frequency].to_s if args[:frequency]
-        @org_unit_group_ext_ids = Array(args[:org_unit_group_ext_ids])
         @groupset_ext_id = args[:groupset_ext_id]
         @dataset_ext_ids = args[:dataset_ext_ids]
         validate
@@ -29,11 +33,11 @@ module Orbf
       end
 
       def monthly?
-        frequency == 'monthly'
+        frequency == "monthly"
       end
 
       def quarterly?
-        frequency == 'quarterly'
+        frequency == "quarterly"
       end
 
       def states
@@ -56,20 +60,24 @@ module Orbf
         rules.select(&:activity_kind?)
       end
 
+      def entities_aggregation_rules
+        rules.select(&:entities_aggregation_kind?)
+      end
+
       def activity_dependencies
         activity_rules.flat_map(&:formulas).flat_map(&:dependencies).to_set
       end
 
       def single?
-        kind == 'single'
+        kind == "single"
       end
 
       def subcontract?
-        kind == 'subcontract'
+        kind == "subcontract"
       end
 
       def zone?
-        kind == 'zone'
+        kind == "zone"
       end
 
       private

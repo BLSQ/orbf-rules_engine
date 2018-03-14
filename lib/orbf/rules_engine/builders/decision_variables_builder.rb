@@ -27,6 +27,8 @@ module Orbf
 
       private
 
+      attr_reader :package, :orgunits, :period
+
       def decision_variables(decision_table)
         package.all_activities_codes
                .each_with_object([]) do |activity_code, array|
@@ -55,15 +57,13 @@ module Orbf
           ),
           expression:     value,
           state:          code,
-          type:           :activity_rule_decision,
+          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE_DECISION,
           activity_code:  activity_code,
           orgunit_ext_id: orgunit.ext_id,
           formula:        nil,
           package:        package
         )
       end
-
-      attr_reader :package, :orgunits, :period
     end
   end
 end

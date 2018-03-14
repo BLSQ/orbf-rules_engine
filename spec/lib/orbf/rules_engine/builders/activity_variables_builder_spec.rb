@@ -92,7 +92,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           expression:     "33",
           state:          "achieved",
           activity_code:  "act1",
-          type:           :activity,
+          type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
           package:        project.packages.first
@@ -103,7 +103,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           expression:     "34",
           state:          "target",
           activity_code:  "act1",
-          type:           :activity,
+          type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
           package:        project.packages.first
@@ -114,7 +114,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           expression:     "80",
           state:          "achieved",
           activity_code:  "act2",
-          type:           :activity,
+          type:           "activity",
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
           package:        project.packages.first
@@ -181,7 +181,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           expression:     "33",
           state:          "cap_level1",
           activity_code:  "act1",
-          type:           :activity,
+          type:           "activity",
           orgunit_ext_id: "country_id",
           formula:        nil,
           package:        project.packages.first
@@ -192,7 +192,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           expression:     "12",
           state:          "cap_level2",
           activity_code:  "act1",
-          type:           :activity,
+          type:           "activity",
           orgunit_ext_id: "county_id",
           formula:        nil,
           package:        project.packages.first

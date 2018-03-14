@@ -33,7 +33,7 @@ module Orbf
           key:            name_constant(activity.activity_code, activity_state.state, period),
           expression:     activity_state.formula,
           state:          activity_state.state,
-          type:           :activity_constant,
+          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
           activity_code:  activity.activity_code,
           orgunit_ext_id: nil,
           formula:        nil,

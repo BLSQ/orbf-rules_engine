@@ -111,6 +111,10 @@ RSpec.describe "Cameroon System" do
                 build_activity_formula(
                   "verified_price", "verified * price",
                   "Activity amount"
+                ),
+                build_activity_formula(
+                  "average_amount", "(verified * price) / org_units_count",
+                  "average amount"
                 )
               ]
             ),

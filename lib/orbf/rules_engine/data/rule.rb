@@ -6,11 +6,33 @@ module Orbf
       attr_reader :formulas, :kind, :decision_tables
       attr_accessor :package
 
-      KINDS = %w[activity package zone payment].freeze
+      module Kinds
+        ACTIVITY = "activity"
+        PACKAGE = "package"
+        ZONE = "zone"
+        PAYMENT = "payment"
+        ENTITIES_AGGREGATION = "entities_aggregation"
+
+        KINDS = [
+          ACTIVITY,
+          PACKAGE,
+          ZONE,
+          PAYMENT,
+          ENTITIES_AGGREGATION
+        ].freeze
+
+        def self.assert_valid(rule_kind)
+          return if KINDS.include?(rule_kind)
+          raise "Invalid rule kind '#{rule_kind}' only supports #{KINDS}"
+        end
+      end
+
+      KNOWN_ATTRIBUTES = %i[kind formulas decision_tables].freeze
 
       def initialize(args)
+        Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
         @kind = args[:kind].to_s
-        @formulas = args[:formulas]
+        @formulas = Array(args[:formulas])
         @formulas.each do |formula|
           formula.rule = self
         end
@@ -19,25 +41,29 @@ module Orbf
       end
 
       def activity_kind?
-        @kind == 'activity'
+        @kind == Kinds::ACTIVITY
       end
 
       def package_kind?
-        @kind == 'package'
+        @kind == Kinds::PACKAGE
       end
 
       def zone_kind?
-        @kind == 'zone'
+        @kind == Kinds::ZONE
       end
 
       def payment_kind?
-        @kind == 'payment'
+        @kind == Kinds::PAYMENT
+      end
+
+      def entities_aggregation_kind?
+        @kind == Kinds::ENTITIES_AGGREGATION
       end
 
       private
 
       def validate
-        raise "Kind #{kind} must be one of #{KINDS}" unless KINDS.include?(kind)
+        Kinds.assert_valid(kind)
       end
     end
   end

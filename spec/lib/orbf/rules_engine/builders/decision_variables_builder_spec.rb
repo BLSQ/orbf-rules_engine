@@ -67,7 +67,7 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
         expression:     "1",
         state:          "equity_bonus",
         activity_code:  "act1",
-        type:           :activity_rule_decision,
+        type:           "activity_rule_decision",
         orgunit_ext_id: "1",
         formula:        nil,
         package:        package
@@ -79,7 +79,7 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
         expression:     "2",
         state:          "equity_bonus",
         activity_code:  "act2",
-        type:           :activity_rule_decision,
+        type:           "activity_rule_decision",
         orgunit_ext_id: "1",
         formula:        nil,
         package:        package
@@ -90,6 +90,6 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
   let(:builder) { Orbf::RulesEngine::DecisionVariablesBuilder.new(package, orgunits, "2016Q1") }
 
   it "build" do
-    expect(builder.to_variables).to eq expected_variables
+    expect(builder.to_variables).to eq_vars expected_variables
   end
 end

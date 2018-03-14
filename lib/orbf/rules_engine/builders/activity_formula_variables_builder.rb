@@ -48,7 +48,7 @@ module Orbf
             period:                   period.downcase
           ),
           state:          formula.code,
-          type:           :activity_rule,
+          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
           activity_code:  activity_code,
           orgunit_ext_id: orgunit.ext_id,
           formula:        formula,
@@ -58,10 +58,19 @@ module Orbf
 
       def substitutions(activity_code)
         states_substitutions(activity_code)
-          .merge(level_substitions(activity_code))
-          .merge(package_substitions)
-          .merge(formulas_substitions(activity_code))
-          .merge(decision_table_substitions(activity_code))
+          .merge(level_substitutions(activity_code))
+          .merge(package_substitutions)
+          .merge(formulas_substitutions(activity_code))
+          .merge(decision_table_substitutions(activity_code))
+          .merge(orgunit_counts_substitutions(activity_code))
+      end
+
+      def orgunit_counts_substitutions(activity_code)
+        return {} unless package.subcontract?
+        counts = Orbf::RulesEngine::ContractVariablesBuilder::COUNTS
+        counts.each_with_object({}) do |count, hash|
+          hash[count] = suffix_activity_pattern(package.code, activity_code, count)
+        end
       end
 
       def states_substitutions(activity_code)
@@ -73,26 +82,26 @@ module Orbf
         end
       end
 
-      def level_substitions(activity_code)
+      def level_substitutions(activity_code)
         package.states.each_with_object({}) do |state, hash|
           state_level1 = state + "_level1"
           hash[state_level1] = suffix_activity_pattern(package.code, activity_code, state_level1, :orgunit_parent_level1_id)
         end
       end
 
-      def package_substitions
+      def package_substitutions
         package.package_rules.flat_map(&:formulas).each_with_object({}) do |formula, hash|
           hash[formula.code] = suffix_package_pattern(package.code, formula.code)
         end
       end
 
-      def formulas_substitions(activity_code)
+      def formulas_substitutions(activity_code)
         package.activity_rules.flat_map(&:formulas).each_with_object({}) do |formula, hash|
           hash[formula.code] = suffix_activity_pattern(package.code, activity_code, formula.code)
         end
       end
 
-      def decision_table_substitions(activity_code)
+      def decision_table_substitutions(activity_code)
         package.activity_rules
                .flat_map(&:decision_tables)
                .each_with_object({}) do |decision_table, hash|

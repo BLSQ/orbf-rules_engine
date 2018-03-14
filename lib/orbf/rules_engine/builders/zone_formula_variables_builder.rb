@@ -29,7 +29,7 @@ module Orbf
             key:            zone_formula.code + '_for_' + period.downcase,
             expression:     formatted,
             state:          zone_formula.code,
-            type:           :zone_rule,
+            type:           Orbf::RulesEngine::Variable::Types::ZONE_RULE,
             activity_code:  nil,
             orgunit_ext_id: nil,
             formula:        zone_formula,

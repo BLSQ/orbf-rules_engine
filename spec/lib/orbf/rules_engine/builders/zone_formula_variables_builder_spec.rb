@@ -51,7 +51,7 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
         key:            "total_weighted_district_reported_for_2016q1",
         expression:     "SUM(facility_number_of_indicators_reported_for_1_and_2016q1,facility_number_of_indicators_reported_for_2_and_2016q1)",
         state:          "total_weighted_district_reported",
-        type:           :zone_rule,
+        type:           "zone_rule",
         activity_code:  nil,
         orgunit_ext_id: nil,
         formula:        package.rules.last.formulas.first,

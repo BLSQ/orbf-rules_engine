@@ -5,18 +5,20 @@ module Orbf
     class ActivityState < Orbf::RulesEngine::ValueObject
       attributes :state, :ext_id, :name, :kind, :formula
 
-      KIND_CONSTANT = "constant"
-      KIND_DATA_ELEMENT = "data_element"
-      KIND_INDICATOR = "indicator"
+      module Kinds
+        KIND_CONSTANT = "constant"
+        KIND_DATA_ELEMENT = "data_element"
+        KIND_INDICATOR = "indicator"
 
-      KINDS = [KIND_CONSTANT, KIND_DATA_ELEMENT, KIND_INDICATOR].freeze
+        KINDS = [KIND_CONSTANT, KIND_DATA_ELEMENT, KIND_INDICATOR].freeze
+      end
 
       def self.new_constant(state:, name:, formula:)
         with(
           state:   state.to_s,
           name:    name,
           formula: formula,
-          kind:    KIND_CONSTANT,
+          kind:    Kinds::KIND_CONSTANT,
           ext_id:  nil
         )
       end
@@ -26,7 +28,7 @@ module Orbf
           state:   state.to_s,
           name:    name,
           ext_id:  ext_id,
-          kind:    KIND_DATA_ELEMENT,
+          kind:    Kinds::KIND_DATA_ELEMENT,
           formula: nil
         )
       end
@@ -36,21 +38,21 @@ module Orbf
           state:   state.to_s,
           name:    name,
           ext_id:  ext_id,
-          kind:    KIND_INDICATOR,
+          kind:    Kinds::KIND_INDICATOR,
           formula: expression
         )
       end
 
       def constant?
-        kind == KIND_CONSTANT
+        kind == Kinds::KIND_CONSTANT
       end
 
       def data_element?
-        kind == KIND_DATA_ELEMENT
+        kind == Kinds::KIND_DATA_ELEMENT
       end
 
       def after_init
-        raise "Kind #{kind} must be one of #{TYPES}" unless KINDS.include?(kind.to_s)
+        raise "Kind #{kind} must be one of #{Kinds::KINDS}" unless Kinds::KINDS.include?(kind.to_s)
       end
     end
 

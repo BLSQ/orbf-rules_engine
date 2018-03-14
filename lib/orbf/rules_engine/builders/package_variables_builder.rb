@@ -35,9 +35,9 @@ module Orbf
             array.push Orbf::RulesEngine::Variable.with(
               period:         period,
               key:            suffix_for(package.code, formula.code, orgunit, period),
-              expression:     format(substitued, activity_substitions(orgunit)),
+              expression:     format(substitued, activity_substitutions(orgunit)),
               state:          formula.code,
-              type:           :package_rule,
+              type:           Orbf::RulesEngine::Variable::Types::PACKAGE_RULE,
               activity_code:  nil,
               orgunit_ext_id: orgunit.ext_id,
               formula:        formula,
@@ -48,29 +48,42 @@ module Orbf
       end
 
       def values(orgunit)
-        values = package.activity_rules
-                        .flat_map(&:formulas)
-                        .each_with_object({}) { |v, hash| hash[v.code + '_values'] = suffix_for_values(package.code, v.code, orgunit, period) }
-
-        substitions_package = package.package_rules
-                                     .flat_map(&:formulas)
-                                     .each_with_object({}) { |formula, hash| hash[formula.code] = suffix_for(package.code, formula.code, orgunit, period) }
-
-        zone_subsititions = package.zone_rules
-                                   .flat_map(&:formulas)
-                                   .each_with_object({}) { |formula, hash| hash[formula.code] = formula.code + '_for_' + period.downcase }
-
-        values.merge(substitions_package)
-              .merge(zone_subsititions)
+        values_substitutions(orgunit).merge(package_substitutions(orgunit))
+                                     .merge(zone_substitutions)
       end
 
-      def activity_substitions(orgunit)
+      def values_substitutions(orgunit)
         package.activity_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |v, hash|
-          hash[suffix_for(package.code, v.code + '_values', orgunit, period).to_sym] = package.all_activities_codes.map do |activity_code|
+          hash[v.code + "_values"] = suffix_for_values(package.code, v.code, orgunit, period)
+        end
+      end
+
+      def zone_substitutions
+        package.zone_rules
+               .flat_map(&:formulas)
+               .each_with_object({}) do |formula, hash|
+          hash[formula.code] = formula.code + "_for_" + period.downcase
+        end
+      end
+
+      def package_substitutions(orgunit)
+        package.package_rules
+               .flat_map(&:formulas)
+               .each_with_object({}) do |formula, hash|
+          hash[formula.code] = suffix_for(package.code, formula.code, orgunit, period)
+        end
+      end
+
+      def activity_substitutions(orgunit)
+        package.activity_rules
+               .flat_map(&:formulas)
+               .each_with_object({}) do |v, hash|
+          subs = package.all_activities_codes.map do |activity_code|
             suffix_for_activity(package.code, activity_code, v.code, orgunit, period)
-          end.join(', ')
+          end
+          hash[suffix_for(package.code, v.code + "_values", orgunit, period).to_sym] = subs.join(", ")
         end
       end
     end
