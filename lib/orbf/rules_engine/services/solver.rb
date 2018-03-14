@@ -13,7 +13,7 @@ module Orbf
       def register_variables(vars)
         @variables.push(*vars)
         duplicates = @variables.group_by(&:key).select { |_, vals| vals.size > 1 }
-        #raise duplicate_message(duplicates, vars) if duplicates.any?
+        # raise duplicate_message(duplicates, vars) if duplicates.any?
       end
 
       def build_problem
@@ -33,15 +33,18 @@ module Orbf
           end
           RulesEngine::Log.call [
             "***** problem ",
-            JSON.pretty_generate(problem),
+            # JSON.pretty_generate(problem),
             "**** solution ",
-            JSON.pretty_generate(solution.map { |k, v| [k, v.to_f] }.to_h),
+            # JSON.pretty_generate(solution.map { |k, v| [k, v.to_f] }.to_h),
             " #{benchmark_log} : problem size=#{problem.size} (#{equations.size})"
           ].join("\n")
         rescue StandardError => e
+          #File.open("/tmp/temp.json", "w") do |f|
+          #  f.write(JSON.pretty_generate(problem))
+          #end
           RulesEngine::Log.error([
             "***** problem ",
-            JSON.pretty_generate(problem),
+             JSON.pretty_generate(problem),
             "  BUT : #{e.message}"
           ].join("\n"))
           raise e
@@ -56,7 +59,14 @@ module Orbf
         @equations = {}
         begin
           split_problem(problem, calc)
-          @solution = calc.solve!(equations)
+          @solution = calc.solve(equations) do |missing_var_error|
+            puts [
+              "WARN !" + missing_var_error.message,
+              "\t recipient_variable : #{missing_var_error.recipient_variable}",
+              "\t unbound_variables  : #{missing_var_error.unbound_variables}"
+            ].join("\n")
+            raise missing_var_error
+          end
         end
         @solution
       end
@@ -71,7 +81,6 @@ module Orbf
         end
       end
 
-      # rubocop:disable Rails/TimeZone
       def benchmark(message)
         start = Time.now
         value = nil
@@ -102,7 +111,7 @@ module Orbf
           "=",
           "\n\t\t",
           vals.map(&:expression).join("\n\t\t"),
-          "  "+vals.size.to_s 
+          "  " + vals.size.to_s
         ].join("")
       end
     end

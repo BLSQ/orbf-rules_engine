@@ -5,9 +5,13 @@ module Orbf
     class PaymentFormulaVariablesBuilder
       include VariablesBuilderSupport
 
-      def initialize(payment_rule, orgunits, invoice_period)
+      def initialize(payment_rule, arg_orgunits, invoice_period)
         @payment_rule = payment_rule
-        @orgunits = orgunits
+        @orgunits = if payment_rule.packages.any?(&:subcontract?)
+          arg_orgunits[0..0]
+                    else
+                      arg_orgunits
+                    end
         @invoice_period = invoice_period
       end
 
@@ -41,7 +45,7 @@ module Orbf
                 key:            var_key,
                 expression:     "SUM(#{var_dependencies.join(',')})",
                 state:          formula.code,
-                orgunit_ext_id: orgunit.ext_id,
+                orgunit_ext_id: orgunit.ext_id
               )
             end
           end
@@ -66,16 +70,16 @@ module Orbf
           payment_rule.packages.select(&:quarterly?).each do |package|
             package.package_rules.flat_map(&:formulas).each do |formula|
               index = 0
-              PeriodIterator.each_periods(@invoice_period, 'monthly') do |period|
+              PeriodIterator.each_periods(@invoice_period, "monthly") do |period|
                 var_key = suffix_for_package(package.code, formula.code, orgunit, period)
-                expression = index != 2 ? '0' : suffix_for_package(package.code, formula.code, orgunit, @invoice_period)
-                
+                expression = index != 2 ? "0" : suffix_for_package(package.code, formula.code, orgunit, @invoice_period)
+
                 array.push RulesEngine::Variable.new_payment(
                   period:         period,
                   key:            var_key,
                   expression:     expression,
                   state:          formula.code,
-                  orgunit_ext_id: orgunit.ext_id,
+                  orgunit_ext_id: orgunit.ext_id
                 )
                 index += 1
               end
@@ -136,7 +140,6 @@ module Orbf
           end
         end
       end
-
     end
   end
 end
