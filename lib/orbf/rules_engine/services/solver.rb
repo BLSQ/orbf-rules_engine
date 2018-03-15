@@ -12,8 +12,9 @@ module Orbf
 
       def register_variables(vars)
         @variables.push(*vars)
-        duplicates = @variables.group_by(&:key).select { |_, vals| vals.size > 1 }
-        # raise duplicate_message(duplicates, vars) if duplicates.any?
+        duplicates = @variables.group_by(&:key)
+                               .select { |_, vals| vals.reject { |v| v.type == "activity_constant" }.uniq.size > 1 }
+        raise duplicate_message(duplicates, vars) if duplicates.any?
       end
 
       def build_problem
@@ -39,12 +40,12 @@ module Orbf
             " #{benchmark_log} : problem size=#{problem.size} (#{equations.size})"
           ].join("\n")
         rescue StandardError => e
-          #File.open("/tmp/temp.json", "w") do |f|
+          # File.open("/tmp/temp.json", "w") do |f|
           #  f.write(JSON.pretty_generate(problem))
-          #end
+          # end
           RulesEngine::Log.error([
             "***** problem ",
-             JSON.pretty_generate(problem),
+            JSON.pretty_generate(problem),
             "  BUT : #{e.message}"
           ].join("\n"))
           raise e

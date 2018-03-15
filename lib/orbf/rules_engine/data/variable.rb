@@ -7,13 +7,12 @@ module Orbf
                   :orgunit_ext_id, :formula, :package, :payment_rule
 
       class << self
-
         def new_activity_decision_table(params)
           Variable.with(
             params.merge!(
-              type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE_DECISION,
-              formula:        nil,
-              payment_rule:   nil
+              type:         Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE_DECISION,
+              formula:      nil,
+              payment_rule: nil
             )
           )
         end
@@ -111,8 +110,14 @@ module Orbf
       end
 
       def inspect
-        ["variable", key, period, expression, type, state, activity_code,
-         orgunit_ext_id].join("-")
+        "Variable(" + [
+          key, period,
+          expression, type, state,
+          activity_code,
+          orgunit_ext_id,
+          package&.code,
+          payment_rule&.code
+        ].join(", ") + ")"
       end
 
       def payment_rule_type?
@@ -122,7 +127,6 @@ module Orbf
       private
 
       def after_init
-        
         raise "Variable type '#{type}' must be one of #{Types::TYPES}" unless Types::TYPES.include?(type.to_s)
       end
     end

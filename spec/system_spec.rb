@@ -188,11 +188,11 @@ RSpec.describe "System" do
                   "% of Target Achieved [B / C], B and C are from activity states"
                 ),
                 build_activity_formula(
-                  "allowed", "if (percent_achieved < 0.75, 0, min(percent_achieved, cap_level1 / 100))",
+                  "allowed_percent", "if (percent_achieved < 0.75, 0, min(percent_achieved, cap_level1 / 100))",
                   "Allowed [E] : should achieve at least 75% and can not go further than the cap"
                 ),
                 build_activity_formula(
-                  "overall", "allowed * percent_weight",
+                  "overall", "allowed_percent * percent_weight",
                   "% Overall [A x E]"
                 ),
                 build_activity_formula(

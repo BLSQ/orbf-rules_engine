@@ -86,6 +86,15 @@ module Orbf
         raise "Frequency #{frequency} must be one of #{FREQUENCIES}" unless FREQUENCIES.include?(frequency)
         raise "Kind #{kind} must be one of #{KINDS}" unless KINDS.include?(kind)
         raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if %w[subcontract zone].include?(kind) && groupset_ext_id.nil?
+
+        validate_states_and_activity_formula_code_uniqness
+      end
+
+      def validate_states_and_activity_formula_code_uniqness
+        states = activities.flat_map(&:activity_states).flat_map(&:state)
+        codes = activity_rules.flat_map(&:formulas).map(&:code)
+        commons = states & codes
+        raise "activity states and activity formulas with same code : #{commons}" if commons.any?
       end
     end
   end

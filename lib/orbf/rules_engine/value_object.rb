@@ -24,6 +24,10 @@ module Orbf
         self.class == other.class && values == other.values
       end
 
+      def hash
+        values.hash
+      end
+
       def to_s
         inspect
       end
