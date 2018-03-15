@@ -32,6 +32,7 @@ require_relative "./rules_engine/data/formula"
 require_relative "./rules_engine/data/package_arguments"
 require_relative "./rules_engine/data/decision_table"
 require_relative "./rules_engine/data/decision_rule"
+require_relative "./rules_engine/data/invoice"
 
 require_relative "./rules_engine/fetch_data/datasets_resolver"
 require_relative "./rules_engine/fetch_data/periods_resolver"
@@ -63,13 +64,11 @@ require_relative "./rules_engine/builders/spans/spans"
 
 require_relative "./rules_engine/printers/graphviz_project_printer"
 require_relative "./rules_engine/printers/graphviz_variables_printer"
+require_relative "./rules_engine/printers/invoice_cli_printer"
 require_relative "./rules_engine/printers/invoice_printer"
 require_relative "./rules_engine/printers/dhis2_values_printer"
 
-
-
 module Orbf
   module RulesEngine
-
   end
 end

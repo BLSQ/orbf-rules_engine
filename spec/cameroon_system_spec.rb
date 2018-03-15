@@ -265,7 +265,7 @@ RSpec.describe "Cameroon System" do
     # expect(solution["quantity_fosa_package_total_for_2_and_2016q1"]).to eq(180.0)
     # expect(solution["quantity_fosa_package_total_for_1_and_2016q1"]).to eq(121_235.0)
 
-    Orbf::RulesEngine::InvoicePrinter.new(solver.variables, solver.solution).print
+    Orbf::RulesEngine::InvoiceCliPrinter.new(solver.variables, solver.solution).print
     # exported_values = Orbf::RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print
     # expect(exported_values).to include(
     #   data_element: "dhis2_dataelement_id_fosa_indicators_reported_weighted",

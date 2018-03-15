@@ -291,7 +291,7 @@ RSpec.describe "System" do
     expect(solution["county_total_indicators_reported_weighted_for_2016q1"]).to eq(180.0)
     expect(solution["county_total_available_budget_for_fosa_for_2016q1"]).to eq(121_235.0)
 
-    Orbf::RulesEngine::InvoicePrinter.new(solver.variables, solver.solution).print
+    Orbf::RulesEngine::InvoiceCliPrinter.new(solver.variables, solver.solution).print
     exported_values = Orbf::RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print
     expect(exported_values).to include(
       dataElement: "dhis2_dataelement_id_fosa_indicators_reported_weighted",
