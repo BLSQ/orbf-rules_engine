@@ -19,7 +19,8 @@ module Orbf
           activity_items = package.activities.map do |activity|
             to_activity_item(package, activity, vars)
           end
-          total_items = vars.select { |var| var.activity_code.nil? }.map do |var|
+          total_items = vars.select { |var| var.activity_code.nil? }
+                            .map do |var|
             to_total_item(var, solution_as_string)
           end
 
@@ -44,7 +45,7 @@ module Orbf
                          .map do |org_unit_period, vars|
           payment_rule, org_unit, period = org_unit_period
           # Orbf::RulesEngine::Log.call "---------- Payments for #{payment_rule.code} #{org_unit} #{period}"
-          total_items = vars.each do |var|
+          total_items = vars.map do |var|
             to_total_item(var, solution_as_string)
           end
 
@@ -92,11 +93,12 @@ module Orbf
         Orbf::RulesEngine::ActivityItem.new(
           activity: activity,
           solution: values,
-          problem:  problem
+          problem:  problem,
+          variables: vars
         )
       end
 
-      def wrap(s, width = 120, extra = "\t\t")
+      def wrap(s, width = 120, extra = "\t")
         s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n#{extra}")
       end
 
