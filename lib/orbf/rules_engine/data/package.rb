@@ -48,6 +48,20 @@ module Orbf
         Set.new(activities.map(&:activity_code))
       end
 
+      def harmonized_activity_states(activity)
+        all_states = states.to_a
+        existing_activity_states = activity.activity_states
+        missing_states = all_states - existing_activity_states.map(&:state)
+        missing_activity_states = missing_states.map do |state|
+          ActivityState.new_data_element(
+            state:  state,
+            name:   activity.activity_code + "-" + state,
+            ext_id: "fakeone"
+          )
+        end
+        existing_activity_states + missing_activity_states
+      end
+
       def package_rules
         rules.select(&:package_kind?)
       end

@@ -45,7 +45,7 @@ module Orbf
           # end
           RulesEngine::Log.error([
             "***** problem ",
-            JSON.pretty_generate(problem),
+            #JSON.pretty_generate(problem),
             "  BUT : #{e.message}"
           ].join("\n"))
           raise e
@@ -64,7 +64,8 @@ module Orbf
             puts [
               "WARN !" + missing_var_error.message,
               "\t recipient_variable : #{missing_var_error.recipient_variable}",
-              "\t unbound_variables  : #{missing_var_error.unbound_variables}"
+              "\t unbound_variables  : #{missing_var_error.unbound_variables}",
+              "\t #{@variables.index_by(&:key)[missing_var_error.recipient_variable]}"
             ].join("\n")
             raise missing_var_error
           end

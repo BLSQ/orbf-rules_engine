@@ -39,7 +39,6 @@ module Orbf
 
       def build_variable(filtered_orgunits, activity, activity_state)
         expressions = org_units_expression(filtered_orgunits, activity, activity_state, period)
-
         Orbf::RulesEngine::Variable.new_contract(
           period:         period,
           key:            build_key(package, activity, activity_state, period),

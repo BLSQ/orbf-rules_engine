@@ -29,7 +29,7 @@ module Orbf
       def convert(period)
         [package].each_with_object([]) do |package, array|
           package.activities.each do |activity|
-            activity.activity_states.select(&:data_element?).each do |activity_state|
+            package.harmonized_activity_states(activity).reject(&:constant?).each do |activity_state|
               SOURCES.each do |source|
                 send(source, activity_state, period, package.activity_dependencies) do |orgunit_id, state, expression|
                   state = suffix_raw(state) if package.subcontract?
@@ -41,7 +41,7 @@ module Orbf
                     activity_code:  activity.activity_code,
                     orgunit_ext_id: orgunit_id,
                     formula:        nil,
-                    package:        package,
+                    package:        package
                   )
                 end
               end
@@ -55,6 +55,8 @@ module Orbf
       attr_reader :package, :orgunits, :lookup
 
       SOURCES = %i[de_values parent_values].freeze
+
+
 
       def de_values(activity_state, period, _dependencies)
         orgunits.each do |orgunit|

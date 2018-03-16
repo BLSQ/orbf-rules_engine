@@ -9,6 +9,7 @@ module Orbf
         @orgunit_ext_id = orgunit_ext_id
         @invoicing_period = invoicing_period
         @main_orgunit = pyramid.org_unit(orgunit_ext_id)
+        raise "unknown orgunit '#{orgunit_ext_id}'" unless @main_orgunit
       end
 
       def call

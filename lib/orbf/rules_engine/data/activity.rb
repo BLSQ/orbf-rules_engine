@@ -51,6 +51,10 @@ module Orbf
         kind == Kinds::KIND_DATA_ELEMENT
       end
 
+      def indicator?
+        kind == Kinds::KIND_INDICATOR
+      end
+
       def after_init
         raise "Kind #{kind} must be one of #{Kinds::KINDS}" unless Kinds::KINDS.include?(kind.to_s)
       end

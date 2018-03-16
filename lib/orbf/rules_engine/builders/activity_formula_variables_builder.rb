@@ -76,7 +76,7 @@ module Orbf
       def states_substitutions(activity_code)
         package.activities.each_with_object({}) do |activity, hash|
           next if activity_code != activity.activity_code
-          activity.activity_states.each do |activity_state|
+          package.harmonized_activity_states(activity).each do |activity_state|
             hash[activity_state.state.to_s] = activity_state_substitution(package.code, activity, activity_state)
           end
         end
@@ -116,6 +116,8 @@ module Orbf
           suffix_activity_pattern(package_code, activity.activity_code, activity_state.state)
         elsif activity_state.constant?
           name_constant(activity.activity_code, activity_state.state, period)
+        elsif activity_state.indicator?
+          suffix_activity_pattern(package_code, activity.activity_code, activity_state.state)
         else
           raise "Unsupported activity state"
         end
