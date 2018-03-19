@@ -68,6 +68,7 @@ module Orbf
       def default_package_builders
         [
           Orbf::RulesEngine::ContractVariablesBuilder,
+          Orbf::RulesEngine::EntitiesAggregationFormulaVariablesBuilder,
           Orbf::RulesEngine::ActivityConstantVariablesBuilder,
           Orbf::RulesEngine::DecisionVariablesBuilder,
           Orbf::RulesEngine::ActivityFormulaVariablesBuilder,

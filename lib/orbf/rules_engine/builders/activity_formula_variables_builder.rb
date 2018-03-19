@@ -7,6 +7,7 @@ module Orbf
 
       def initialize(package, orgunits, period)
         @package = package
+        @all_orgunits = orgunits
         @orgunits = if package.subcontract?
                       orgunits[0..0]
                     else
@@ -30,6 +31,9 @@ module Orbf
               substitued = ActivityFormulaValuesExpander.new(
                 package.code, activity_code, formula, orgunit, period
               ).expand_values
+
+              substitued = format(substitued, entities_aggregation_values(activity_code))
+
               array.push(build_variable(orgunit, activity_code, formula, substitued))
             end
           end
@@ -126,6 +130,28 @@ module Orbf
             hash[header_out] = suffix_activity_pattern(package.code, activity_code, header_out)
           end
         end
+      end
+
+      def entities_aggregation_values(activity_code)
+        activity = package.activities.detect {|activity| activity.activity_code == activity_code}
+        sub = package.entities_aggregation_rules.each_with_object({}) do |aggregation_rules, hash|
+          aggregation_rules.formulas.each do |formula|
+
+            selected_org_units = SumIf.org_units(@all_orgunits, package, activity)
+            key = formula.code+"_values"
+            hash[key.to_sym] = to_values_list(formula, activity, selected_org_units)
+          end
+        end
+
+        sub
+      end
+
+      def to_values_list(formula, activity, selected_org_units)
+        vals = selected_org_units.map do |orgunit|
+          suffix_for_values(package.code, suffix_raw(activity.activity_code), orgunit, period)
+        end
+
+        vals.empty? ? "0" : vals.join(", ")
       end
 
       def activity_state_substitution(package_code, activity, activity_state)
