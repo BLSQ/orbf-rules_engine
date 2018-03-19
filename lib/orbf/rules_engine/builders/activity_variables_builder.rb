@@ -67,7 +67,7 @@ module Orbf
 
       def parent_values(activity_state, period, dependencies)
         parents_with_level.each do |hash|
-          code = "#{activity_state.state}_level#{hash[:level]}"
+          code = "#{activity_state.state}_level_#{hash[:level]}"
           next unless dependencies.include?(code)
           hash_value = lookup_value(build_keys_with_yearly([hash[:id], period, activity_state.ext_id]))
           yield(hash[:id], code, hash_value)

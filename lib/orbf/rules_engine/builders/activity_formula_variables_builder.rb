@@ -43,9 +43,10 @@ module Orbf
           expression:     Tokenizer.replace_token_from_expression(
             substitued,
             substitutions(activity_code),
-            orgunit_parent_level1_id: orgunit.parent_ext_ids.first,
-            orgunit_id:               orgunit.ext_id,
-            period:                   period.downcase
+            level_pattern_values(orgunit).merge(
+              orgunit_id: orgunit.ext_id,
+              period:     period.downcase
+            )
           ),
           state:          formula.code,
           type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
@@ -56,9 +57,17 @@ module Orbf
         )
       end
 
+      def level_pattern_values(orgunit)
+        hash = {}
+        orgunit.parent_ext_ids.each_with_index do |ext_id, index|
+          hash["orgunit_parent_level#{index + 1}_id".to_sym] = ext_id
+        end
+        hash
+      end
+
       def substitutions(activity_code)
         states_substitutions(activity_code)
-          .merge(level_substitutions(activity_code))
+          .merge(level_substitutions)
           .merge(package_substitutions)
           .merge(formulas_substitutions(activity_code))
           .merge(decision_table_substitutions(activity_code))
@@ -82,11 +91,20 @@ module Orbf
         end
       end
 
-      def level_substitutions(activity_code)
-        package.states.each_with_object({}) do |state, hash|
-          state_level1 = state + "_level1"
-          hash[state_level1] = suffix_activity_pattern(package.code, activity_code, state_level1, :orgunit_parent_level1_id)
+      def level_substitutions
+
+        @level_subs ||= package.states.each_with_object({}) do |state, hash|
+          package.all_activities_codes.each do |activity_code|
+            (1..5).each do |level_index|
+              state_level = state + "_level_#{level_index}"
+              hash[state_level] = suffix_activity_pattern(
+                package.code, activity_code, state_level,
+                "orgunit_parent_level#{level_index}_id".to_sym
+              )
+            end
+          end
         end
+        @level_subs
       end
 
       def package_substitutions

@@ -39,7 +39,7 @@ module Orbf
       end
 
       def to_s
-        @rules.to_s
+        @rules.map(&:to_s).join("\n")
       end
 
       def inspect

@@ -173,7 +173,7 @@ RSpec.describe "System" do
               kind:     :activity,
               formulas: [
                 build_activity_formula(
-                  "active_weight", "weight_level1 * active",
+                  "active_weight", "weight_level_1 * active",
                   "Column C Weight"
                 ),
                 build_activity_formula(
@@ -181,14 +181,14 @@ RSpec.describe "System" do
                   "new concept added to avoid handling nil vs 0"
                 ),
                 build_activity_formula(
-                  "percent_weight", "safe_div(weight_level1, fosa_total_actual_weight)"
+                  "percent_weight", "safe_div(weight_level_1, fosa_total_actual_weight)"
                 ),
                 build_activity_formula(
                   "percent_achieved", "active * safe_div(achieved,target)",
                   "% of Target Achieved [B / C], B and C are from activity states"
                 ),
                 build_activity_formula(
-                  "allowed_percent", "if (percent_achieved < 0.75, 0, min(percent_achieved, cap_level1 / 100))",
+                  "allowed_percent", "if (percent_achieved < 0.75, 0, min(percent_achieved, cap_level_1 / 100))",
                   "Allowed [E] : should achieve at least 75% and can not go further than the cap"
                 ),
                 build_activity_formula(
@@ -200,7 +200,7 @@ RSpec.describe "System" do
                   "used for available bonus calculations see package and zone rules"
                 ),
                 build_activity_formula(
-                  "actual_regional_bonus", "regional_bonus_level1",
+                  "actual_regional_bonus", "regional_bonus_level_1",
                   "used for available bonus calculations see package and zone rules"
                 )
               ]
@@ -312,7 +312,7 @@ RSpec.describe "System" do
   it "should build formula variables" do
     variable = Orbf::RulesEngine::ActivityFormulaVariablesBuilder.new(project.packages.first, orgunits_full, period).to_variables.last
     expect(variable.key).to eq("facility_act9_actual_regional_bonus_for_20_and_2016q1")
-    expect(variable.expression).to eq("facility_act9_regional_bonus_level1_for_country_id_and_2016q1")
+    expect(variable.expression).to eq("facility_act9_regional_bonus_level_1_for_country_id_and_2016q1")
   end
 
   def build_solver(orgs, dhis2_values)

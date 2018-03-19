@@ -37,7 +37,11 @@ module Orbf
                                  .merge("activity_code" => activity_code)
 
             output_facts = decision_table.find(input_facts)
-            next unless output_facts
+            unless output_facts
+              puts "WARN : no facts for #{orgunit} #{input_facts} in #{decision_table}"
+              next
+            end
+
             output_facts.each do |code, value|
               array.push(build_variable(orgunit, activity_code, code, value))
             end
