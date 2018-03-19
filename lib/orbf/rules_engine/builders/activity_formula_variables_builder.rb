@@ -92,7 +92,6 @@ module Orbf
       end
 
       def level_substitutions
-
         @level_subs ||= package.states.each_with_object({}) do |state, hash|
           package.all_activities_codes.each do |activity_code|
             (1..5).each do |level_index|

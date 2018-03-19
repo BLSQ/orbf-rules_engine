@@ -45,7 +45,7 @@ module Orbf
           # end
           RulesEngine::Log.error([
             "***** problem ",
-            #JSON.pretty_generate(problem),
+            # JSON.pretty_generate(problem),
             "  BUT : #{e.message}"
           ].join("\n"))
           raise e

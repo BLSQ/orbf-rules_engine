@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/class/attribute'
+require "active_support/core_ext/class/attribute"
 module Orbf
   module RulesEngine
     class ValueObject
@@ -24,9 +24,7 @@ module Orbf
         self.class == other.class && values == other.values
       end
 
-      def hash
-        values.hash
-      end
+      delegate :hash, to: :values
 
       def to_s
         inspect

@@ -31,7 +31,6 @@ RSpec.describe Orbf::RulesEngine::Tokenizer do
     expect(tokens).to eq ["", "(", "equity_bonus", "/", "100", ")", "", " ", "", "*", "", " ", "pma_quantity_total", "\n"]
   end
 
-
   describe "#format_keys" do
     it "extract format_keys" do
       expect(described_class.format_keys("sample%{vass}")).to eq ["vass"]

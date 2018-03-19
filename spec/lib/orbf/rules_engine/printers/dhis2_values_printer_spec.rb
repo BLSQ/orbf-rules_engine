@@ -11,6 +11,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
   let(:activity) do
     Orbf::RulesEngine::Activity.with(
+      name:            "act1",
       activity_code:   "act1",
       activity_states: [
         Orbf::RulesEngine::ActivityState.new_data_element(

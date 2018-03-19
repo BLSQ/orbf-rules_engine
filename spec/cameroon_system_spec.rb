@@ -68,6 +68,7 @@ RSpec.describe "Cameroon System" do
         )
       )
       Orbf::RulesEngine::Activity.with(
+        name:            activity_code,
         activity_code:   activity_code,
         activity_states: activity_states
       )
@@ -218,13 +219,12 @@ RSpec.describe "Cameroon System" do
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "32", "period" => "201603", "orgUnit" => "1" },
       { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "41", "period" => "201603", "orgUnit" => "1" },
 
-
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "12", "period" => "201601", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "201601", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "31", "period" => "201602", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "201602", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "41", "period" => "201603", "orgUnit" => "2" },
-      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "11", "period" => "201603", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "11", "period" => "201603", "orgUnit" => "2" }
     ]
   end
 

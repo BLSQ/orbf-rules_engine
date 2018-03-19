@@ -12,7 +12,9 @@ module Orbf
 
       def print
         solution_as_string = solution.each_with_object({}) { |(k, v), hash| hash[k] = d_to_s(v, 10) }
-        invoices = variables.select(&:orgunit_ext_id).select(&:package).group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
+        invoices = variables.select(&:orgunit_ext_id)
+                            .select(&:package)
+                            .group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
                             .map do |package_orgunit_period, vars|
           package, orgunit, period = package_orgunit_period
 
@@ -78,7 +80,11 @@ module Orbf
       end
 
       def to_activity_item(package, activity, vars)
-        codes = (activity.states + package.activity_rules.flat_map(&:formulas).map(&:code))
+        decision_codes = package.activity_rules
+                                .flat_map(&:decision_tables)
+                                .flat_map { |decision_table| decision_table.headers(:in) + decision_table.headers(:out)}
+        formula_codes = package.activity_rules.flat_map(&:formulas).map(&:code)
+        codes = activity.states + decision_codes + formula_codes
         problem = {}
 
         values = codes.each_with_object({}) do |state, hash|
@@ -91,9 +97,9 @@ module Orbf
         return nil if values.values.compact.none?
 
         Orbf::RulesEngine::ActivityItem.new(
-          activity: activity,
-          solution: values,
-          problem:  problem,
+          activity:  activity,
+          solution:  values,
+          problem:   problem,
           variables: vars
         )
       end

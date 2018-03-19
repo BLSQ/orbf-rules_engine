@@ -85,7 +85,7 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           formula:        payment_rule.rule.formulas.first,
           package:        nil,
           payment_rule:   payment_rule
-        )   , 
+        ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
           key:            "fosa_payment_rbf_amount_for_1_and_2016q1",

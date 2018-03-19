@@ -71,6 +71,7 @@ RSpec.describe "System" do
         )
       end
       Orbf::RulesEngine::Activity.with(
+        name:            activity_code,
         activity_code:   activity_code,
         activity_states: activity_states
       )
@@ -143,7 +144,6 @@ RSpec.describe "System" do
       end
     end.flatten
   end
-
 
   def build_formula(code, expression, comment = nil)
     Orbf::RulesEngine::Formula.new(code, expression, comment, single_mapping: "dhis2_dataelement_id_#{code}")
@@ -296,9 +296,9 @@ RSpec.describe "System" do
     expect(exported_values).to include(
       dataElement: "dhis2_dataelement_id_fosa_indicators_reported_weighted",
       orgUnit:     "14",
-      period:       "2016Q1",
-      value:        9,
-      comment:      "facility_fosa_indicators_reported_weighted_for_14_and_2016q1"
+      period:      "2016Q1",
+      value:       9,
+      comment:     "facility_fosa_indicators_reported_weighted_for_14_and_2016q1"
     )
   end
 

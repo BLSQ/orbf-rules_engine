@@ -11,6 +11,10 @@ module Orbf
         KIND_INDICATOR = "indicator"
 
         KINDS = [KIND_CONSTANT, KIND_DATA_ELEMENT, KIND_INDICATOR].freeze
+        KINDS_WITH_FORMULA = [KIND_CONSTANT, KIND_INDICATOR]
+        def self.formula_required?(kind)
+          KINDS_WITH_FORMULA.include?(kind)
+        end
       end
 
       def self.new_constant(state:, name:, formula:)
@@ -57,11 +61,12 @@ module Orbf
 
       def after_init
         raise "Kind #{kind} must be one of #{Kinds::KINDS}" unless Kinds::KINDS.include?(kind.to_s)
+        raise "formula required for #{kind}" if Kinds.formula_required?(kind) && formula.nil?
       end
     end
 
     class Activity < RulesEngine::ValueObject
-      attributes :activity_code, :activity_states
+      attributes :name, :activity_code, :activity_states
 
       def states
         activity_states.map(&:state)

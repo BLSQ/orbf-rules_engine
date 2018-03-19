@@ -56,8 +56,6 @@ module Orbf
 
       SOURCES = %i[de_values parent_values].freeze
 
-
-
       def de_values(activity_state, period, _dependencies)
         orgunits.each do |orgunit|
           current_value = lookup_value(build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id]))

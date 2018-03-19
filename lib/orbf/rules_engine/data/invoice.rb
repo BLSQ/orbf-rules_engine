@@ -8,8 +8,8 @@ module Orbf
       end
 
       def input?(code)
-       var = variable(code)
-       return var.state == code && var.formula.nil?
+        var = variable(code)
+        var.state == code && var.formula.nil?
       end
 
       def output?(code)
@@ -39,7 +39,7 @@ module Orbf
       end
 
       def headers
-        activity_items.first.solution.keys
+        activity_items.flat_map(&:solution).flat_map(&:keys).uniq
       end
     end
   end
