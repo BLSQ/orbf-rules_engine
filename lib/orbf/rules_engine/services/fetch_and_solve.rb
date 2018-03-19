@@ -25,7 +25,8 @@ module Orbf
         dhis2_values = FetchData.new(dhis2_connection, package_arguments.values).call
 
         # TODO: I think it's the other branch
-        # dhis2_values += RulesEngine::IndicatorEvaluator.new(project, dhis2_values).call
+        indicators = project.packages.flat_map(&:activities).flat_map(&:activity_states).select(&:indicator?)
+        dhis2_values += RulesEngine::IndicatorEvaluator.new(indicators, dhis2_values ).to_dhis2_values
 
         # orgs from package arguments ?
 
