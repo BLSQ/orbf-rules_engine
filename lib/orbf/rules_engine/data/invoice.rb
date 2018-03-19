@@ -20,6 +20,7 @@ module Orbf
         "ActivityItem(#{activity.activity_code} #{solution})"
       end
     end
+
     class TotalItem < Orbf::RulesEngine::ValueObject
       attributes :formula, :explanations, :value
 
@@ -27,6 +28,7 @@ module Orbf
         "TotalItem(#{formula.code} #{explanations})"
       end
     end
+
     class Invoice < Orbf::RulesEngine::ValueObject
       attributes :kind, :period, :orgunit_ext_id, :package, :payment_rule, :activity_items, :total_items
 
@@ -39,7 +41,7 @@ module Orbf
       end
 
       def headers
-        activity_items.flat_map(&:solution).flat_map(&:keys).uniq
+        activity_items.flat_map(&:solution).sort_by(&:size).last.keys
       end
     end
   end

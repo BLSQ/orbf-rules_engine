@@ -84,7 +84,10 @@ module Orbf
                                 .flat_map(&:decision_tables)
                                 .flat_map { |decision_table| decision_table.headers(:in) + decision_table.headers(:out)}
         formula_codes = package.activity_rules.flat_map(&:formulas).map(&:code)
-        codes = activity.states + decision_codes + formula_codes
+
+        level_codes = package.activity_rules.flat_map(&:formulas).flat_map(&:dependencies).select {|code| code.match?(/level_[0-5]/)}
+
+        codes = activity.states + decision_codes + level_codes + formula_codes
         problem = {}
 
         values = codes.each_with_object({}) do |state, hash|

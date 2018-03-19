@@ -6,7 +6,7 @@ module Orbf
       attributes :ext_id, :name, :path, :group_ext_ids
 
       def parent_ext_ids
-        path.split("/")[0..-2]
+        path.split("/").reject(&:empty?)
       end
 
       def eql?(other)

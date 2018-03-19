@@ -17,10 +17,16 @@ RSpec.describe Orbf::RulesEngine::OrgUnit do
     expect(uniq_orgunit.first).to equal(orgunit)
   end
 
+  describe "#parent_ext_ids" do
+    it "returns array of ids" do
+      expect(orgunit.parent_ext_ids).to eq(%w[country_id county_id 1])
+    end
+  end
+
   def build_org_unit(ext_id)
     Orbf::RulesEngine::OrgUnit.with(
       ext_id:        ext_id,
-      path:          "country_id/county_id/#{ext_id}",
+      path:          "/country_id/county_id/#{ext_id}",
       name:          "OU1",
       group_ext_ids: ["GROUP_1"]
     )
