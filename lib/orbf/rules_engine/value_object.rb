@@ -30,6 +30,14 @@ module Orbf
         inspect
       end
 
+      def to_h
+        self.class._attributes.each_with_object({}) { |field, hash| hash[field] = send(field) }
+      end
+
+      def to_json(options = nil)
+        to_h.to_json(options)
+      end
+
       protected
 
       def values
