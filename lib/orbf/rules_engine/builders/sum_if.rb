@@ -12,7 +12,6 @@ module Orbf
       def sum_if
         decision_tables.each do |decision_table|
           output_facts = decision_table.find(input_facts)
-          puts "sum_if : #{input_facts} vs #{output_facts}"
           expect_outputs(output_facts)
           return false unless output_facts[SUM_IF] == "true"
         end

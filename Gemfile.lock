@@ -3,6 +3,7 @@ PATH
   specs:
     orbf-rules_engine (0.1.0)
       activesupport
+      colorize
       dentaku (= 3.1.0)
       dhis2 (= 3.0.0)
 
@@ -18,6 +19,7 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     ast (2.4.0)
     byebug (10.0.0)
+    colorize (0.8.1)
     concurrent-ruby (1.0.5)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)

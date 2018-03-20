@@ -23,25 +23,55 @@ module Orbf
 
       def to_variables
         return [] unless package.subcontract?
-        package.activities.each_with_object([]) do |activity, array|
-          filtered_orgunits = SumIf.org_units(orgunits, package, activity)
-          activity.activity_states.each do |activity_state|
-            array.push(build_variable(filtered_orgunits, activity, activity_state))
-          end
-          array.push(build_count(ORG_UNITS_COUNT, orgunits.size, activity))
-          array.push(build_count(ORG_UNITS_SUM_IF_COUNT, filtered_orgunits.size, activity))
-        end
+
+        var_for_invoice_periods + vars_for_spans
       end
 
       private
 
       attr_reader :package, :orgunits, :ref_orgunit, :period
 
-      def build_variable(filtered_orgunits, activity, activity_state)
+      def var_for_invoice_periods
+        vars = package.activities.each_with_object([]) do |activity, array|
+          filtered_orgunits = SumIf.org_units(orgunits, package, activity)
+          package.harmonized_activity_states(activity).each do |activity_state|
+            array.push(build_variable(filtered_orgunits, activity, activity_state, period))
+          end
+          array.push(build_count(ORG_UNITS_COUNT, orgunits.size, activity))
+          array.push(build_count(ORG_UNITS_SUM_IF_COUNT, filtered_orgunits.size, activity))
+        end
+      end
+
+      def vars_for_spans
+        periods_from_values_span.each_with_object([]) do |missing_period, vars|
+          package.activities.each do |activity|
+            filtered_orgunits = SumIf.org_units(orgunits, package, activity)
+            package.harmonized_activity_states(activity).each do |activity_state|
+              unless activity_state.constant?
+                vars.push(build_variable(filtered_orgunits, activity, activity_state, missing_period))
+              end
+            end
+          end
+        end
+      end
+
+      def periods_from_values_span
+        package.activity_rules.flat_map(&:formulas).each_with_object(Set.new) do |formula, set|
+          formula.values_dependencies.each do |dependency|
+            span = Orbf::RulesEngine::Spans.matching_span(dependency, formula.rule.kind)
+            next unless span
+            set.merge(span.periods(period, dependency))
+          end
+        end
+      end
+
+      def build_variable(filtered_orgunits, activity, activity_state, period)
         expressions = org_units_expression(filtered_orgunits, activity, activity_state, period)
+        key = build_key(package, activity, activity_state, period)
+
         Orbf::RulesEngine::Variable.new_contract(
           period:         period,
-          key:            build_key(package, activity, activity_state, period),
+          key:            key,
           expression:     "SUM(#{expressions.join(', ')})",
           state:          activity_state.state.to_s,
           activity_code:  activity.activity_code,

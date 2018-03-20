@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "colorized_string"
+
 module Orbf
   module RulesEngine
     class Solver
@@ -61,16 +63,35 @@ module Orbf
         begin
           split_problem(problem, calc)
           @solution = calc.solve(equations) do |missing_var_error|
+            missing_var = @variables.index_by(&:key)[missing_var_error.recipient_variable]
             puts [
-              "WARN !" + missing_var_error.message,
-              "\t recipient_variable : #{missing_var_error.recipient_variable}",
-              "\t unbound_variables  : #{missing_var_error.unbound_variables}",
-              "\t #{@variables.index_by(&:key)[missing_var_error.recipient_variable]}"
+              ColorizedString["----------- ERROR !!!"].colorize(:red),
+              field_message("  Message            : ", missing_var_error.message),
+              field_message("  Recipient_variable : ", missing_var_error.recipient_variable.to_s),
+              field_message("  Unbound_variables  : ", missing_var_error.unbound_variables.to_s),
+              field_message("  Variables          : ", "\n"+missing_var.to_s),
+              field_message("  Equation           : ", "\n#{highlight(problem[missing_var_error.recipient_variable], missing_var_error.unbound_variables)}"),
+              field_message("  Formula expression : ", "\n"+missing_var&.formula&.expression.to_s),
+              ColorizedString["--------------------"].colorize(:red)
             ].join("\n")
             raise missing_var_error
           end
         end
         @solution
+      end
+
+      def field_message(field_name, message)
+        [
+          ColorizedString[field_name].colorize(:light_blue),
+          message
+        ].join(" ")
+      end
+
+      def highlight(equation, unbound_variables)
+        tokens = Tokenizer.tokenize(equation).map do |token|
+          unbound_variables.include?(token) ? ColorizedString[token].colorize(:yellow) : token
+        end
+        tokens.join("")
       end
 
       def split_problem(problem, calc)

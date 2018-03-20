@@ -15,7 +15,7 @@ module Orbf
       def call
         package_arguments = build_package_arguments
         package_arguments.each do |k, v|
-          Orbf::RulesEngine::Log.call " #{k.code} #{k.kind} ---- #{v.orgunits.map(&:ext_id)}"
+          Orbf::RulesEngine::Log.call " #{k.code} #{k.kind} ---- #{v.orgunits.map(&:ext_id)}, #{v.periods}"
         end
         package_arguments
       end

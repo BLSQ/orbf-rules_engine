@@ -134,9 +134,9 @@ module Orbf
 
       def entities_aggregation_values(activity_code)
         activity = package.activities.detect {|activity| activity.activity_code == activity_code}
+
         sub = package.entities_aggregation_rules.each_with_object({}) do |aggregation_rules, hash|
           aggregation_rules.formulas.each do |formula|
-
             selected_org_units = SumIf.org_units(@all_orgunits, package, activity)
             key = formula.code+"_values"
             hash[key.to_sym] = to_values_list(formula, activity, selected_org_units)
@@ -148,9 +148,8 @@ module Orbf
 
       def to_values_list(formula, activity, selected_org_units)
         vals = selected_org_units.map do |orgunit|
-          suffix_for_values(package.code, suffix_raw(activity.activity_code), orgunit, period)
+          suffix_for_id_activity(package.code, activity.activity_code, suffix_raw(formula.code), orgunit.ext_id, period)
         end
-
         vals.empty? ? "0" : vals.join(", ")
       end
 
