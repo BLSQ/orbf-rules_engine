@@ -37,7 +37,7 @@ module Orbf
               payment_rule: nil
             )
           )
-            end
+        end
 
         def new_package_rule(params)
           Variable.with(
@@ -78,7 +78,6 @@ module Orbf
             )
           )
         end
-
       end
 
       module Types

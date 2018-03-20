@@ -18,7 +18,12 @@ module Orbf
           entities_aggregation_rules.each do |aggreggation_rule|
             package.all_activities_codes.each do |activity_code|
               aggreggation_rule.formulas.each do |formula|
-                key = suffix_for_activity(package.code, activity_code, suffix_raw(formula.code), orgunit, period)
+                key = suffix_for_activity(
+                  package.code,
+                  activity_code,
+                  suffix_raw(formula.code),
+                  orgunit, period
+                )
 
                 expression = Tokenizer.replace_token_from_expression(
                   formula.expression,
@@ -58,14 +63,24 @@ module Orbf
         package.activities.each_with_object({}) do |activity, hash|
           next if activity_code != activity.activity_code
           package.harmonized_activity_states(activity).each do |activity_state|
-            hash[activity_state.state.to_s] = activity_state_substitution(package.code, activity, activity_state)
+            hash[activity_state.state.to_s] = activity_state_substitution(
+              package.code,
+              activity,
+              activity_state
+            )
           end
         end
       end
 
       def formulas_substitutions(activity_code)
-        package.entities_aggregation_rules.flat_map(&:formulas).each_with_object({}) do |formula, hash|
-          hash[formula.code] = suffix_activity_pattern(package.code, activity_code, suffix_raw(formula.code))
+        package.entities_aggregation_rules
+               .flat_map(&:formulas)
+               .each_with_object({}) do |formula, hash|
+          hash[formula.code] = suffix_activity_pattern(
+            package.code,
+            activity_code,
+            suffix_raw(formula.code)
+          )
         end
       end
 

@@ -11,7 +11,7 @@ module Orbf
         KIND_INDICATOR = "indicator"
 
         KINDS = [KIND_CONSTANT, KIND_DATA_ELEMENT, KIND_INDICATOR].freeze
-        KINDS_WITH_FORMULA = [KIND_CONSTANT, KIND_INDICATOR]
+        KINDS_WITH_FORMULA = [KIND_CONSTANT, KIND_INDICATOR].freeze
         def self.formula_required?(kind)
           KINDS_WITH_FORMULA.include?(kind)
         end

@@ -133,12 +133,12 @@ module Orbf
       end
 
       def entities_aggregation_values(activity_code)
-        activity = package.activities.detect {|activity| activity.activity_code == activity_code}
+        activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
 
         sub = package.entities_aggregation_rules.each_with_object({}) do |aggregation_rules, hash|
           aggregation_rules.formulas.each do |formula|
             selected_org_units = SumIf.org_units(@all_orgunits, package, activity)
-            key = formula.code+"_values"
+            key = formula.code + "_values"
             hash[key.to_sym] = to_values_list(formula, activity, selected_org_units)
           end
         end

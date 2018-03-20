@@ -31,9 +31,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "activesupport"
+  spec.add_dependency "colorize"
   spec.add_dependency "dentaku", "3.1.0"
   spec.add_dependency "dhis2", "3.0.0"
-  spec.add_dependency "colorize"
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "byebug"

@@ -42,11 +42,10 @@ module Orbf
       def print_payments(solution_as_string)
         payment_variables = variables.select(&:payment_rule_type?)
                                      .select(&:formula)
-        puts "no payment" if payment_variables.none?
         payment_variables.group_by { |v| [v.payment_rule, v.orgunit_ext_id, v.period] }
                          .map do |org_unit_period, vars|
           payment_rule, org_unit, period = org_unit_period
-          # Orbf::RulesEngine::Log.call "---------- Payments for #{payment_rule.code} #{org_unit} #{period}"
+
           total_items = vars.map do |var|
             to_total_item(var, solution_as_string)
           end
@@ -80,17 +79,9 @@ module Orbf
       end
 
       def to_activity_item(package, activity, vars)
-        decision_codes = package.activity_rules
-                                .flat_map(&:decision_tables)
-                                .flat_map { |decision_table| decision_table.headers(:in) + decision_table.headers(:out)}
-        formula_codes = package.activity_rules.flat_map(&:formulas).map(&:code)
-
-        level_codes = package.activity_rules.flat_map(&:formulas).flat_map(&:dependencies).select {|code| code.match?(/level_[0-5]/)}
-
-        codes = activity.states + decision_codes + level_codes + formula_codes
         problem = {}
 
-        values = codes.each_with_object({}) do |state, hash|
+        values = package_codes(activity, package).each_with_object({}) do |state, hash|
           vars.select { |v| v.state == state && v.activity_code == activity.activity_code }
               .each do |activity_variable|
             hash[state] = solution[activity_variable.key] || activity_variable.expression
@@ -105,6 +96,32 @@ module Orbf
           problem:   problem,
           variables: vars
         )
+      end
+
+      def package_codes(activity, package)
+        activity.states +
+          decision_codes(package) +
+          level_code(package) +
+          activity_formula_codes(package)
+      end
+
+      def decision_codes(package)
+        package.activity_rules
+               .flat_map(&:decision_tables)
+               .flat_map do |decision_table|
+          decision_table.headers(:in) + decision_table.headers(:out)
+        end
+      end
+
+      def level_code(package)
+        package.activity_rules
+               .flat_map(&:formulas)
+               .flat_map(&:dependencies)
+               .select { |code| code.match?(/level_[0-5]/) }
+      end
+
+      def activity_formula_codes(package)
+        package.activity_rules.flat_map(&:formulas).map(&:code)
       end
 
       def wrap(s, width = 120, extra = "\t")

@@ -16,7 +16,6 @@ module Orbf
       end
 
       def dependencies
-        mocked_values = values_dependencies.each_with_object({}) { |k, mocked_values| mocked_values[k.to_sym] = "1" }
         @dependencies ||= CalculatorFactory.build.dependencies(format(expression, mocked_values))
       end
 
@@ -32,6 +31,12 @@ module Orbf
       private
 
       attr_reader :single_mapping, :activity_mappings
+
+      def mocked_values
+        values_dependencies.each_with_object({}) do |k, mocked_value|
+          mocked_value[k.to_sym] = "1"
+        end
+      end
     end
   end
 end

@@ -24,14 +24,16 @@ module Orbf
 
         dhis2_values = FetchData.new(dhis2_connection, package_arguments.values).call
 
-        # TODO: I think it's the other branch
-        indicators = project.packages.flat_map(&:activities).flat_map(&:activity_states).select(&:indicator?)
-        dhis2_values += RulesEngine::IndicatorEvaluator.new(indicators, dhis2_values ).to_dhis2_values
+        dhis2_values += RulesEngine::IndicatorEvaluator.new(
+          project.indicators,
+          dhis2_values
+        ).to_dhis2_values
 
-        # orgs from package arguments ?
+        package_vars = ActivityVariablesBuilder.to_variables(
+          package_arguments,
+          dhis2_values
+        )
 
-        package_vars = ActivityVariablesBuilder.to_variables(package_arguments, dhis2_values)
-        # adapt solver factory to receive package_arguments and replace filtered_packages with it
         @solver = SolverFactory.new(
           project,
           package_arguments,
@@ -40,12 +42,10 @@ module Orbf
         ).new_solver
         solver.solve!
 
-        # RulesEngine::InvoiceCliPrinter.new(solver.variables, solver.solution).print
-
-        @exported_values = RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print
-
-        # TODO: create an entry in dhis2_logs and push to dhis2
-        # dhis2_connection.data_value_sets.bulk_create(exported_values) if exported_values.any?
+        @exported_values = RulesEngine::Dhis2ValuesPrinter.new(
+          solver.variables,
+          solver.solution
+        ).print
 
         exported_values
       end

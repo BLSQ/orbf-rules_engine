@@ -32,7 +32,7 @@ module Orbf
       attr_reader :package, :orgunits, :ref_orgunit, :period
 
       def var_for_invoice_periods
-        vars = package.activities.each_with_object([]) do |activity, array|
+        package.activities.each_with_object([]) do |activity, array|
           filtered_orgunits = SumIf.org_units(orgunits, package, activity)
           package.harmonized_activity_states(activity).each do |activity_state|
             array.push(build_variable(filtered_orgunits, activity, activity_state, period))
