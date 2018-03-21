@@ -64,7 +64,6 @@ module Orbf
           next if activity_code != activity.activity_code
           package.harmonized_activity_states(activity).each do |activity_state|
             hash[activity_state.state.to_s] = activity_state_substitution(
-              package.code,
               activity,
               activity_state
             )
@@ -84,17 +83,17 @@ module Orbf
         end
       end
 
-      def activity_state_substitution(package_code, activity, activity_state)
+      def activity_state_substitution(activity, activity_state)
         if activity_state.data_element?
-          suffix_activity_pattern(package_code, activity.activity_code, suffix_raw(activity_state.state))
+          suffix_activity_pattern(package.code, activity.activity_code, suffix_raw(activity_state.state))
         elsif activity_state.constant?
           name_constant(activity.activity_code, activity_state.state, period)
         elsif activity_state.indicator?
-          suffix_activity_pattern(package_code, activity.activity_code, suffix_raw(activity_state.state))
+          suffix_activity_pattern(package.code, activity.activity_code, suffix_raw(activity_state.state))
         else
           raise "Unsupported activity state"
         end
       end
     end
-   end
+  end
 end

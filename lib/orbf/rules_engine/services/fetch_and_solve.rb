@@ -23,11 +23,13 @@ module Orbf
         ).call
 
         dhis2_values = FetchData.new(dhis2_connection, package_arguments.values).call
+        puts JSON.pretty_generate(dhis2_values)
 
         dhis2_values += RulesEngine::IndicatorEvaluator.new(
           project.indicators,
           dhis2_values
         ).to_dhis2_values
+
 
         package_vars = ActivityVariablesBuilder.to_variables(
           package_arguments,

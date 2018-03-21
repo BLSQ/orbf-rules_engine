@@ -144,7 +144,7 @@ RSpec.describe "Malawi System" do
           kind:     :activity,
           formulas: [
             build_activity_formula(
-              "dhmt_verified_price", "if(activity_type=1, sum(%{fosa_caped_amount_values}), "+
+              "dhmt_verified_price", "if(activity_type=1, sum(%{fosa_caped_amount_values}), " \
                                      "if(activity_type=2, safe_div(sum(%{validated_previous_year_same_quarter_values}), org_units_sum_if_count), 0))",
               "Activity amount"
             ),

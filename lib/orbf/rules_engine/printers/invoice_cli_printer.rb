@@ -40,7 +40,7 @@ module Orbf
       def print_payments(solution_as_string)
         payment_variables = variables.select(&:payment_rule_type?)
                                      .select(&:formula)
-        puts "no payment" if payment_variables.none?
+        Orbf::RulesEngine::Log.call "no payment" if payment_variables.none?
         payment_variables.group_by { |v| [v.payment_rule, v.orgunit_ext_id, v.period] }
                          .each do |org_unit_period, vars|
           payment_rule, org_unit, period = org_unit_period

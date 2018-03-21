@@ -36,9 +36,7 @@ module Orbf
       def self.build
         Dentaku::Calculator.new(nested_data_support: false, case_sensitive: true).tap do |calculator|
           calculator.add_function(:between, :logical, BETWEEN)
-          calculator.add_function(:abs, :number, lambda { |number|
-                                                   number.abs
-                                                 })
+          calculator.add_function(:abs, :number, ->(number) { number.abs })
           calculator.add_function(:score_table, :numeric, SCORE_TABLE)
           calculator.add_function(:avg, :numeric, AVG)
           calculator.add_function(:sum, :numeric, SUM)
