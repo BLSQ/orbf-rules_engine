@@ -38,7 +38,7 @@ module Orbf
 
             output_facts = decision_table.find(input_facts)
             unless output_facts
-              puts "WARN : no facts for #{orgunit} #{input_facts} in #{decision_table}"
+              Orbf::RulesEngine::Log.call "WARN : no facts for #{orgunit} #{input_facts} in #{decision_table}"
               next
             end
 

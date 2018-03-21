@@ -102,7 +102,7 @@ module Orbf
       end
 
       def exportable?
-        orgunit_ext_id && dhis2_data_element
+        !!(orgunit_ext_id && dhis2_data_element)
       end
 
       def dhis2_data_element

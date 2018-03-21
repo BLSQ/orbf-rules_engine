@@ -8,8 +8,8 @@ module Orbf
       end
 
       def input?(code)
-        var = variable(code)
-        var.state == code && var.formula.nil?
+        varr = variable(code)
+        varr.state == code && varr.formula.nil?
       end
 
       def output?(code)

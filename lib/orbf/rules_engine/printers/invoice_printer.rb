@@ -42,6 +42,7 @@ module Orbf
       def print_payments(solution_as_string)
         payment_variables = variables.select(&:payment_rule_type?)
                                      .select(&:formula)
+
         payment_variables.group_by { |v| [v.payment_rule, v.orgunit_ext_id, v.period] }
                          .map do |org_unit_period, vars|
           payment_rule, org_unit, period = org_unit_period
@@ -88,6 +89,7 @@ module Orbf
             problem[state] = activity_variable.expression
           end
         end
+
         return nil if values.values.compact.none?
 
         Orbf::RulesEngine::ActivityItem.new(

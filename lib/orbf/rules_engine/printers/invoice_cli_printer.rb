@@ -52,8 +52,8 @@ module Orbf
       end
 
       def headers(values)
-        Orbf::RulesEngine::Log.call wrap((values.keys + ["activity_name"]).each_with_index.map { |v, i| "#{v}(#{i})" }.join("\t"), 120, "")
-        Orbf::RulesEngine::Log.call (0..values.keys.size).map(&:to_s).join("\t")
+        Orbf::RulesEngine::Log.call(wrap((values.keys + ["activity_name"]).each_with_index.map { |v, i| "#{v}(#{i})" }.join("\t"), 120, ""))
+        Orbf::RulesEngine::Log.call((0..values.keys.size).map(&:to_s).join("\t"))
       end
 
       def explanation_package(var, solution_as_string)
@@ -64,7 +64,7 @@ module Orbf
                               "\n\t" + Tokenizer.replace_token_from_expression(var.expression, solution_as_string, {}) +
                               "\n\t" + wrap(var.expression)
         )
-        end
+      end
 
       def wrap(s, width = 120, extra = "\t\t")
         s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n#{extra}")

@@ -17,6 +17,8 @@ module Orbf
 
       def dependencies
         @dependencies ||= CalculatorFactory.build.dependencies(format(expression, mocked_values))
+      rescue StandardError => e
+        raise(e.message+" :" + code + " = " + expression)
       end
 
       def values_dependencies
