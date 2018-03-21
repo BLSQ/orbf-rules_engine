@@ -40,6 +40,7 @@ require_relative "./rules_engine/fetch_data/orgunits_resolver"
 require_relative "./rules_engine/fetch_data/resolve_arguments"
 require_relative "./rules_engine/fetch_data/fetch_data"
 require_relative "./rules_engine/fetch_data/orgunit_facts"
+require_relative "./rules_engine/fetch_data/pyramid_factory"
 require_relative "./rules_engine/fetch_data/create_pyramid"
 require_relative "./rules_engine/services/fetch_and_solve"
 
