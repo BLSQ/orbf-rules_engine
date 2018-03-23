@@ -12,16 +12,36 @@ module Orbf
         periods = package_arguments.flat_map(&:periods).uniq
         values = dhis2_connection.data_value_sets.list(
           organisation_unit: orgunit_ext_ids,
-          data_sets: dataset_ext_ids,
-          periods:   periods,
-          children: false
+          data_sets:         dataset_ext_ids,
+          periods:           periods,
+          children:          false
         )
-        values.data_values || []
+
+        results = values.data_values || []
+
+        map_to_raw(results)
       end
 
       private
 
       attr_reader :dhis2_connection, :package_arguments
+
+      def map_to_raw(results)
+        results.map do |v|
+          {
+            "dataElement"          => v["data_element"],
+            "period"               => v["period"],
+            "orgUnit"              => v["org_unit"],
+            "categoryOptionCombo"  => v["category_option_combo"],
+            "attributeOptionCombo" => v["attribute_option_combo"],
+            "value"                => v["value"],
+            "storedBy"             => v["stored_by"],
+            "created"              => v["created"],
+            "lastUpdated"          => v["last_updated"],
+            "followUp"             => v["follow_up"]
+          }
+        end
+      end
     end
   end
 end
