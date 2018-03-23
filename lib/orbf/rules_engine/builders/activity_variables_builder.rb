@@ -40,30 +40,9 @@ module Orbf
                   suffixed_state = package.subcontract? ? suffix_raw(state) : state
                   express = expression.value
                   array.push register_vars(package, activity.activity_code, suffixed_state, express, orgunit_id, period)
-
-                  # array.push Orbf::RulesEngine::Variable.new_activity(
-                  #   period:         period,
-                  #   key:            suffix_for_id_activity(package.code, activity.activity_code, suffixed_state, orgunit_id, period),
-                  #   expression:     expression.value,
-                  #   state:          suffixed_state,
-                  #   activity_code:  activity.activity_code,
-                  #   orgunit_ext_id: orgunit_id,
-                  #   formula:        nil,
-                  #   package:        package
-                  # )
                   if dependencies.include?(suffix_is_null(state))
                     express = expression.is_null ? "1" : "0"
                     array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
-                    # array.push Orbf::RulesEngine::Variable.new_activity(
-                    #   period:         period,
-                    #   key:            suffix_for_id_activity(package.code, activity.activity_code, suffix_is_null(suffixed_state), orgunit_id, period),
-                    #   expression:     expression.is_null ? "1" : "0",
-                    #   state:          suffix_is_null(suffixed_state),
-                    #   activity_code:  activity.activity_code,
-                    #   orgunit_ext_id: orgunit_id,
-                    #   formula:        nil,
-                    #   package:        package
-                    # )
                   end
                 end
               end
