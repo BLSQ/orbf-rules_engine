@@ -2,8 +2,9 @@
 RSpec.describe Orbf::RulesEngine::FetchData do
   let(:dhis2_connection) do
     ::Dhis2::Client.new(
-      url:     "https://admin:district@play.dhis2.org/2.28",
-      version: "2.28"
+      url:     "https://play.dhis2.org/2.28",
+      user: "admin",
+      password: "district"
     )
   end
 
