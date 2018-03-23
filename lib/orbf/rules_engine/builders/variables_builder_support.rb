@@ -42,6 +42,10 @@ module Orbf
       def suffix_raw(code)
         "#{code}_raw"
       end
+
+      def suffix_is_null(code)
+        "#{code}_is_null"
+      end
     end
   end
 end

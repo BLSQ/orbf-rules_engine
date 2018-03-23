@@ -7,7 +7,7 @@ module Orbf
       attr_accessor :rule
 
       def initialize(code, expression, comment = "", single_mapping: nil, activity_mappings: nil)
-        @code = code
+        @code = code.strip
         @expression = expression.strip
         @comment = comment
         @single_mapping = single_mapping
