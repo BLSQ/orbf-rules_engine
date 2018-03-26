@@ -18,6 +18,7 @@ require_relative "./rules_engine/services/value_formatter"
 require_relative "./rules_engine/services/codifier"
 
 require_relative "./rules_engine/data/activity"
+require_relative "./rules_engine/data/activity_state"
 require_relative "./rules_engine/data/org_unit"
 require_relative "./rules_engine/data/org_unit_with_facts"
 require_relative "./rules_engine/data/org_unit_group"
