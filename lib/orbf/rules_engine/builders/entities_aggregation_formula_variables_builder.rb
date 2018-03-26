@@ -18,33 +18,7 @@ module Orbf
           entities_aggregation_rules.each do |aggreggation_rule|
             package.all_activities_codes.each do |activity_code|
               aggreggation_rule.formulas.each do |formula|
-                key = suffix_for_activity(
-                  package.code,
-                  activity_code,
-                  suffix_raw(formula.code),
-                  orgunit, period
-                )
-
-                expression = Tokenizer.replace_token_from_expression(
-                  formula.expression,
-                  substitutions(activity_code),
-                  orgunit_id: orgunit.ext_id,
-                  period:     period.downcase
-                )
-                variables.push(
-                  Orbf::RulesEngine::Variable.with(
-                    period:         period,
-                    key:            key,
-                    expression:     expression,
-                    state:          formula.code,
-                    type:           Orbf::RulesEngine::Variable::Types::CONTRACT,
-                    activity_code:  activity_code,
-                    orgunit_ext_id: orgunit.ext_id,
-                    formula:        formula,
-                    package:        package,
-                    payment_rule:   nil
-                  )
-                )
+                variables.push(new_variable(orgunit, activity_code, formula))
               end
             end
           end
@@ -54,6 +28,31 @@ module Orbf
       private
 
       attr_reader :package, :orgunits, :period
+
+      def new_variable(orgunit, activity_code, formula)
+        Orbf::RulesEngine::Variable.with(
+          period:         period,
+          key:            suffix_for_activity(
+            package.code,
+            activity_code,
+            suffix_raw(formula.code),
+            orgunit, period
+          ),
+          expression:     Tokenizer.replace_token_from_expression(
+            formula.expression,
+            substitutions(activity_code),
+            orgunit_id: orgunit.ext_id,
+            period:     period.downcase
+          ),
+          state:          formula.code,
+          type:           Orbf::RulesEngine::Variable::Types::CONTRACT,
+          activity_code:  activity_code,
+          orgunit_ext_id: orgunit.ext_id,
+          formula:        formula,
+          package:        package,
+          payment_rule:   nil
+        )
+     end
 
       def substitutions(activity_code)
         states_substitutions(activity_code).merge(formulas_substitutions(activity_code))

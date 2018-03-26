@@ -71,7 +71,7 @@ module Orbf
 
       def substitutions(activity_code)
         states_substitutions(activity_code)
-          .merge(is_null_substitutions(activity_code))
+          .merge(null_substitutions(activity_code))
           .merge(level_substitutions)
           .merge(package_substitutions)
           .merge(formulas_substitutions(activity_code))
@@ -79,7 +79,7 @@ module Orbf
           .merge(orgunit_counts_substitutions(activity_code))
       end
 
-      def is_null_substitutions(activity_code)
+      def null_substitutions(activity_code)
         activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
         package.harmonized_activity_states(activity).each_with_object({}) do |activity_state, hash|
           suffixed_state = suffix_is_null(activity_state.state)
