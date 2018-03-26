@@ -51,21 +51,24 @@ module Orbf
                                .flat_map { |package| package_arguments[package]&.orgunits }
                                .compact
                                .uniq
-        PeriodIterator.each_periods(invoice_period, payment_rule.frequency) do |period|
-          variables = Orbf::RulesEngine::PaymentFormulaVariablesBuilder.new(
-            payment_rule,
-            orgunits,
-            period
-          ).to_variables
-          solver.register_variables(variables)
+
+        matching_packages = payment_rule.packages.flat_map { |package| package_arguments[package] }.compact
+        return unless matching_packages.size == payment_rule.packages.size
+
+        variables = Orbf::RulesEngine::PaymentFormulaVariablesBuilder.new(
+          payment_rule,
+          orgunits,
+          invoice_period
+        ).to_variables
+        solver.register_variables(variables)
         end
-      end
 
       attr_reader :project, :package_arguments, :package_vars, :invoice_period, :package_builders
 
       def default_package_builders
         [
           Orbf::RulesEngine::ContractVariablesBuilder,
+          Orbf::RulesEngine::EntitiesAggregationFormulaVariablesBuilder,
           Orbf::RulesEngine::ActivityConstantVariablesBuilder,
           Orbf::RulesEngine::DecisionVariablesBuilder,
           Orbf::RulesEngine::ActivityFormulaVariablesBuilder,

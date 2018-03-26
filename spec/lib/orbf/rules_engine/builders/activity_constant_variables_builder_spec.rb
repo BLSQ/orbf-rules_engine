@@ -3,6 +3,7 @@ RSpec.describe Orbf::RulesEngine::ActivityConstantVariablesBuilder do
   let(:activities) do
     [
       Orbf::RulesEngine::Activity.with(
+        name:            "act1",
         activity_code:   "act1",
         activity_states: [
           Orbf::RulesEngine::ActivityState.new_constant(
@@ -49,7 +50,8 @@ RSpec.describe Orbf::RulesEngine::ActivityConstantVariablesBuilder do
         activity_code:  "act1",
         orgunit_ext_id: nil,
         formula:        nil,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       )
     ]
   end

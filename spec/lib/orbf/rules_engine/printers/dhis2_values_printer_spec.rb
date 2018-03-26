@@ -2,21 +2,22 @@
 RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
   let(:orgunit) do
     Orbf::RulesEngine::OrgUnit.with(
-      ext_id:    "1",
-      path:      "country_id/county_id/1",
-      name:      "African Foundation Baptist",
+      ext_id:        "1",
+      path:          "country_id/county_id/1",
+      name:          "African Foundation Baptist",
       group_ext_ids: []
     )
   end
 
   let(:activity) do
     Orbf::RulesEngine::Activity.with(
+      name:            "act1",
       activity_code:   "act1",
       activity_states: [
         Orbf::RulesEngine::ActivityState.new_data_element(
-          state:   :achieved,
-          ext_id:  "dhis2_act1_achieved",
-          name:    "act1_achieved",
+          state:  :achieved,
+          ext_id: "dhis2_act1_achieved",
+          name:   "act1_achieved"
         )
       ]
     )
@@ -57,11 +58,11 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         expect(result_values).to eq(
           [
             {
-              data_element:    data_element_id,
-              org_unit: "1",
-              period:          "201601",
-              value:           1.5,
-              comment:         variable_with_mapping.key
+              dataElement: data_element_id,
+              orgUnit:     "1",
+              period:      "201601",
+              value:       1.5,
+              comment:     variable_with_mapping.key
             }
           ]
         )
@@ -80,7 +81,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         activity_code:  nil,
         orgunit_ext_id: "1",
         formula:        package.rules.first.formulas.first,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       )
     end
 
@@ -143,11 +145,11 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         expect(result_values).to eq(
           [
             {
-              data_element: "dhis2_data_element_id_act1",
-              org_unit:     "1",
-              period:       "2016Q1",
-              value:        expected_value,
-              comment:      variable.key
+              dataElement: "dhis2_data_element_id_act1",
+              orgUnit:     "1",
+              period:      "2016Q1",
+              value:       expected_value,
+              comment:     variable.key
             }
           ]
         )
@@ -166,7 +168,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         type:           :activity,
         orgunit_ext_id: orgunit.ext_id,
         formula:        package.rules.first.formulas.first,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       )
     end
 

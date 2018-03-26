@@ -5,31 +5,45 @@ module Orbf
     class ActivityVariablesBuilder
       include VariablesBuilderSupport
 
-      def initialize(project, orgunits, dhis2_values)
-        @project = project
+      class ValueLookup < Orbf::RulesEngine::ValueObject
+        attributes :value, :is_null
+      end
+
+      class << self
+        def to_variables(package_arguments, dhis2_values)
+          package_arguments.values.each_with_object([]) do |package_argument, package_vars|
+            package_argument.periods.each do |period|
+              package_vars.push(*RulesEngine::ActivityVariablesBuilder.new(
+                package_argument.package,
+                package_argument.orgunits,
+                dhis2_values
+              ).convert(period))
+            end
+          end
+        end
+      end
+
+      def initialize(package, orgunits, dhis2_values)
+        @package = package
         @orgunits = orgunits
         @lookup = dhis2_values
-                  .group_by { |v| [v['orgUnit'], v['period'], v['dataElement']] }
+                  .group_by { |v| [v["orgUnit"], v["period"], v["dataElement"]] }
       end
 
       def convert(period)
-        project.packages.each_with_object([]) do |package, array|
+        [package].each_with_object([]) do |package, array|
+          dependencies = package.activity_dependencies
           package.activities.each do |activity|
-            activity.activity_states.select(&:data_element?).each do |activity_state|
+            package.harmonized_activity_states(activity).reject(&:constant?).each do |activity_state|
               SOURCES.each do |source|
-                send(source, activity_state, period, package.activity_dependencies) do |orgunit_id, state, expression|
-                  state = suffix_raw(state) if package.subcontract?
-                  array.push Orbf::RulesEngine::Variable.with(
-                    period:         period,
-                    key:            suffix_for_id_activity(package.code, activity.activity_code, state, orgunit_id, period),
-                    expression:     expression,
-                    state:          state,
-                    activity_code:  activity.activity_code,
-                    type:           Orbf::RulesEngine::Variable::Types::ACTIVITY,
-                    orgunit_ext_id: orgunit_id,
-                    formula:        nil,
-                    package:        package
-                  )
+                send(source, activity_state, period, dependencies) do |orgunit_id, state, expression|
+                  suffixed_state = package.subcontract? ? suffix_raw(state) : state
+                  express = expression.value
+                  array.push register_vars(package, activity.activity_code, suffixed_state, express, orgunit_id, period)
+                  if dependencies.include?(suffix_is_null(state))
+                    express = expression.is_null ? "1" : "0"
+                    array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
+                  end
                 end
               end
             end
@@ -39,25 +53,35 @@ module Orbf
 
       private
 
-      attr_reader :project, :orgunits, :lookup
+      attr_reader :package, :orgunits, :lookup
 
       SOURCES = %i[de_values parent_values].freeze
 
+      def register_vars(package, activity_code, state, expression, orgunit_id, period)
+        Orbf::RulesEngine::Variable.new_activity(
+          period:         period,
+          key:            suffix_for_id_activity(package.code, activity_code, state, orgunit_id, period),
+          expression:     expression,
+          state:          state,
+          activity_code:  activity_code,
+          orgunit_ext_id: orgunit_id,
+          formula:        nil,
+          package:        package
+        )
+      end
+
       def de_values(activity_state, period, _dependencies)
         orgunits.each do |orgunit|
-          key = [orgunit.ext_id, period, activity_state.ext_id]
-          current_value = lookup[key]
-          yield(orgunit.ext_id, activity_state.state, current_value.first['value']) if current_value
+          current_value = lookup_value(build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id]))
+          yield(orgunit.ext_id, activity_state.state, current_value)
         end
       end
 
       def parent_values(activity_state, period, dependencies)
         parents_with_level.each do |hash|
-          code = "#{activity_state.state}_level#{hash[:level]}"
+          code = "#{activity_state.state}_level_#{hash[:level]}"
           next unless dependencies.include?(code)
-          key = [hash[:id], period, activity_state.ext_id]
-          hash_value = lookup[key] ? lookup[key].first['value'].to_s : '0'
-
+          hash_value = lookup_value(build_keys_with_yearly([hash[:id], period, activity_state.ext_id]))
           yield(hash[:id], code, hash_value)
         end
       end
@@ -71,6 +95,21 @@ module Orbf
             )
           end
         end.uniq
+      end
+
+      def lookup_value(keys)
+        keys.each do |key|
+          val = lookup[key]
+          return ValueLookup.new(value: val.first["value"], is_null: false) if val
+        end
+        ValueLookup.new(value: "0", is_null: true)
+      end
+
+      def build_keys_with_yearly(key)
+        [
+          key,
+          [key[0], PeriodIterator.periods(key[1], "yearly").first, key[2]]
+        ]
       end
     end
   end

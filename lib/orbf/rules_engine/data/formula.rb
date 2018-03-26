@@ -6,9 +6,9 @@ module Orbf
       attr_reader :code, :expression, :comment
       attr_accessor :rule
 
-      def initialize(code, expression, comment = '', single_mapping: nil, activity_mappings: nil)
-        @code = code
-        @expression = expression
+      def initialize(code, expression, comment = "", single_mapping: nil, activity_mappings: nil)
+        @code = code.strip
+        @expression = expression.strip
         @comment = comment
         @single_mapping = single_mapping
         @activity_mappings = activity_mappings
@@ -16,11 +16,13 @@ module Orbf
       end
 
       def dependencies
-        @dependencies ||= CalculatorFactory.build.dependencies(expression)
+        @dependencies ||= CalculatorFactory.build.dependencies(format(expression, mocked_values))
+      rescue StandardError => e
+        raise(e.message + " :" + code + " = " + expression)
       end
 
       def values_dependencies
-        @values_dependencies ||= Tokenizer.format_keys(@expression).select { |e| e.end_with?('_values') }
+        @values_dependencies ||= Tokenizer.format_keys(@expression).select { |e| e.end_with?("_values") }
       end
 
       def dhis2_mapping(activity_code = nil)
@@ -31,6 +33,12 @@ module Orbf
       private
 
       attr_reader :single_mapping, :activity_mappings
+
+      def mocked_values
+        values_dependencies.each_with_object({}) do |k, mocked_value|
+          mocked_value[k.to_sym] = "1"
+        end
+      end
     end
   end
 end

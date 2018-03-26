@@ -32,9 +32,16 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
   end
 
   describe "support access function" do
-    it "solve " do
+    it "solve" do
       solution = calculator.solve("my_arr" => "access(3,6,9,1)")
       expect(solution["my_arr"]).to eq(6)
+    end
+  end
+
+  describe "support abs function" do
+    it "solve" do
+      solution = calculator.solve("my_var" => "abs(-1.5)")
+      expect(solution["my_var"]).to eq(1.5)
     end
   end
 end

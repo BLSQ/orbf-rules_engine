@@ -83,7 +83,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.first,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
@@ -94,7 +95,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.last,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         )
       ]
     end
@@ -118,7 +120,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.first,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
@@ -129,7 +132,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.last,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016Q1",
@@ -140,7 +144,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        nil
+          package:        nil,
+          payment_rule:   nil
         )
 
       ]
@@ -165,7 +170,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.first,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201601",
@@ -176,7 +182,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.last,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201602",
@@ -187,7 +194,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.first,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201602",
@@ -198,7 +206,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.last,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201603",
@@ -209,7 +218,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.first,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201603",
@@ -220,7 +230,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        payment_rule.rule.formulas.last,
-          package:        nil
+          package:        nil,
+          payment_rule:   payment_rule
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201601",
@@ -231,7 +242,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        nil
+          package:        nil,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201602",
@@ -242,7 +254,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        nil
+          package:        nil,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "201603",
@@ -253,7 +266,8 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
           activity_code:  nil,
           orgunit_ext_id: orgunits.first.ext_id,
           formula:        nil,
-          package:        nil
+          package:        nil,
+          payment_rule:   nil
         )
 
       ]

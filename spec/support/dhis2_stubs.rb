@@ -6,7 +6,7 @@ module Dhis2Stubs
         "https://play.dhis2.org/2.28/",
         "api/organisationUnitGroupSets",
         "?fields=id,code,shortName,displayName,organisationUnitGroups",
-        "&page=1&pageSize=10000"
+        "&pageSize=40000"
       ].join
     ).to_return(
       status: 200,
@@ -39,7 +39,7 @@ module Dhis2Stubs
       ["https://play.dhis2.org/2.28/",
        "api/organisationUnitGroups",
        "?fields=id,code,shortName,displayName",
-       "&page=1&pageSize=10000"].join
+       "&pageSize=40000"].join
     ).to_return(
       status: 200,
       body:   {
@@ -78,7 +78,7 @@ module Dhis2Stubs
         "https://play.dhis2.org/2.28/",
         "api/organisationUnits",
         "?fields=id,displayName,path,organisationUnitGroups",
-        "&page=1&pageSize=10000"
+        "&pageSize=40000"
       ].join
     ).to_return(
       status: 200,

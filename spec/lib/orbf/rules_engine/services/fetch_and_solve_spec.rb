@@ -7,8 +7,9 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
     Orbf::RulesEngine::Project.new(
       packages:     [package],
       dhis2_params: {
-        url:     "https://admin:district@play.dhis2.org/2.28",
-        version: "2.28"
+        url:      "https://admin:district@play.dhis2.org/2.28",
+        user:     "admin",
+        password: "district"
       }
     )
   end
@@ -26,6 +27,7 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
   let(:activities) do
     [
       Orbf::RulesEngine::Activity.with(
+        name:            "act1",
         activity_code:   "act1",
         activity_states: [
           Orbf::RulesEngine::ActivityState.new_constant(

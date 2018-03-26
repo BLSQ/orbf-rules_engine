@@ -8,7 +8,11 @@ module Orbf
       def initialize(indicators, dhis2_values)
         @indicators = Array(indicators)
         @indexed_values = Dhis2IndexedValues.new(dhis2_values)
-        @period_orgunits = dhis2_values.map { |value| [value['period'], value['orgUnit']] }.uniq
+        @period_orgunits = dhis2_values.map do |value|
+          [value['period'], value['org_unit'] || value['orgUnit']]
+        end
+
+        @period_orgunits = @period_orgunits.uniq
       end
 
       def to_dhis2_values
@@ -23,11 +27,13 @@ module Orbf
         parsed_expressions = IndicatorExpressionParser.parse_expression(indicator.formula)
         @period_orgunits.map do |period, orgunit|
           value = indicator_value(period, orgunit, parsed_expressions)
-          { 'dataElement'         => indicator.ext_id,
+          {
+             'dataElement'         => indicator.ext_id,
             'categoryOptionCombo' => 'default',
             'value'               => ValueFormatter.format(value).to_s,
             'period'              => period,
-            'orgUnit'             => orgunit }
+            'orgUnit'             => orgunit
+           }
         end
       end
 

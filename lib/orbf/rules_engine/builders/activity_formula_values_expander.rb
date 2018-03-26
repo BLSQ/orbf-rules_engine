@@ -18,7 +18,11 @@ module Orbf
       #    activity_code_code_for_orgunit_id_and_period_2
       # in the expression formula for a given orgunit, period and activity code
       def expand_values
-        format(formula.expression, spans_subsitutions)
+        expanded_string = formula.expression
+        spans_subsitutions.each do |k, v|
+          expanded_string = expanded_string.gsub("%{#{k}}", v)
+        end
+        expanded_string
       end
 
       private
@@ -45,7 +49,7 @@ module Orbf
         val = periods.map do |period|
           suffix_for_id_activity(package_code, activity_code, code, orgunit.ext_id, period)
         end
-        val.join(',')
+        val.join(",")
       end
     end
   end

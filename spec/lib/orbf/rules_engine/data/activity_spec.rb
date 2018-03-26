@@ -8,6 +8,6 @@ RSpec.describe Orbf::RulesEngine::Activity do
         name:    "name",
         formula: "formula"
       )
-    end.to raise_error('Kind badbadkind must be one of ["constant", "data_element", "indicator"]')
+    end.to raise_error('Invalid activity state kind \'badbadkind\' only supports ["constant", "data_element", "indicator"]')
   end
 end

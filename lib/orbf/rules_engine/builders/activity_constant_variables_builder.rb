@@ -12,7 +12,7 @@ module Orbf
       end
 
       def to_variables
-        activity_constant_variables
+        activity_constant_variables.uniq
       end
 
       private
@@ -28,16 +28,13 @@ module Orbf
       end
 
       def new_var(activity, activity_state)
-        Orbf::RulesEngine::Variable.with(
-          period:         period,
-          key:            name_constant(activity.activity_code, activity_state.state, period),
-          expression:     activity_state.formula,
-          state:          activity_state.state,
-          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
-          activity_code:  activity.activity_code,
-          orgunit_ext_id: nil,
-          formula:        nil,
-          package:        package
+        Orbf::RulesEngine::Variable.new_activity_constant(
+          period:        period,
+          key:           name_constant(activity.activity_code, activity_state.state, period),
+          expression:    activity_state.formula,
+          state:         activity_state.state,
+          activity_code: activity.activity_code,
+          package:       package
         )
       end
     end

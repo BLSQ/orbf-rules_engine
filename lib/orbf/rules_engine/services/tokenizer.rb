@@ -8,7 +8,7 @@ module Orbf
       end
 
       def self.tokenize(expression)
-        expression.split(/(,|\/|-|\*|\ |%{|}|\+|\)|\()/)
+        expression.split(/(<=|>=|<|>|=|,|\/|-|\*|\ |%{|}|\+|\)|\(|\r?\n)/m)
       end
 
       def self.replace_token_from_expression(expression_template, substitutions_template, template_vars)

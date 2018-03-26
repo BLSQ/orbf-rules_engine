@@ -9,7 +9,8 @@ RSpec.describe Orbf::RulesEngine::Solver do
       type:           "contract",
       orgunit_ext_id: "district_orgunit1.ext_id",
       formula:        nil,
-      package:        nil
+      package:        nil,
+      payment_rule:   nil
     )
   end
 
@@ -18,7 +19,7 @@ RSpec.describe Orbf::RulesEngine::Solver do
   it "raise error on duplicate variables" do
     solver.register_variables([build_variable("key1")])
     expect do
-      solver.register_variables([build_variable("key1")])
+      solver.register_variables([build_variable("key1", "duuu")])
     end.to raise_error(/Duplicates for key1=/)
   end
 

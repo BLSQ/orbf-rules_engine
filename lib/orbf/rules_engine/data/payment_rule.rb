@@ -28,7 +28,7 @@ module Orbf
 
       def validate
         raise "rule must be kind payment" unless rule.kind == "payment"
-        raise "no frequency" unless Package::FREQUENCIES.include?(@frequency)
+        raise "no support for frequency #{frequency}" unless Package::FREQUENCIES.include?(@frequency)
       end
     end
   end

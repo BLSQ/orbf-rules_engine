@@ -2,8 +2,9 @@
 RSpec.describe Orbf::RulesEngine::FetchData do
   let(:dhis2_connection) do
     ::Dhis2::Client.new(
-      url:     "https://admin:district@play.dhis2.org/2.28",
-      version: "2.28"
+      url:      "https://play.dhis2.org/2.28",
+      user:     "admin",
+      password: "district"
     )
   end
 
@@ -49,6 +50,7 @@ RSpec.describe Orbf::RulesEngine::FetchData do
                            [
                              "https://play.dhis2.org/2.28/api/dataValueSets",
                              "?children=false",
+                             "&orgUnit=1&orgUnit=2",
                              "&dataSet=dataset1&dataSet=dataset2",
                              "&period=201601&period=201602&period=201603&period=2016Q1&period=2015Q1"
                            ].join)

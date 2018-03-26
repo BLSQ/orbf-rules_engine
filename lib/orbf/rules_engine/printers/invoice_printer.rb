@@ -1,61 +1,138 @@
 module Orbf
-module RulesEngine
-  class InvoicePrinter
-    attr_reader :variables, :solution
+  module RulesEngine
+    class InvoicePrinter
+      attr_reader :variables, :solution
 
-    def initialize(variables, solution)
-      @variables = variables
-      @solution = solution
-      @variables_by_key = @variables.group_by(&:key)
-                                    .each_with_object({}) { |(k, v), hash| hash[k] = v.first }
-    end
+      def initialize(variables, solution)
+        @variables = variables
+        @solution = solution
+        @variables_by_key = @variables.group_by(&:key)
+                                      .each_with_object({}) { |(k, v), hash| hash[k] = v.first }
+      end
 
-    def print
-      solution_as_string = solution.each_with_object({}) { |(k, v), hash| hash[k] = d_to_s(v, 10) }
-      variables.group_by { |v| [v.package, v.orgunit_ext_id] }
-               .each do |package_orgunit, vars|
-        package, orgunit = package_orgunit
-        Orbf::RulesEngine::Log.call "---------- #{package} #{orgunit}"
-        package.activities.each_with_index do |activity, index|
-          codes = (package.activity_rules.flat_map(&:formulas).map(&:code) + activity.states)
-          values = codes.each_with_object({}) do |state, hash|
-            vars.select { |v| v.state == state && v.activity_code == activity.activity_code }
-                .each do |activity_variable|
-              hash[state] = solution[activity_variable.key]
-            end
+      def print
+        solution_as_string = solution.each_with_object({}) { |(k, v), hash| hash[k] = d_to_s(v, 10) }
+        invoices = variables.select(&:orgunit_ext_id)
+                            .select(&:package)
+                            .group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
+                            .map do |package_orgunit_period, vars|
+          package, orgunit, period = package_orgunit_period
+
+          activity_items = package.activities.map do |activity|
+            to_activity_item(package, activity, vars)
           end
-          headers(values) if index.zero?
-          Orbf::RulesEngine::Log.call "#{values.values.map { |v| d_to_s(v) }.join("\t")} #{activity.activity_code}"
+          total_items = vars.select { |var| var.activity_code.nil? }
+                            .map do |var|
+            to_total_item(var, solution_as_string)
+          end
+
+          Orbf::RulesEngine::Invoice.new(
+            kind:           "package",
+            period:         period,
+            orgunit_ext_id: orgunit,
+            package:        package,
+            payment_rule:   nil,
+            activity_items: activity_items.compact,
+            total_items:    total_items
+          )
         end
-        vars.select { |var| var.activity_code.nil? }.each do |var|
-          explanation_package(var, solution_as_string)
+        (invoices + print_payments(solution_as_string)).compact
+      end
+
+      def print_payments(solution_as_string)
+        payment_variables = variables.select(&:payment_rule_type?)
+                                     .select(&:formula)
+
+        payment_variables.group_by { |v| [v.payment_rule, v.orgunit_ext_id, v.period] }
+                         .map do |org_unit_period, vars|
+          payment_rule, org_unit, period = org_unit_period
+
+          total_items = vars.map do |var|
+            to_total_item(var, solution_as_string)
+          end
+
+          Orbf::RulesEngine::Invoice.new(
+            kind:           "payment_rule",
+            period:         period,
+            orgunit_ext_id: org_unit,
+            package:        nil,
+            payment_rule:   payment_rule,
+            activity_items: [],
+            total_items:    total_items
+          )
         end
       end
-    end
 
-    def headers(values)
-      Orbf::RulesEngine::Log.call wrap((values.keys + ["activity_name"]).each_with_index.map { |v, i| "#{v}(#{i})" }.join("\t"), 120, "")
-      Orbf::RulesEngine::Log.call (0..values.keys.size).map(&:to_s).join("\t")
-    end
+      def to_total_item(var, solution_as_string)
+        Orbf::RulesEngine::TotalItem.new(
+          formula:      var.formula,
+          explanations: [
+            var.formula.expression,
+            Tokenizer.replace_token_from_expression(
+              var.expression,
+              solution_as_string,
+              {}
+            ),
+            wrap(var.expression)
+          ],
+          value:        solution[var.key]
+        )
+      end
 
-    def explanation_package(var, solution_as_string)
-      Orbf::RulesEngine::Log.call " ---- " + var.state +
-                            "\n\t" + d_to_s(solution[var.key]) +
-                            "\n\t" + var.formula.expression +
-                            "\n\t" + Tokenizer.replace_token_from_expression(var.expression, solution_as_string, {}) +
-                            "\n\t" + wrap(var.expression)
-    end
+      def to_activity_item(package, activity, vars)
+        problem = {}
 
-    def wrap(s, width = 120, extra = "\t\t")
-      s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n#{extra}")
-    end
+        values = package_codes(activity, package).each_with_object({}) do |state, hash|
+          vars.select { |v| v.state == state && v.activity_code == activity.activity_code }
+              .each do |activity_variable|
+            hash[state] = solution[activity_variable.key] || activity_variable.expression
+            problem[state] = activity_variable.expression
+          end
+        end
 
-    def d_to_s(decimal, number_of_decimal = 2)
-      return decimal.to_i.to_s if number_of_decimal > 2 && decimal.to_i == decimal.to_f
-      return decimal.to_f.to_s if number_of_decimal > 2
-      return format("%.#{number_of_decimal}f", decimal) if decimal.is_a? Numeric
-      decimal
+        return nil if values.values.compact.none?
+
+        Orbf::RulesEngine::ActivityItem.new(
+          activity:  activity,
+          solution:  values,
+          problem:   problem,
+          variables: vars
+        )
+      end
+
+      def package_codes(activity, package)
+        activity.states +
+          decision_codes(package) +
+          level_code(package) +
+          activity_formula_codes(package)
+      end
+
+      def decision_codes(package)
+        package.activity_rules
+               .flat_map(&:decision_tables)
+               .flat_map do |decision_table|
+          decision_table.headers(:in) + decision_table.headers(:out)
+        end
+      end
+
+      def level_code(package)
+        package.activity_rules
+               .flat_map(&:formulas)
+               .flat_map(&:dependencies)
+               .select { |code| code.match?(/level_[0-5]/) }
+      end
+
+      def activity_formula_codes(package)
+        package.activity_rules.flat_map(&:formulas).map(&:code)
+      end
+
+      def wrap(s, width = 120, extra = "\t")
+        s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n#{extra}")
+      end
+
+      def d_to_s(decimal, number_of_decimal = 2)
+        ValueFormatter.d_to_s(decimal, number_of_decimal)
+      end
     end
   end
-end
 end

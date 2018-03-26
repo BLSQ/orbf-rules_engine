@@ -16,4 +16,8 @@ RSpec.describe Orbf::RulesEngine::Codifier do
   it "replace - are replaced" do
     expect(subject.codify("pma/Pca")).to eq("pma_pca")
   end
+
+  it "replace double spaces" do
+    expect(subject.codify("pma  Pca")).to eq("pma_pca")
+  end
 end

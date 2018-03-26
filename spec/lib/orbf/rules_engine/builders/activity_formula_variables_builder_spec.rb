@@ -3,6 +3,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
   let(:activities) do
     [
       Orbf::RulesEngine::Activity.with(
+        name:            "act1",
         activity_code:   "act1",
         activity_states: [
           Orbf::RulesEngine::ActivityState.new_data_element(
@@ -75,7 +76,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
         activity_code:  "act1",
         orgunit_ext_id: "1",
         formula:        formula_with_span,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       ),
 
       Orbf::RulesEngine::Variable.with(
@@ -87,7 +89,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
         activity_code:  "act1",
         orgunit_ext_id: "1",
         formula:        basic_formula,
-        package:        package
+        package:        package,
+        payment_rule:   nil
       )
     ]
   end
@@ -101,6 +104,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     let(:activities) do
       [
         Orbf::RulesEngine::Activity.with(
+          name:            "act1",
           activity_code:   "act1",
           activity_states: [
             Orbf::RulesEngine::ActivityState.new_data_element(
@@ -165,7 +169,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
           activity_code:  "act1",
           orgunit_ext_id: "1",
           formula:        package.rules.first.formulas.first,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         )
       ]
     end
@@ -180,6 +185,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     let(:activities) do
       [
         Orbf::RulesEngine::Activity.with(
+          name:            "act1",
           activity_code:   "act1",
           activity_states: [
             Orbf::RulesEngine::ActivityState.new_data_element(
@@ -233,7 +239,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
           activity_code:  "act1",
           orgunit_ext_id: "1",
           formula:        package.rules.first.formulas.first,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         )
       ]
     end

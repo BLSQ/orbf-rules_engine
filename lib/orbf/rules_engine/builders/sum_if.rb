@@ -12,7 +12,7 @@ module Orbf
       def sum_if
         decision_tables.each do |decision_table|
           output_facts = decision_table.find(input_facts)
-          expect_outputs(output_facts)
+          expect_outputs(input_facts, output_facts)
           return false unless output_facts[SUM_IF] == "true"
         end
         true
@@ -31,8 +31,8 @@ module Orbf
 
       attr_reader :package, :activity, :orgunit
 
-      def expect_outputs(output_facts)
-        raise "No sum_if value for this orgunit #{orgunit.id} - #{orgunit.name}" unless output_facts
+      def expect_outputs(input_facts, output_facts)
+        raise "No sum_if value for this orgunit #{orgunit.ext_id} - #{orgunit.name} (#{input_facts})" unless output_facts
       end
 
       def input_facts

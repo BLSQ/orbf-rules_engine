@@ -6,6 +6,7 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
 
   let(:activity) do
     Orbf::RulesEngine::Activity.with(
+      name:            "act1",
       activity_code:   "act1",
       activity_states: [
         Orbf::RulesEngine::ActivityState.new_data_element(
@@ -82,7 +83,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -93,7 +95,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -104,7 +107,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -115,7 +119,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         )
       ]
     end
@@ -161,7 +166,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -172,7 +178,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -183,7 +190,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         ),
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
@@ -194,7 +202,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
           formula:        nil,
-          package:        package
+          package:        package,
+          payment_rule:   nil
         )
       ]
     end

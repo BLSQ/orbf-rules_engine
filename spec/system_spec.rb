@@ -71,6 +71,7 @@ RSpec.describe "System" do
         )
       end
       Orbf::RulesEngine::Activity.with(
+        name:            activity_code,
         activity_code:   activity_code,
         activity_states: activity_states
       )
@@ -144,10 +145,6 @@ RSpec.describe "System" do
     end.flatten
   end
 
-  let(:package_vars) do
-    Orbf::RulesEngine::ActivityVariablesBuilder.new(project, orgunits_full, dhis2_values).convert(period)
-  end
-
   def build_formula(code, expression, comment = nil)
     Orbf::RulesEngine::Formula.new(code, expression, comment, single_mapping: "dhis2_dataelement_id_#{code}")
   end
@@ -176,7 +173,7 @@ RSpec.describe "System" do
               kind:     :activity,
               formulas: [
                 build_activity_formula(
-                  "active_weight", "weight_level1 * active",
+                  "active_weight", "weight_level_1 * active",
                   "Column C Weight"
                 ),
                 build_activity_formula(
@@ -184,18 +181,18 @@ RSpec.describe "System" do
                   "new concept added to avoid handling nil vs 0"
                 ),
                 build_activity_formula(
-                  "percent_weight", "safe_div(weight_level1, fosa_total_actual_weight)"
+                  "percent_weight", "safe_div(weight_level_1, fosa_total_actual_weight)"
                 ),
                 build_activity_formula(
                   "percent_achieved", "active * safe_div(achieved,target)",
                   "% of Target Achieved [B / C], B and C are from activity states"
                 ),
                 build_activity_formula(
-                  "allowed", "if (percent_achieved < 0.75, 0, min(percent_achieved, cap_level1 / 100))",
+                  "allowed_percent", "if (percent_achieved < 0.75, 0, min(percent_achieved, cap_level_1 / 100))",
                   "Allowed [E] : should achieve at least 75% and can not go further than the cap"
                 ),
                 build_activity_formula(
-                  "overall", "allowed * percent_weight",
+                  "overall", "allowed_percent * percent_weight",
                   "% Overall [A x E]"
                 ),
                 build_activity_formula(
@@ -203,7 +200,7 @@ RSpec.describe "System" do
                   "used for available bonus calculations see package and zone rules"
                 ),
                 build_activity_formula(
-                  "actual_regional_bonus", "regional_bonus_level1",
+                  "actual_regional_bonus", "regional_bonus_level_1",
                   "used for available bonus calculations see package and zone rules"
                 )
               ]
@@ -255,7 +252,7 @@ RSpec.describe "System" do
   end
 
   let(:solver) do
-    build_solver(orgunits_full, package_vars)
+    build_solver(orgunits_full, dhis2_values)
   end
 
   let(:groupset) do
@@ -268,8 +265,7 @@ RSpec.describe "System" do
   end
 
   it "should register activity_variables" do
-    solver = Orbf::RulesEngine::Solver.new
-    solver.register_variables(package_vars)
+    solver = build_solver(orgunits_full, dhis2_values)
     expect(solver.build_problem["facility_act1_achieved_for_2_and_2016q1"]).to eq("66")
   end
 
@@ -282,11 +278,11 @@ RSpec.describe "System" do
 
   it "should build problem based on variables" do
     orgs = orgunits_full[0..2]
-    package_vars = Orbf::RulesEngine::ActivityVariablesBuilder.new(project, orgs, dhis2_values).convert(period)
-    solver = build_solver(orgs, package_vars)
+    solver = build_solver(orgs, dhis2_values)
     problem = solver.build_problem
-    Orbf::RulesEngine::Log.call JSON.pretty_generate(problem)
-    expect(problem).to eq(JSON.parse(fixture_content(:rules_engine, "problem.json")))
+    expected_problem = JSON.parse(fixture_content(:rules_engine, "problem.json"))
+    puts JSON.pretty_generate(problem) if problem != expected_problem
+    expect(problem).to eq(expected_problem)
   end
 
   it "should solve equations" do
@@ -295,14 +291,14 @@ RSpec.describe "System" do
     expect(solution["county_total_indicators_reported_weighted_for_2016q1"]).to eq(180.0)
     expect(solution["county_total_available_budget_for_fosa_for_2016q1"]).to eq(121_235.0)
 
-    Orbf::RulesEngine::InvoicePrinter.new(solver.variables, solver.solution).print
+    Orbf::RulesEngine::InvoiceCliPrinter.new(solver.variables, solver.solution).print
     exported_values = Orbf::RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print
     expect(exported_values).to include(
-      data_element: "dhis2_dataelement_id_fosa_indicators_reported_weighted",
-      org_unit:     "14",
-      period:       "2016Q1",
-      value:        9,
-      comment:      "facility_fosa_indicators_reported_weighted_for_14_and_2016q1"
+      dataElement: "dhis2_dataelement_id_fosa_indicators_reported_weighted",
+      orgUnit:     "14",
+      period:      "2016Q1",
+      value:       9,
+      comment:     "facility_fosa_indicators_reported_weighted_for_14_and_2016q1"
     )
   end
 
@@ -316,10 +312,10 @@ RSpec.describe "System" do
   it "should build formula variables" do
     variable = Orbf::RulesEngine::ActivityFormulaVariablesBuilder.new(project.packages.first, orgunits_full, period).to_variables.last
     expect(variable.key).to eq("facility_act9_actual_regional_bonus_for_20_and_2016q1")
-    expect(variable.expression).to eq("facility_act9_regional_bonus_level1_for_country_id_and_2016q1")
+    expect(variable.expression).to eq("facility_act9_regional_bonus_level_1_for_country_id_and_2016q1")
   end
 
-  def build_solver(orgs, package_vars)
+  def build_solver(orgs, dhis2_values)
     pyramid = Orbf::RulesEngine::Pyramid.new(
       org_units:          orgs,
       org_unit_groups:    org_unit_groups,
@@ -331,6 +327,7 @@ RSpec.describe "System" do
       orgunit_ext_id:   orgs[0].ext_id,
       invoicing_period: "2016Q1"
     ).call
+    package_vars = Orbf::RulesEngine::ActivityVariablesBuilder.to_variables(package_arguments, dhis2_values)
     Orbf::RulesEngine::SolverFactory.new(
       project,
       package_arguments,

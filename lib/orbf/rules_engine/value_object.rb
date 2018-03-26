@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/class/attribute'
+require "active_support/core_ext/class/attribute"
 module Orbf
   module RulesEngine
     class ValueObject
@@ -24,8 +24,18 @@ module Orbf
         self.class == other.class && values == other.values
       end
 
+      delegate :hash, to: :values
+
       def to_s
         inspect
+      end
+
+      def to_h
+        self.class._attributes.each_with_object({}) { |field, hash| hash[field] = send(field) }
+      end
+
+      def to_json(options = nil)
+        to_h.to_json(options)
       end
 
       protected

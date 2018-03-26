@@ -14,6 +14,7 @@ RSpec.describe Orbf::RulesEngine::PackageVariablesBuilder do
   let(:activities) do
     [
       Orbf::RulesEngine::Activity.with(
+        name:            "act1",
         activity_code:   "act1",
         activity_states: [
           Orbf::RulesEngine::ActivityState.new_data_element(
@@ -29,6 +30,7 @@ RSpec.describe Orbf::RulesEngine::PackageVariablesBuilder do
         ]
       ),
       Orbf::RulesEngine::Activity.with(
+        name:            "act2",
         activity_code:   "act2",
         activity_states: [
           Orbf::RulesEngine::ActivityState.new_data_element(
@@ -82,7 +84,8 @@ RSpec.describe Orbf::RulesEngine::PackageVariablesBuilder do
         activity_code:  nil,
         orgunit_ext_id: "1",
         formula:        quantity_package.rules[1].formulas.first,
-        package:        quantity_package
+        package:        quantity_package,
+        payment_rule:   nil
       ),
       Orbf::RulesEngine::Variable.with(
         key:            "#{quantity_package.code}_quantity_amount_bonus_for_1_and_201601",
@@ -93,7 +96,8 @@ RSpec.describe Orbf::RulesEngine::PackageVariablesBuilder do
         activity_code:  nil,
         orgunit_ext_id: "1",
         formula:        quantity_package.rules[1].formulas.last,
-        package:        quantity_package
+        package:        quantity_package,
+        payment_rule:   nil
       )
 
     ]
