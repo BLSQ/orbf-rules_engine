@@ -7,8 +7,9 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
     Orbf::RulesEngine::Project.new(
       packages:     [package],
       dhis2_params: {
-        url:     "https://admin:district@play.dhis2.org/2.28",
-        version: "2.28"
+        url:      "https://admin:district@play.dhis2.org/2.28",
+        user:     "admin",
+        password: "district"
       }
     )
   end
@@ -45,7 +46,7 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
     stub_orgunit_groupsets
 
     stub_values(
-      dataValues: []
+      { dataValues: []}
     )
     Orbf::RulesEngine::FetchAndSolve.new(project, "Rp268JB6Ne4", "2016Q1").call
   end

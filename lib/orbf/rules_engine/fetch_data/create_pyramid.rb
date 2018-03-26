@@ -21,21 +21,21 @@ module Orbf
 
       def org_units
         dhis2_connection.organisation_units
-                        .fetch_paginated_data(
+                        .list(
                           *default_params("id,displayName,path,organisationUnitGroups")
                         )
       end
 
       def org_unit_groups
         dhis2_connection.organisation_unit_groups
-                        .fetch_paginated_data(
+                        .list(
                           *default_params("id,code,shortName,displayName")
                         )
       end
 
       def org_unit_groupsets
         dhis2_connection.organisation_unit_group_sets
-                        .fetch_paginated_data(
+                        .list(
                           *default_params("id,code,shortName,displayName,organisationUnitGroups")
                         )
       end
@@ -44,9 +44,9 @@ module Orbf
         [
           {
             fields:    fields,
-            page_size: 10_000
-          },
-          raw: true
+            page_size: 40_000
+          }
+
         ]
       end
     end
