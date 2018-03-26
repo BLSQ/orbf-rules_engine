@@ -271,7 +271,7 @@ RSpec.describe "System" do
 
   it "should be exportable to graphviz" do
     Orbf::RulesEngine::Log.call "------------------------- project"
-    Orbf::RulesEngine::Log.call Orbf::RulesEngine::GraphvizProjectPrinter.new.print(project)
+    Orbf::RulesEngine::Log.call Orbf::RulesEngine::GraphvizProjectPrinter.new.print_project(project)
     Orbf::RulesEngine::Log.call "------------------------- solver"
     Orbf::RulesEngine::Log.call Orbf::RulesEngine::GraphvizVariablesPrinter.new.print(solver.variables)
   end
