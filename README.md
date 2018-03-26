@@ -1,5 +1,6 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/3efa31b8965568095798/maintainability)](https://codeclimate.com/github/BLSQ/orbf-rules_engine/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/3efa31b8965568095798/test_coverage)](https://codeclimate.com/github/BLSQ/orbf-rules_engine/test_coverage)
+[![Build Status](https://travis-ci.org/BLSQ/orbf-rules_engine.svg?branch=master)](https://travis-ci.org/BLSQ/orbf-rules_engine)
 
 # Orbf::RulesEngine
 
