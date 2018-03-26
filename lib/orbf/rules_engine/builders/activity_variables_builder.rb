@@ -5,6 +5,10 @@ module Orbf
     class ActivityVariablesBuilder
       include VariablesBuilderSupport
 
+      class ValueLookup < Orbf::RulesEngine::ValueObject
+        attributes :value, :is_null
+      end
+
       class << self
         def to_variables(package_arguments, dhis2_values)
           package_arguments.values.each_with_object([]) do |package_argument, package_vars|
@@ -28,22 +32,18 @@ module Orbf
 
       def convert(period)
         [package].each_with_object([]) do |package, array|
+          dependencies = package.activity_dependencies
           package.activities.each do |activity|
             package.harmonized_activity_states(activity).reject(&:constant?).each do |activity_state|
               SOURCES.each do |source|
-                send(source, activity_state, period, package.activity_dependencies) do |orgunit_id, state, expression|
-                  state = suffix_raw(state) if package.subcontract?
-
-                  array.push Orbf::RulesEngine::Variable.new_activity(
-                    period:         period,
-                    key:            suffix_for_id_activity(package.code, activity.activity_code, state, orgunit_id, period),
-                    expression:     expression,
-                    state:          state,
-                    activity_code:  activity.activity_code,
-                    orgunit_ext_id: orgunit_id,
-                    formula:        nil,
-                    package:        package
-                  )
+                send(source, activity_state, period, dependencies) do |orgunit_id, state, expression|
+                  suffixed_state = package.subcontract? ? suffix_raw(state) : state
+                  express = expression.value
+                  array.push register_vars(package, activity.activity_code, suffixed_state, express, orgunit_id, period)
+                  if dependencies.include?(suffix_is_null(state))
+                    express = expression.is_null ? "1" : "0"
+                    array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
+                  end
                 end
               end
             end
@@ -56,6 +56,19 @@ module Orbf
       attr_reader :package, :orgunits, :lookup
 
       SOURCES = %i[de_values parent_values].freeze
+
+      def register_vars(package, activity_code, state, expression, orgunit_id, period)
+        Orbf::RulesEngine::Variable.new_activity(
+          period:         period,
+          key:            suffix_for_id_activity(package.code, activity_code, state, orgunit_id, period),
+          expression:     expression,
+          state:          state,
+          activity_code:  activity_code,
+          orgunit_ext_id: orgunit_id,
+          formula:        nil,
+          package:        package
+        )
+      end
 
       def de_values(activity_state, period, _dependencies)
         orgunits.each do |orgunit|
@@ -86,9 +99,10 @@ module Orbf
 
       def lookup_value(keys)
         keys.each do |key|
-          return lookup[key].first["value"] if lookup[key]
+          val = lookup[key]
+          return ValueLookup.new(value: val.first["value"], is_null: false) if val
         end
-        "0"
+        ValueLookup.new(value: "0", is_null: true)
       end
 
       def build_keys_with_yearly(key)

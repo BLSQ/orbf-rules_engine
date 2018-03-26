@@ -17,6 +17,137 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
     ]
   end
 
+  context "null values" do
+    let(:activities) do
+      [
+        Orbf::RulesEngine::Activity.with(
+          name:            "act1",
+          activity_code:   "act1",
+          activity_states: [
+            Orbf::RulesEngine::ActivityState.new_data_element(
+              state:  :achieved,
+              ext_id: "dhis2_act1_achieved",
+              name:   "act1_achieved"
+            ),
+            Orbf::RulesEngine::ActivityState.new_data_element(
+              state:  :target,
+              ext_id: "dhis2_act1_target",
+              name:   "act1_target"
+            )
+          ]
+        )
+      ]
+    end
+
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:       :facility,
+        kind:       :single,
+        frequency:  :quarterly,
+        activities: activities,
+        rules:      [
+          Orbf::RulesEngine::Rule.new(
+            kind:     :activity,
+            formulas: [
+              Orbf::RulesEngine::Formula.new(
+                "percent_achieved",
+                "if(achieved_is_null=1,target,achieved)"
+              )
+            ]
+          )
+        ]
+      )
+    end
+
+    let(:dhis2_values) do
+      [
+        { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default", "value" => "0", "period" => "2016Q1", "orgUnit" => "1", "comment" => "African Foundation Baptist-0" }
+      ]
+    end
+
+    let(:expected_vars) do
+      [
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
+          key:            "facility_act1_achieved_for_1_and_2016q1",
+          expression:     "0",
+          state:          "achieved",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.first.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
+          key:            "facility_act1_achieved_is_null_for_1_and_2016q1",
+          expression:     "0",
+          state:          "achieved_is_null",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.first.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
+          key:            "facility_act1_achieved_for_2_and_2016q1",
+          expression:     "0",
+          state:          "achieved",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.last.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
+          key:            "facility_act1_achieved_is_null_for_2_and_2016q1",
+          expression:     "1",
+          state:          "achieved_is_null",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.last.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
+          key:            "facility_act1_target_for_1_and_2016q1",
+          expression:     "0",
+          state:          "target",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.first.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016Q1",
+          key:            "facility_act1_target_for_2_and_2016q1",
+          expression:     "0",
+          state:          "target",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: orgunits.last.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        )
+      ]
+    end
+
+    it "registers extra variables for null values" do
+      result = described_class.new(package, orgunits, dhis2_values).convert("2016Q1")
+      expect(result).to eq_vars(expected_vars)
+    end
+  end
+
   context "simple case" do
     let(:activities) do
       [

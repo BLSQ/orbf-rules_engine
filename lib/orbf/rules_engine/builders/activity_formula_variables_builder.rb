@@ -71,11 +71,20 @@ module Orbf
 
       def substitutions(activity_code)
         states_substitutions(activity_code)
+          .merge(is_null_substitutions(activity_code))
           .merge(level_substitutions)
           .merge(package_substitutions)
           .merge(formulas_substitutions(activity_code))
           .merge(decision_table_substitutions(activity_code))
           .merge(orgunit_counts_substitutions(activity_code))
+      end
+
+      def is_null_substitutions(activity_code)
+        activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
+        package.harmonized_activity_states(activity).each_with_object({}) do |activity_state, hash|
+          suffixed_state = suffix_is_null(activity_state.state)
+          hash[suffixed_state] = suffix_activity_pattern(package.code, activity_code, suffixed_state)
+        end
       end
 
       def orgunit_counts_substitutions(activity_code)
@@ -90,7 +99,7 @@ module Orbf
         package.activities.each_with_object({}) do |activity, hash|
           next if activity_code != activity.activity_code
           package.harmonized_activity_states(activity).each do |activity_state|
-            hash[activity_state.state.to_s] = activity_state_substitution(package.code, activity, activity_state)
+            hash[activity_state.state] = activity_state_substitution(package.code, activity, activity_state)
           end
         end
       end

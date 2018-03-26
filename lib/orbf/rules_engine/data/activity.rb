@@ -19,7 +19,7 @@ module Orbf
 
       def self.new_constant(state:, name:, formula:)
         with(
-          state:   state.to_s,
+          state:   state,
           name:    name,
           formula: formula,
           kind:    Kinds::KIND_CONSTANT,
@@ -29,7 +29,7 @@ module Orbf
 
       def self.new_data_element(state:, name:, ext_id:)
         with(
-          state:   state.to_s,
+          state:   state,
           name:    name,
           ext_id:  ext_id,
           kind:    Kinds::KIND_DATA_ELEMENT,
@@ -39,7 +39,7 @@ module Orbf
 
       def self.new_indicator(state:, name:, ext_id:, expression:)
         with(
-          state:   state.to_s,
+          state:   state,
           name:    name,
           ext_id:  ext_id,
           kind:    Kinds::KIND_INDICATOR,
@@ -60,6 +60,8 @@ module Orbf
       end
 
       def after_init
+        raise "State is mandatory" unless @state
+        @state = state.to_s
         raise "Kind #{kind} must be one of #{Kinds::KINDS}" unless Kinds::KINDS.include?(kind.to_s)
         raise "formula required for #{kind}" if Kinds.formula_required?(kind) && formula.nil?
       end

@@ -36,6 +36,11 @@ RSpec.describe Orbf::RulesEngine::Tokenizer do
     expect(tokens).to eq ["if", "(", "activity_type", "=", "2", ",", "", " ", "", "\n", "0", ",", "", "\n", "1"]
   end
 
+  it "should tokenize non-spaced expressions" do
+    tokens = described_class.tokenize("IF(difference_percentage<=5,validated,0)")
+    expect(tokens).to eq ["IF", "(", "difference_percentage", "<=", "5", ",", "validated", ",", "0", ")"]
+  end
+
   describe "#format_keys" do
     it "extract format_keys" do
       expect(described_class.format_keys("sample%{vass}")).to eq ["vass"]
