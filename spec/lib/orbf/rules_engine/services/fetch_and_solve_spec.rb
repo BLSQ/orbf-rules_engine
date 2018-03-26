@@ -46,7 +46,7 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
     stub_orgunit_groupsets
 
     stub_values(
-      { dataValues: []}
+      dataValues: []
     )
     Orbf::RulesEngine::FetchAndSolve.new(project, "Rp268JB6Ne4", "2016Q1").call
   end
