@@ -11,7 +11,6 @@ module Orbf
       end
 
       def print
-        solution_as_string = solution.each_with_object({}) { |(k, v), hash| hash[k] = d_to_s(v, 10) }
         invoices = variables.select(&:orgunit_ext_id)
                             .select(&:package)
                             .group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
@@ -19,7 +18,7 @@ module Orbf
           package, orgunit, period = package_orgunit_period
 
           activity_items = package.activities.map do |activity|
-            to_activity_item(package, activity, vars)
+            to_activity_item(package, activity, vars, solution_as_string)
           end
           total_items = vars.select { |var| var.activity_code.nil? }
                             .map do |var|
@@ -79,25 +78,41 @@ module Orbf
         )
       end
 
-      def to_activity_item(package, activity, vars)
+      def to_activity_item(package, activity, vars, solution_as_string)
         problem = {}
-
+        substitued = {}
         values = package_codes(activity, package).each_with_object({}) do |state, hash|
           vars.select { |v| v.state == state && v.activity_code == activity.activity_code }
               .each do |activity_variable|
             hash[state] = solution[activity_variable.key] || activity_variable.expression
             problem[state] = activity_variable.expression
+            substitued[state] = Tokenizer.replace_token_from_expression(
+              activity_variable.expression,
+              solution_as_string,
+              {}
+            )
           end
         end
 
         return nil if values.values.compact.none?
 
         Orbf::RulesEngine::ActivityItem.new(
-          activity:  activity,
-          solution:  values,
-          problem:   problem,
-          variables: vars
+          activity:   activity,
+          solution:   values,
+          problem:    problem,
+          substitued: substitued,
+          variables:  vars
         )
+      end
+
+      def solution_as_string
+        @solution_as_string ||= begin
+          solution_hash = {}
+          variables.each do |var|
+            solution_hash[var.key] = d_to_s(var.expression, 10)
+          end
+          solution.each_with_object(solution_hash) { |(k, v), hash| hash[k] = d_to_s(v, 10) }
+        end
       end
 
       def package_codes(activity, package)

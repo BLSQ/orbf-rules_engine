@@ -130,15 +130,16 @@ RSpec.describe Orbf::RulesEngine::InvoicePrinter do
       expect(payment_invoice.total_items.first.to_h).to eq(
         formula:      variable_payment.formula,
         explanations: ["quality_score * 100", "120", "120\n\t"],
-        value: 120
+        value:        120
       )
 
       expect(invoice.activity_items.first.to_h).to eq(
         Orbf::RulesEngine::ActivityItem.with(
-          activity:  activity,
-          solution:  { "achieved"=>12 },
-          problem:   { "achieved"=>"12" },
-          variables: [variable_total, variable_activity]
+          activity:   activity,
+          solution:   { "achieved"=>12 },
+          problem:    { "achieved"=>"12" },
+          substitued: { "achieved"=>"12" },
+          variables:  [variable_total, variable_activity]
         ).to_h
       )
 

@@ -1,7 +1,7 @@
 module Orbf
   module RulesEngine
     class ActivityItem < Orbf::RulesEngine::ValueObject
-      attributes :activity, :solution, :problem, :variables
+      attributes :activity, :solution, :problem, :substitued, :variables
 
       def variable(code)
         variables.detect { |v| v.state == code && v.activity_code == activity.activity_code }
