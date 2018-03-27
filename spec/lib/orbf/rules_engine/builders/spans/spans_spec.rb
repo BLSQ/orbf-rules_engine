@@ -1,6 +1,4 @@
 
-
-
 RSpec.describe "spans" do
   it "detect matching dependencies" do
     expect_matching_span(
@@ -80,6 +78,36 @@ RSpec.describe "spans" do
 
       expect(span.periods("2016Q1", "#{var_name}_yearly_values")).to eq(
         %w[2015]
+      )
+    end
+  end
+
+  describe Orbf::RulesEngine::Spans::CurrentQuarter do
+    let(:span) { described_class.new }
+
+    let(:var_name) { "sample_matching_current_quarter" }
+
+    it "give prefix" do
+      expect(span.prefix("#{var_name}_values")).to eq("sample_matching")
+      expect(span.prefix("#{var_name}_monthly_values")).to eq("sample_matching")
+      expect(span.prefix("#{var_name}_yearly_values")).to eq("sample_matching")
+    end
+
+    it "give periods" do
+      expect(span.periods("2016Q1", "#{var_name}_values")).to eq(
+        %w[201601 201602 201603]
+      )
+
+      expect(span.periods("2016Q1", "#{var_name}_monthly_values")).to eq(
+        %w[201601 201602 201603]
+      )
+
+      expect(span.periods("2016Q1", "#{var_name}_quarterly_values")).to eq(
+        %w[201601 201602 201603]
+      )
+
+      expect(span.periods("2016Q1", "#{var_name}_yearly_values")).to eq(
+        %w[201601 201602 201603]
       )
     end
   end
