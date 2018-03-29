@@ -94,7 +94,13 @@ RSpec.describe "Senegal System" do
               "qtt_percent_rule", "IF(difference_percentage<=5,validated,0)"
             ),
             build_activity_formula(
-              "amount ", "qtt_percent_rule"
+              "monthly_sanction", "IF(difference_percentage>5,1,0)"
+            ),
+            build_activity_formula(
+              "quarterly_sanction", "IF(SUM(%{monthly_sanction_current_quarter_values}) > 0,0,1)"
+            ),
+            build_activity_formula(
+              "amount ", "qtt_percent_rule * quarterly_sanction"
             )
           ]
         ),

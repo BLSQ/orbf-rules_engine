@@ -72,6 +72,21 @@ module Orbf
         end
       end
 
+      class CurrentQuarter < Span
+        def suffix
+          "current_quarter"
+        end
+
+        def periods(invoicing_period, _name)
+          quarter = PeriodIterator.periods(invoicing_period, "quarterly").first
+          PeriodIterator.periods(quarter, "monthly")
+        end
+
+        def supports?(rule_kind)
+          rule_kind == "activity"
+        end
+      end
+
       class PreviousCycle < Span
         def suffix
           "previous"
@@ -88,7 +103,7 @@ module Orbf
         end
       end
 
-      SPANS = [PreviousYearSameQuarter.new, PreviousYear.new, PreviousCycle.new].freeze
+      SPANS = [PreviousYearSameQuarter.new, PreviousYear.new, PreviousCycle.new, CurrentQuarter.new].freeze
     end
   end
 end
