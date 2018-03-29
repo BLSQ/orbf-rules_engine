@@ -57,6 +57,7 @@ module Orbf
       end
 
       def fetch_data(package_arguments)
+        return [] if package_arguments.empty?
         values = FetchData.new(dhis2_connection, package_arguments.values).call
 
         values += RulesEngine::IndicatorEvaluator.new(

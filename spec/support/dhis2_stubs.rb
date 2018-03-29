@@ -65,6 +65,10 @@ module Dhis2Stubs
           {
             "id"          => "b0EsAxm8Nge",
             "displayName" => "Adonkia CHP"
+          },
+          {
+            "id"          => "f25dqv3Y7Z0",
+            "displayName" => "health center"
           }
         ]
       }.to_json
