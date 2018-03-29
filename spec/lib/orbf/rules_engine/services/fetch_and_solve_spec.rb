@@ -28,9 +28,8 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
       stub_orgunit_groups
       stub_orgunit_groupsets
 
-      values = {}
       stub_request(:get, "https://play.dhis2.org/2.28/api/dataValueSets?children=false&dataSet=&orgUnit=Rp268JB6Ne4&period=2016")
-        .to_return(status: 200, body: values.to_json)
+        .to_return(status: 200, body: {}.to_json)
 
       fetch_and_solve = described_class.new(project, "Rp268JB6Ne4", "2016Q1")
       fetch_and_solve.call
