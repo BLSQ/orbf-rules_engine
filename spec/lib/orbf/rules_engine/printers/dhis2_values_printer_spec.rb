@@ -110,12 +110,14 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
   describe "when activity variable" do
     let(:activity_variable_with_mapping) do
       build_activity_variable(
-        activity.activity_code => "dhis2_data_element_id_act1"
+        activity_mappings: {
+          activity.activity_code => "dhis2_data_element_id_act1"
+        }
       )
     end
 
     let(:activity_variable_without_mapping) do
-      build_activity_variable(nil)
+      build_activity_variable({})
     end
 
     describe "and NO mapping configured " do
@@ -130,34 +132,53 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
     describe " and mapping configured " do
       it "export decimal that are actually integer as integer" do
-        expect_exported_value(activity_variable_with_mapping, 15.0, 15)
+        expect_exported_value(activity_variable_with_mapping, 15.0, 15, "2016Q1")
       end
 
       it "export decimal as decimal" do
-        expect_exported_value(activity_variable_with_mapping, 15.0001, 15.0001)
-      end
-
-      def expect_exported_value(variable, solution_value, expected_value)
-        result_values = described_class.new(
-          [variable],
-          variable.key => solution_value
-        ).print
-        expect(result_values).to eq(
-          [
-            {
-              dataElement: "dhis2_data_element_id_act1",
-              orgUnit:     "1",
-              period:      "2016Q1",
-              value:       expected_value,
-              comment:     variable.key
-            }
-          ]
-        )
+        expect_exported_value(activity_variable_with_mapping, 15.0001, 15.0001, "2016Q1")
       end
     end
 
-    def build_activity_variable(activity_mappings)
-      package = build_package(activity_mappings)
+    describe " and mapping and frequency configured " do
+      let(:activity_variable_with_mapping_and_frequency) do
+        build_activity_variable(
+          activity_mappings: {
+            activity.activity_code => "dhis2_data_element_id_act1"
+          },
+          frequency:         "monthly"
+        )
+      end
+
+      it "export decimal that are actually integer as integer" do
+        expect_exported_value(activity_variable_with_mapping_and_frequency, 15.0, 15, "201603")
+      end
+
+      it "export decimal as decimal" do
+        expect_exported_value(activity_variable_with_mapping_and_frequency, 15.0001, 15.0001, "201603")
+      end
+    end
+
+    def expect_exported_value(variable, solution_value, expected_value, period)
+      result_values = described_class.new(
+        [variable],
+        variable.key => solution_value
+      ).print
+      expect(result_values).to eq(
+        [
+          {
+            dataElement: "dhis2_data_element_id_act1",
+            orgUnit:     "1",
+            period:      period,
+            value:       expected_value,
+            comment:     variable.key
+          }
+        ]
+      )
+    end
+
+    def build_activity_variable(options)
+      package = build_package(options)
 
       Orbf::RulesEngine::Variable.with(
         period:         "2016Q1",
@@ -173,7 +194,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       )
     end
 
-    def build_package(activity_mappings)
+    def build_package(options)
       Orbf::RulesEngine::Package.new(
         code:       :quantity,
         kind:       :single,
@@ -185,7 +206,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
             formulas: [
               Orbf::RulesEngine::Formula.new(
                 "quality_score", "31", "",
-                activity_mappings: activity_mappings
+                options
               )
             ]
           )
