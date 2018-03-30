@@ -3,13 +3,14 @@
 module Orbf
   module RulesEngine
     class Formula
-      attr_reader :code, :expression, :comment
+      attr_reader :code, :expression, :comment, :frequency
       attr_accessor :rule
 
-      def initialize(code, expression, comment = "", single_mapping: nil, activity_mappings: nil)
+      def initialize(code, expression, comment = "", single_mapping: nil, activity_mappings: nil, frequency: nil)
         @code = code.strip
         @expression = expression.strip
         @comment = comment
+        @frequency = frequency
         @single_mapping = single_mapping
         @activity_mappings = activity_mappings
         raise "mapping and mappings can't be both filled" if single_mapping && activity_mappings
