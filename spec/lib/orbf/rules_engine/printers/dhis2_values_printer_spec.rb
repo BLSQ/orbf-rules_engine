@@ -132,29 +132,11 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
     describe " and mapping configured " do
       it "export decimal that are actually integer as integer" do
-        expect_exported_value(activity_variable_with_mapping, 15.0, 15)
+        expect_exported_value(activity_variable_with_mapping, 15.0, 15, "2016Q1")
       end
 
       it "export decimal as decimal" do
-        expect_exported_value(activity_variable_with_mapping, 15.0001, 15.0001)
-      end
-
-      def expect_exported_value(variable, solution_value, expected_value)
-        result_values = described_class.new(
-          [variable],
-          variable.key => solution_value
-        ).print
-        expect(result_values).to eq(
-          [
-            {
-              dataElement: "dhis2_data_element_id_act1",
-              orgUnit:     "1",
-              period:      "2016Q1",
-              value:       expected_value,
-              comment:     variable.key
-            }
-          ]
-        )
+        expect_exported_value(activity_variable_with_mapping, 15.0001, 15.0001, "2016Q1")
       end
     end
 
@@ -169,30 +151,30 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
 
       it "export decimal that are actually integer as integer" do
-        expect_exported_value(activity_variable_with_mapping_and_frequency, 15.0, 15)
+        expect_exported_value(activity_variable_with_mapping_and_frequency, 15.0, 15, "201603")
       end
 
       it "export decimal as decimal" do
-        expect_exported_value(activity_variable_with_mapping_and_frequency, 15.0001, 15.0001)
+        expect_exported_value(activity_variable_with_mapping_and_frequency, 15.0001, 15.0001, "201603")
       end
+    end
 
-      def expect_exported_value(variable, solution_value, expected_value)
-        result_values = described_class.new(
-          [variable],
-          variable.key => solution_value
-        ).print
-        expect(result_values).to eq(
-          [
-            {
-              dataElement: "dhis2_data_element_id_act1",
-              orgUnit:     "1",
-              period:      "201603",
-              value:       expected_value,
-              comment:     variable.key
-            }
-          ]
-        )
-      end
+    def expect_exported_value(variable, solution_value, expected_value, period)
+      result_values = described_class.new(
+        [variable],
+        variable.key => solution_value
+      ).print
+      expect(result_values).to eq(
+        [
+          {
+            dataElement: "dhis2_data_element_id_act1",
+            orgUnit:     "1",
+            period:      period,
+            value:       expected_value,
+            comment:     variable.key
+          }
+        ]
+      )
     end
 
     def build_activity_variable(options)
