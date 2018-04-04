@@ -11,8 +11,8 @@ module Orbf
       end
 
       def print
-        variables.select(&:exportable?)
-                 .map do |variable|
+        values = variables.select(&:exportable?)
+                          .map do |variable|
           {
             dataElement: variable.dhis2_data_element,
             orgUnit:     variable.orgunit_ext_id,
@@ -21,7 +21,17 @@ module Orbf
             comment:     variable.key
           }
         end
+        uniq_values(values)
       end
+
+      def uniq_values(values)
+        values.uniq do |value|
+          [value[:dataElement],
+           value[:orgUnit],
+           value[:period],
+           value[:value]]
+        end
+    end
 
       def format_period(variable)
         return variable.period unless variable.formula.frequency

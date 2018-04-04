@@ -140,6 +140,44 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
     end
 
+    describe " and mapping and frequency configured and remove duplicates" do
+      let(:var1) do
+        build_activity_variable(
+          activity_mappings: {
+            activity.activity_code => "dhis2_data_element_id_act1"
+          },
+          frequency:         "monthly"
+        )
+      end
+
+      let(:var2) do
+        build_activity_variable(
+          activity_mappings: {
+            activity.activity_code => "dhis2_data_element_id_act1"
+          },
+          frequency:         "monthly"
+        )
+      end
+
+      it "export decimal that are actually integer as integer" do
+        result_values = described_class.new(
+          [var1, var2],
+          var1.key => 15, var2.key => 15
+        ).print
+        expect(result_values).to eq(
+          [
+            {
+              dataElement: "dhis2_data_element_id_act1",
+              orgUnit:     "1",
+              period:      "201603",
+              value:       15,
+              comment:     var1.key
+            }
+          ]
+        )
+      end
+    end
+
     describe " and mapping and frequency configured " do
       let(:activity_variable_with_mapping_and_frequency) do
         build_activity_variable(
