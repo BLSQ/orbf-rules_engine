@@ -50,9 +50,9 @@ RSpec.describe Orbf::RulesEngine::FetchData do
                            [
                              "https://play.dhis2.org/2.28/api/dataValueSets",
                              "?children=false",
-                             "&orgUnit=1&orgUnit=2",
+                             "&orgUnit=1&orgUnit=2&orgUnit=country_id&orgUnit=county_id",
                              "&dataSet=dataset1&dataSet=dataset2",
-                             "&period=201601&period=201602&period=201603&period=2016Q1&period=2015Q1"
+                             "&period=2015Q1&period=201601&period=201602&period=201603&period=2016Q1"
                            ].join)
               .to_return(status: 200, body: JSON.pretty_generate(
                 "dataValues" => []

@@ -28,7 +28,7 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
       stub_orgunit_groups
       stub_orgunit_groupsets
 
-      stub_request(:get, "https://play.dhis2.org/2.28/api/dataValueSets?children=false&dataSet=&orgUnit=Rp268JB6Ne4&period=2016")
+      stub_request(:get, "https://play.dhis2.org/2.28/api/dataValueSets?children=false&dataSet=data_set_id&orgUnit=ImspTQPwCqd&orgUnit=Rp268JB6Ne4&orgUnit=at6UHUQatSo&orgUnit=qtr8GGlm4gg&period=2016&period=2016Q1")
         .to_return(status: 200, body: {}.to_json)
 
       fetch_and_solve = described_class.new(project, "Rp268JB6Ne4", "2016Q1")
@@ -84,6 +84,7 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
       kind:                   :single,
       frequency:              :quarterly,
       activities:             activities,
+      dataset_ext_ids:        ["data_set_id"],
       org_unit_group_ext_ids: [group],
       rules:                  [
         Orbf::RulesEngine::Rule.new(
