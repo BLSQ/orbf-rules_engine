@@ -47,6 +47,44 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
       expect(fetch_and_solve.dhis2_values).to eq([])
       expect(fetch_and_solve.pyramid).to be_a(Orbf::RulesEngine::Pyramid)
     end
+
+    it "allow to pass mocked dhis2 values" do
+      stub_orgunits
+      stub_orgunit_groups
+      stub_orgunit_groupsets
+
+      fetch_and_solve = described_class.new(project, "Rp268JB6Ne4", "2016Q1", mock_values: [])
+      fetch_and_solve.call
+
+      expect(fetch_and_solve.solver).to be_a(Orbf::RulesEngine::Solver)
+      expect(fetch_and_solve.exported_values).to eq(
+        [
+          { dataElement: "achieved_dhis2id",
+            orgUnit:     "Rp268JB6Ne4",
+            period:      "2016Q1",
+            value:       0,
+            comment:     "facility_act1_achieved_for_Rp268JB6Ne4_and_2016q1" }
+        ]
+      )
+      expect(fetch_and_solve.dhis2_values).to eq([])
+      expect(fetch_and_solve.pyramid).to be_a(Orbf::RulesEngine::Pyramid)
+    end
+
+    it "allow to pass mocked pyramid" do
+      pyramid = Orbf::RulesEngine::Pyramid.new(
+        org_units: [
+          OpenStruct.new(ext_id: "Rp268JB6Ne4", group_ext_ids: [])
+        ], org_unit_groups: [], org_unit_groupsets: []
+      )
+
+      fetch_and_solve = described_class.new(project, "Rp268JB6Ne4", "2016Q1", mock_values: [], pyramid: pyramid)
+      fetch_and_solve.call
+
+      expect(fetch_and_solve.solver).to be_a(Orbf::RulesEngine::Solver)
+      expect(fetch_and_solve.exported_values).to eq([])
+      expect(fetch_and_solve.dhis2_values).to eq([])
+      expect(fetch_and_solve.pyramid).to eq(pyramid)
+    end
   end
 
   describe "without matching package group" do
