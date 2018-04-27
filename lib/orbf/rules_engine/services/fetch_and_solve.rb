@@ -5,12 +5,13 @@ module Orbf
     class FetchAndSolve
       attr_reader :solver, :exported_values, :dhis2_values, :pyramid
 
-      def initialize(project, orgunit_ext_id, invoicing_period, pyramid = nil)
+      def initialize(project, orgunit_ext_id, invoicing_period, pyramid: nil, mock_values: nil)
         @orgunit_ext_id = orgunit_ext_id
         @invoicing_period = invoicing_period
         @project = project
         @dhis2_connection = ::Dhis2::Client.new(project.dhis2_params)
         @pyramid = pyramid || CreatePyramid.new(dhis2_connection).call
+        @mock_values = mock_values
       end
 
       def call
@@ -58,7 +59,11 @@ module Orbf
 
       def fetch_data(package_arguments)
         return [] if package_arguments.empty?
-        values = FetchData.new(dhis2_connection, package_arguments.values).call
+        values = if @mock_values
+                   @mock_values
+                 else
+                   FetchData.new(dhis2_connection, package_arguments.values).call
+                 end
 
         values += RulesEngine::IndicatorEvaluator.new(
           project.indicators,
