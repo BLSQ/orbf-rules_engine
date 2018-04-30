@@ -36,8 +36,9 @@ module Orbf
       end
 
       def map_to_raw(results)
-        results.map do |v|
-          {
+        results.each_with_object([]) do |v, cleaned|
+          next if v["value"].nil?
+          cleaned << {
             "dataElement"          => v["data_element"],
             "period"               => v["period"],
             "orgUnit"              => v["org_unit"],
