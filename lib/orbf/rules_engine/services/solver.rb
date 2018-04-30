@@ -54,22 +54,39 @@ module Orbf
         @equations = {}
         begin
           split_problem(problem, calc)
-          @solution = calc.solve(equations) do |missing_var_error|
-            missing_var = @variables.index_by(&:key)[missing_var_error.recipient_variable]
-            puts [
-              ColorizedString["----------- ERROR !!!"].colorize(:red),
-              field_message("  Message            : ", missing_var_error.message),
-              field_message("  Recipient_variable : ", missing_var_error.recipient_variable.to_s),
-              field_message("  Unbound_variables  : ", missing_var_error.unbound_variables.to_s),
-              field_message("  Variables          : ", "\n" + missing_var.to_s),
-              field_message("  Equation           : ", "\n#{highlight(problem[missing_var_error.recipient_variable], missing_var_error.unbound_variables)}"),
-              field_message("  Formula expression : ", "\n" + missing_var&.formula&.expression.to_s),
-              ColorizedString["--------------------"].colorize(:red)
-            ].join("\n")
-            raise missing_var_error
+          @solution = calc.solve(equations) do |error|
+            if error.is_a?(Dentaku::UnboundVariableError)
+              on_unbound_variable_error(error, problem)
+            else
+              on_error(error, problem)
+            end
+            raise error
           end
         end
         @solution
+      end
+
+      def on_error(error, problem)
+        puts [
+          ColorizedString["----------- ERROR !!!"].colorize(:red),
+          field_message("  Message            : ", error.message),
+          field_message("  Problem            : ", JSON.generate(problem)),
+          ColorizedString["--------------------"].colorize(:red)
+        ].join("\n")
+      end
+
+      def on_unbound_variable_error(missing_var_error, problem)
+        missing_var = @variables.index_by(&:key)[missing_var_error.recipient_variable]
+        puts [
+          ColorizedString["----------- ERROR !!!"].colorize(:red),
+          field_message("  Message            : ", missing_var_error.message),
+          field_message("  Recipient_variable : ", missing_var_error.recipient_variable.to_s),
+          field_message("  Unbound_variables  : ", missing_var_error.unbound_variables.to_s),
+          field_message("  Variables          : ", "\n" + missing_var.to_s),
+          field_message("  Equation           : ", "\n#{highlight(problem[missing_var_error.recipient_variable], missing_var_error.unbound_variables)}"),
+          field_message("  Formula expression : ", "\n" + missing_var&.formula&.expression.to_s),
+          ColorizedString["--------------------"].colorize(:red)
+        ].join("\n")
       end
 
       def field_message(field_name, message)

@@ -23,6 +23,18 @@ RSpec.describe Orbf::RulesEngine::Solver do
     end.to raise_error(/Duplicates for key1=/)
   end
 
+  it "logs Dentaku::ArgumentError" do
+    expect do
+      solver.register_variables(
+        [
+          build_variable("key1", "10 - nil_key"),
+          build_variable("nil_key", nil)
+        ]
+      )
+      solver.solve!
+    end.to raise_error(Dentaku::ArgumentError)
+  end
+
   it "throws error when equations don't match" do
     solver.register_variables(
       [
