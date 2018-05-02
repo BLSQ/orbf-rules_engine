@@ -37,6 +37,9 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
           formulas: [
             Orbf::RulesEngine::Formula.new(
               "total_weighted_district_reported", "SUM(%{number_of_indicators_reported_values})", ""
+            ),
+            Orbf::RulesEngine::Formula.new(
+              "sample_zone_formula", "14 / total_weighted_district_reported", ""
             )
           ]
         )
@@ -57,7 +60,20 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
         formula:        package.rules.last.formulas.first,
         package:        package,
         payment_rule:   nil
+      ),
+      Orbf::RulesEngine::Variable.with(
+        period:         "2016Q1",
+        key:            "sample_zone_formula_for_2016q1",
+        expression:     "14 / total_weighted_district_reported_for_2016q1",
+        state:          "sample_zone_formula",
+        type:           "zone_rule",
+        activity_code:  nil,
+        orgunit_ext_id: nil,
+        formula:        package.rules.last.formulas.last,
+        package:        package,
+        payment_rule:   nil
       )
+
     ]
   end
 

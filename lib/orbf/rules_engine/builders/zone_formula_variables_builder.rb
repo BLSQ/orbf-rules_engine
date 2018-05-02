@@ -20,13 +20,18 @@ module Orbf
       attr_reader :orgunits, :package, :period
 
       def zone_orgs_formula_variables
-        substitutions = get_substitutions
+        substitutions = values_substitutions
 
         package.zone_rules.flat_map(&:formulas).map do |zone_formula|
           formatted = format(zone_formula.expression, substitutions)
+          formatted = Tokenizer.replace_token_from_expression(
+            formatted,
+            zone_substitions,
+            {}
+          )
           Orbf::RulesEngine::Variable.with(
             period:         period,
-            key:            zone_formula.code + '_for_' + period.downcase,
+            key:            zone_formula.code + "_for_" + period.downcase,
             expression:     formatted,
             state:          zone_formula.code,
             type:           Orbf::RulesEngine::Variable::Types::ZONE_RULE,
@@ -39,14 +44,20 @@ module Orbf
         end
       end
 
-      def get_substitutions
+      def zone_substitions
+        package.zone_rules.flat_map(&:formulas).each_with_object({}) do |zone_formula, hash|
+          hash[zone_formula.code] = zone_formula.code + "_for_" + period.downcase
+        end
+      end
+
+      def values_substitutions
         package.package_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |package_formula, hash|
           values = orgunits.map do |orgunit|
             suffix_for(package.code, package_formula.code, orgunit, period)
           end
-          hash["#{package_formula.code}_values".to_sym] = values.join(',')
+          hash["#{package_formula.code}_values".to_sym] = values.join(",")
         end
       end
     end
