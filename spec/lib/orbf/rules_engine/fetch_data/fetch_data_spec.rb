@@ -45,15 +45,18 @@ RSpec.describe Orbf::RulesEngine::FetchData do
 
   let(:fetch_data) { described_class.new(dhis2_connection, package_arguments) }
 
+  let(:expected_url) do
+    [
+      "https://play.dhis2.org/2.28/api/dataValueSets",
+      "?children=false",
+      "&orgUnit=1&orgUnit=2&orgUnit=country_id&orgUnit=county_id",
+      "&dataSet=dataset1&dataSet=dataset2",
+      "&period=2015Q1&period=201601&period=201602&period=201603&period=2016Q1"
+    ].join
+  end
+
   it "combines all arguments and fetch data in one call" do
-    request = stub_request(:get,
-                           [
-                             "https://play.dhis2.org/2.28/api/dataValueSets",
-                             "?children=false",
-                             "&orgUnit=1&orgUnit=2&orgUnit=country_id&orgUnit=county_id",
-                             "&dataSet=dataset1&dataSet=dataset2",
-                             "&period=2015Q1&period=201601&period=201602&period=201603&period=2016Q1"
-                           ].join)
+    request = stub_request(:get, expected_url)
               .to_return(status: 200, body: JSON.pretty_generate(
                 "dataValues" => []
               ), headers: {})
@@ -61,5 +64,63 @@ RSpec.describe Orbf::RulesEngine::FetchData do
     fetch_data.call
 
     expect(request).to have_been_made.once
+  end
+
+  context "data cleaning" do
+    let(:ok_value) do
+      {
+        "value":                  "I'm ok",
+        "data_element":           "fHV12Didd5R",
+        "period":                 "201712",
+        "org_unit":               "k2SI9SSS33I",
+        "category_option_combo":  "HllvX50cXC0",
+        "attribute_option_combo": "HllvX50cXC0",
+        "stored_by":              "dd",
+        "created":                "2018-04-18T14:33:50.000+0000",
+        "last_updated":           "2018-04-30T10:26:24.371+0000",
+        "comment":                "form-azeaze by d@d.be",
+        "follow_up":              false
+      }
+    end
+
+    let(:nil_value) do
+      {
+        "data_element":           "fHV12Didd5R",
+        "period":                 "201712",
+        "org_unit":               "k2SI9SSS33I",
+        "category_option_combo":  "HllvX50cXC0",
+        "attribute_option_combo": "HllvX50cXC0",
+        "stored_by":              "dd",
+        "created":                "2018-04-18T14:33:50.000+0000",
+        "last_updated":           "2018-04-30T10:26:24.371+0000",
+        "comment":                "form-azeaze by d@d.be",
+        "follow_up":              false
+      }
+    end
+
+    it "cleans up the null values" do
+      stub_request(:get, expected_url)
+        .to_return(status: 200, body: JSON.pretty_generate(
+          "dataValues" => [
+            nil_value,
+            ok_value
+          ]
+        ), headers: {})
+
+      values = fetch_data.call
+
+      expect(values).to eq [
+        { "dataElement"          => "fHV12Didd5R",
+          "period"               => "201712",
+          "orgUnit"              => "k2SI9SSS33I",
+          "categoryOptionCombo"  => "HllvX50cXC0",
+          "attributeOptionCombo" => "HllvX50cXC0",
+          "value"                => "I'm ok",
+          "storedBy"             => "dd",
+          "created"              => "2018-04-18T14:33:50.000+0000",
+          "lastUpdated"          => "2018-04-30T10:26:24.371+0000",
+          "followUp"             => false }
+      ]
+    end
   end
 end
