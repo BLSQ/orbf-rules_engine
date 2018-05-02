@@ -54,36 +54,20 @@ module Orbf
         @equations = {}
         begin
           split_problem(problem, calc)
-          @solution = calc.solve(equations) do |missing_var_error|
-            missing_var = @variables.index_by(&:key)[missing_var_error.recipient_variable]
-            puts [
-              ColorizedString["----------- ERROR !!!"].colorize(:red),
-              field_message("  Message            : ", missing_var_error.message),
-              field_message("  Recipient_variable : ", missing_var_error.recipient_variable.to_s),
-              field_message("  Unbound_variables  : ", missing_var_error.unbound_variables.to_s),
-              field_message("  Variables          : ", "\n" + missing_var.to_s),
-              field_message("  Equation           : ", "\n#{highlight(problem[missing_var_error.recipient_variable], missing_var_error.unbound_variables)}"),
-              field_message("  Formula expression : ", "\n" + missing_var&.formula&.expression.to_s),
-              ColorizedString["--------------------"].colorize(:red)
-            ].join("\n")
-            raise missing_var_error
+          @solution = calc.solve(equations) do |error|
+            if error.is_a?(Dentaku::UnboundVariableError)
+              Orbf::RulesEngine::SolverErrorHandler.on_unbound_variable_error(
+                error,
+                problem,
+                @variables
+              )
+            else
+              Orbf::RulesEngine::SolverErrorHandler.on_error(error, problem, @variables)
+            end
+            raise error
           end
         end
         @solution
-      end
-
-      def field_message(field_name, message)
-        [
-          ColorizedString[field_name].colorize(:light_blue),
-          message
-        ].join(" ")
-      end
-
-      def highlight(equation, unbound_variables)
-        tokens = Tokenizer.tokenize(equation).map do |token|
-          unbound_variables.include?(token) ? ColorizedString[token].colorize(:yellow) : token
-        end
-        tokens.join("")
       end
 
       def split_problem(problem, calc)
@@ -96,6 +80,7 @@ module Orbf
         end
       end
 
+      # rubocop:disable Rails/TimeZone
       def benchmark(message)
         start = Time.now
         value = nil
