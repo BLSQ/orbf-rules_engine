@@ -16,7 +16,7 @@ module Orbf
         "zone"                 => "fill:#ada397"
       }.freeze
 
-      TODO_ADDITIONAL_STYLE = ",stroke:#f66,stroke-width:6px,stroke-dasharray: 5, 5;"
+      TODO_ADDITIONAL_STYLE = ",stroke:#FF9900,stroke-width:8px,stroke-dasharray: 8, 8;"
 
       def print_project(project)
         print_packages(project.packages)
@@ -36,16 +36,36 @@ module Orbf
               formula.code + "--> " + dependency + ";"
             end
 
-            dig + [
-              "#{formula.code}#{sep.first}\"<b>#{formula.code}</b>\"#{sep.last};",
-              "style " + formula.code + " " + STYLES[formula.rule.kind.to_s] + additional_style(formula)
-            ]
+            dig + node_formula(formula, sep)
           end
+          diagram += package.states.map { |state| node_state(state) }
           diagrams.push diagram.flatten.uniq.join("\n")
         end
 
         Orbf::RulesEngine::Log.call diagrams
         diagrams
+      end
+
+      def node_formula(formula, sep)
+        [
+          "#{formula.code}#{sep.first}\"#{title(formula.code)}\"#{sep.last};",
+          "style " + formula.code + " " + STYLES[formula.rule.kind.to_s] + additional_style(formula),
+          "click " + formula.code + " \"/##{formula.code}\" \"#{tooltip(formula)}\""
+        ]
+      end
+
+      def node_state(state)
+        "#{state}(\"#{title(state)}\")"
+      end
+
+      def title(name)
+        "<h3><b>#{name}</b></h3>"
+      end
+
+      def tooltip(formula)
+        "<b>#{formula.code}</b> <br><br>" \
+          "Expression: <br><code>#{formula.expression}</code><br><br>" \
+          "Description: <br>#{formula.comment}"
       end
 
       def additional_style(formula)
