@@ -21,6 +21,6 @@ require_relative "./support/dhis2_stubs"
 
 require_relative "../lib/orbf/rules_engine"
 
-def fixture_content(type, name)
-  File.read(File.join("spec", "fixtures", type.to_s, name))
+def fixture_content(*path_elements)
+  File.read(File.join("spec", "fixtures", path_elements.map(&:to_s)))
 end

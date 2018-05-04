@@ -3,8 +3,28 @@
 module Orbf
   module RulesEngine
     class Package
-      FREQUENCIES = %w[monthly quarterly].freeze
-      KINDS = %w[single subcontract zone].freeze
+      module Frequencies
+        MONTHLY = "monthly"
+        QUARTERLY = "quarterly"
+        FREQUENCIES = [MONTHLY, QUARTERLY].freeze
+
+        def self.assert_valid(package_frequency)
+          return if FREQUENCIES.include?(package_frequency)
+          raise "Invalid package frequency '#{package_frequency}' only supports #{FREQUENCIES}"
+        end
+      end
+
+      module Kinds
+        SINGLE = "single"
+        SUBCONTRACT = "subcontract"
+        ZONE = "zone"
+        KINDS = [SINGLE, SUBCONTRACT, ZONE].freeze
+
+        def self.assert_valid(package_kind)
+          return if KINDS.include?(package_kind)
+          raise "Invalid package kind '#{rule_kind}' only supports #{KINDS}"
+        end
+      end
 
       attr_reader :activities, :kind, :rules, :frequency, :code,
                   :org_unit_group_ext_ids, :groupset_ext_id, :dataset_ext_ids
@@ -33,11 +53,11 @@ module Orbf
       end
 
       def monthly?
-        frequency == "monthly"
+        frequency == Frequencies::MONTHLY
       end
 
       def quarterly?
-        frequency == "quarterly"
+        frequency == Frequencies::QUARTERLY
       end
 
       def states
@@ -83,23 +103,23 @@ module Orbf
       end
 
       def single?
-        kind == "single"
+        kind == Kinds::SINGLE
       end
 
       def subcontract?
-        kind == "subcontract"
+        kind == Kinds::SUBCONTRACT
       end
 
       def zone?
-        kind == "zone"
+        kind == Kinds::ZONE
       end
 
       private
 
       def validate
-        raise "Frequency #{frequency} must be one of #{FREQUENCIES}" unless FREQUENCIES.include?(frequency)
-        raise "Kind #{kind} must be one of #{KINDS}" unless KINDS.include?(kind)
-        raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if %w[subcontract zone].include?(kind) && groupset_ext_id.nil?
+        Frequencies.assert_valid(frequency)
+        Kinds.assert_valid(kind)
+        raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if [Kinds::SUBCONTRACT, Kinds::ZONE].include?(kind) && groupset_ext_id.nil?
         validate_values_references
         validate_states_and_activity_formula_code_uniqness
       end

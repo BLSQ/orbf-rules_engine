@@ -3,6 +3,17 @@
 module Orbf
   module RulesEngine
     class PaymentRule
+      module Frequencies
+        MONTHLY = "monthly"
+        QUARTERLY = "quarterly"
+        FREQUENCIES = [MONTHLY, QUARTERLY].freeze
+
+        def self.assert_valid(payment_rule_frequency)
+          return if FREQUENCIES.include?(payment_rule_frequency)
+          raise "Invalid payment rule frequency '#{payment_rule_frequency}' only supports #{FREQUENCIES}"
+        end
+      end
+
       KNOWN_ATTRIBUTES = %i[packages rule frequency code].freeze
 
       attr_reader(*KNOWN_ATTRIBUTES)
@@ -21,14 +32,14 @@ module Orbf
       end
 
       def monthly?
-        frequency == "monthly"
+        frequency == Frequencies::MONTHLY
       end
 
       private
 
       def validate
-        raise "rule must be kind payment" unless rule.kind == "payment"
-        raise "no support for frequency #{frequency}" unless Package::FREQUENCIES.include?(@frequency)
+        raise "rule must be kind '#{Rule::Kinds::PAYMENT}'" unless rule.payment_kind?
+        Frequencies.assert_valid(@frequency)
       end
     end
   end
