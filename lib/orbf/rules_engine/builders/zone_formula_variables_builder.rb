@@ -7,7 +7,8 @@ module Orbf
 
       def initialize(package, orgunits, period)
         @package = package
-        @orgunits = orgunits
+        @ref_orgunit = orgunits[0]
+        @secondary_orgunits = orgunits[1..-1]
         @period = period
       end
 
@@ -17,7 +18,7 @@ module Orbf
 
       private
 
-      attr_reader :orgunits, :package, :period
+      attr_reader :orgunits, :package, :period, :ref_orgunit, :secondary_orgunits
 
       def zone_orgs_formula_variables
         substitutions = values_substitutions
@@ -36,7 +37,7 @@ module Orbf
             state:          zone_formula.code,
             type:           Orbf::RulesEngine::Variable::Types::ZONE_RULE,
             activity_code:  nil,
-            orgunit_ext_id: nil,
+            orgunit_ext_id: ref_orgunit.ext_id,
             formula:        zone_formula,
             package:        package,
             payment_rule:   nil
@@ -54,7 +55,7 @@ module Orbf
         package.package_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |package_formula, hash|
-          values = orgunits.map do |orgunit|
+          values = secondary_orgunits.map do |orgunit|
             suffix_for(package.code, package_formula.code, orgunit, period)
           end
           hash["#{package_formula.code}_values".to_sym] = values.join(",")
