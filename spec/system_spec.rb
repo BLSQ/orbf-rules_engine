@@ -288,8 +288,8 @@ RSpec.describe "System" do
   it "should solve equations" do
     solution = solver.solve!
 
-    expect(solution["county_total_indicators_reported_weighted_for_2016q1"]).to eq(180.0)
-    expect(solution["county_total_available_budget_for_fosa_for_2016q1"]).to eq(121_235.0)
+    expect(solution["county_total_indicators_reported_weighted_for_2016q1"]).to eq(171.0)
+    expect(solution["county_total_available_budget_for_fosa_for_2016q1"].round).to eq(121_235.0)
 
     Orbf::RulesEngine::InvoiceCliPrinter.new(solver.variables, solver.solution).print
     exported_values = Orbf::RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print

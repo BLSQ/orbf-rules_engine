@@ -10,6 +10,8 @@ module Orbf
         @all_orgunits = orgunits
         @orgunits = if package.subcontract?
                       orgunits[0..0]
+                    elsif package.zone?
+                      orgunits[1..-1]
                     else
                       orgunits
                     end

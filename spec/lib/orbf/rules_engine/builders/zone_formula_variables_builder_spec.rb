@@ -52,11 +52,11 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
       Orbf::RulesEngine::Variable.with(
         period:         "2016Q1",
         key:            "total_weighted_district_reported_for_2016q1",
-        expression:     "SUM(facility_number_of_indicators_reported_for_1_and_2016q1,facility_number_of_indicators_reported_for_2_and_2016q1)",
+        expression:     "SUM(facility_number_of_indicators_reported_for_2_and_2016q1)",
         state:          "total_weighted_district_reported",
         type:           "zone_rule",
         activity_code:  nil,
-        orgunit_ext_id: nil,
+        orgunit_ext_id: "1",
         formula:        package.rules.last.formulas.first,
         package:        package,
         payment_rule:   nil
@@ -68,7 +68,7 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
         state:          "sample_zone_formula",
         type:           "zone_rule",
         activity_code:  nil,
-        orgunit_ext_id: nil,
+        orgunit_ext_id: "1",
         formula:        package.rules.last.formulas.last,
         package:        package,
         payment_rule:   nil

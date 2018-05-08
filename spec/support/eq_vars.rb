@@ -16,6 +16,7 @@ RSpec::Matchers.define :eq_vars do |expected|
     (actual_by_keys.keys & expected_by_keys.keys).each do |common_key|
       act = actual_by_keys[common_key].first
       exp = expected_by_keys[common_key].first
+
       messages.push [
         "*** #{act == exp ? 'OK' : 'KO!!!'} #{common_key}",
         "    got :     " + var_to_log(act) + ", #{act.payment_rule == exp.payment_rule}, #{act.package == exp.package}, #{act.formula == exp.formula}, #{act == exp}",
