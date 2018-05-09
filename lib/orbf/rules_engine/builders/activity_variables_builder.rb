@@ -55,7 +55,7 @@ module Orbf
 
       attr_reader :package, :orgunits, :lookup
 
-      SOURCES = %i[de_values parent_values].freeze
+      SOURCES = %i[de_values parent_values main_orgunit_values].freeze
 
       def register_vars(package, activity_code, state, expression, orgunit_id, period)
         Orbf::RulesEngine::Variable.new_activity(
@@ -84,6 +84,15 @@ module Orbf
           hash_value = lookup_value(build_keys_with_yearly([hash[:id], period, activity_state.ext_id]))
           yield(hash[:id], code, hash_value)
         end
+      end
+
+      def main_orgunit_values(activity_state, period, dependencies)
+        code = "#{activity_state.state}_zone_main_orgunit"
+        return unless dependencies.include?(code)
+        main_orgunit_ext_id = orgunits.first.ext_id
+        key = [main_orgunit_ext_id, period, activity_state.ext_id]
+        hash_value = lookup_value(build_keys_with_yearly(key))
+        yield(main_orgunit_ext_id, code, hash_value)
       end
 
       def parents_with_level

@@ -250,4 +250,64 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
       expect(results).to eq_vars(expected_results)
     end
   end
+
+  describe "with main orgunit reference" do
+    let(:orgunits) do
+      [
+        Orbf::RulesEngine::OrgUnit.with(
+          ext_id:        "1",
+          path:          "country_id/county_id/zonemain",
+          name:          "zonemain",
+          group_ext_ids: []
+        ),
+        Orbf::RulesEngine::OrgUnit.with(
+          ext_id:        "1",
+          path:          "country_id/county_id/1",
+          name:          "African Foundation Baptist",
+          group_ext_ids: []
+        )
+      ]
+    end
+
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:            :facility,
+        kind:            :zone,
+        activities:      activities,
+        frequency:       :quarterly,
+        groupset_ext_id: "zone_groups",
+        rules:           [
+          Orbf::RulesEngine::Rule.new(
+            kind:     :activity,
+            formulas: [
+              Orbf::RulesEngine::Formula.new(
+                "equity_price", "target * achieved_zone_main_orgunit"
+              )
+            ]
+          )
+        ]
+      )
+    end
+
+    let(:expected_results) do
+      [
+        Orbf::RulesEngine::Variable.with(
+          key:            "facility_act1_equity_price_for_1_and_2016q1",
+          period:         "2016Q1",
+          expression:     "facility_act1_target_for_1_and_2016q1 * facility_act1_achieved_zone_main_orgunit_for_1_and_2016q1",
+          type:           "activity_rule",
+          state:          "equity_price",
+          activity_code:  "act1",
+          orgunit_ext_id: "1",
+          formula:        package.rules.first.formulas.first,
+          package:        package,
+          payment_rule:   nil
+        )
+      ]
+    end
+    it "substitute decision tables variables" do
+      results = described_class.new(package, orgunits, "2016Q1").to_variables
+      expect(results).to eq_vars(expected_results)
+    end
+  end
 end
