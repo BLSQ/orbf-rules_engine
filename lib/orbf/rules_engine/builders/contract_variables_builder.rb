@@ -67,12 +67,13 @@ module Orbf
 
       def build_variable(filtered_orgunits, activity, activity_state, period)
         expressions = org_units_expression(filtered_orgunits, activity, activity_state, period)
+        expression = activity_state.constant? ? expressions.first : "SUM(#{expressions.join(', ')})"
         key = build_key(package, activity, activity_state, period)
 
         Orbf::RulesEngine::Variable.new_contract(
           period:         period,
           key:            key,
-          expression:     "SUM(#{expressions.join(', ')})",
+          expression:     expression,
           state:          activity_state.state.to_s,
           activity_code:  activity.activity_code,
           orgunit_ext_id: ref_orgunit.ext_id,
