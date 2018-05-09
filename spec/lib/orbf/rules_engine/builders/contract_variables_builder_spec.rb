@@ -18,6 +18,11 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           state:  :target,
           ext_id: "dhis2_act1_target",
           name:   "act1_target"
+        ),
+        Orbf::RulesEngine::ActivityState.new_constant(
+          state:  "price",
+          name:   "act1_price",
+          formula: "10"
         )
       ]
     )
@@ -91,6 +96,18 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           key:            "#{package.code}_act1_target_for_1_and_2016",
           expression:     "SUM(#{package.code}_act1_target_raw_for_1_and_2016, #{package.code}_act1_target_raw_for_2_and_2016, #{package.code}_act1_target_raw_for_4_and_2016)",
           state:          "target",
+          activity_code:  "act1",
+          type:           "contract",
+          orgunit_ext_id: district_orgunit1.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "quality_eval_subcontract_act1_price_for_1_and_2016",
+          expression:     "act1_price_for_2016",
+          state:          "price",
           activity_code:  "act1",
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
@@ -174,6 +191,18 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           key:            "#{package.code}_act1_target_for_1_and_2016",
           expression:     "SUM(#{package.code}_act1_target_raw_for_2_and_2016, #{package.code}_act1_target_raw_for_4_and_2016)",
           state:          "target",
+          activity_code:  "act1",
+          type:           "contract",
+          orgunit_ext_id: district_orgunit1.ext_id,
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ),
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "quality_eval_subcontract_act1_price_for_1_and_2016",
+          expression:     "act1_price_for_2016",
+          state:          "price",
           activity_code:  "act1",
           type:           "contract",
           orgunit_ext_id: district_orgunit1.ext_id,
