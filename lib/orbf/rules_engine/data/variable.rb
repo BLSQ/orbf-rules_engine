@@ -119,7 +119,7 @@ module Orbf
         return nil if type != Types::ACTIVITY
         activity = package.activities.detect { |activity| activity.activity_code == activity_code }
         return nil unless activity
-        activity_state = activity.activity_states.detect {|as| as.state == state }
+        activity_state = activity.activity_states.detect {|as| as.state == state || as.state + "_zone_main_orgunit" == state }
         activity_state&.ext_id
       end
 
