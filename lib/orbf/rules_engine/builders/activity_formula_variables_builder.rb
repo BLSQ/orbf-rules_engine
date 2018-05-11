@@ -43,17 +43,18 @@ module Orbf
       end
 
       def build_variable(orgunit, activity_code, formula, substitued)
+        expression = Tokenizer.replace_token_from_expression(
+          substitued,
+          substitutions(activity_code),
+          level_pattern_values(orgunit).merge(
+            orgunit_id: orgunit.ext_id,
+            period:     period.downcase
+          )
+        )
         Orbf::RulesEngine::Variable.new_activity_rule(
           period:         period,
           key:            suffix_for_activity(package.code, activity_code, formula.code, orgunit, period),
-          expression:     Tokenizer.replace_token_from_expression(
-            substitued,
-            substitutions(activity_code),
-            level_pattern_values(orgunit).merge(
-              orgunit_id: orgunit.ext_id,
-              period:     period.downcase
-            )
-          ),
+          expression:     expression,
           state:          formula.code,
           type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
           activity_code:  activity_code,
@@ -68,7 +69,21 @@ module Orbf
         orgunit.parent_ext_ids.each_with_index do |ext_id, index|
           hash["orgunit_parent_level#{index + 1}_id".to_sym] = ext_id
         end
+        hash[:zone_main_orgunit_id] = @all_orgunits.first.ext_id
         hash
+      end
+
+      def zone_main_orgunit_substitutions
+        @zone_main_orgunit_substitutions ||= package.states.each_with_object({}) do |state, hash|
+          package.all_activities_codes.each do |activity_code|
+            state_level = state + "_zone_main_orgunit"
+            hash[state_level] = suffix_activity_pattern(
+              package.code, activity_code, state_level,
+              "zone_main_orgunit_id".to_sym
+            )
+          end
+        end
+        @zone_main_orgunit_substitutions
       end
 
       def substitutions(activity_code)
@@ -76,6 +91,7 @@ module Orbf
           .merge(null_substitutions(activity_code))
           .merge(level_substitutions)
           .merge(package_substitutions)
+          .merge(zone_main_orgunit_substitutions)
           .merge(formulas_substitutions(activity_code))
           .merge(decision_table_substitutions(activity_code))
           .merge(orgunit_counts_substitutions(activity_code))

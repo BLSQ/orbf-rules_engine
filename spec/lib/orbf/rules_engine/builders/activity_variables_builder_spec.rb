@@ -417,4 +417,91 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
       expect(result).to eq_vars(expected_vars)
     end
   end
+
+  context "zone main orgunit case" do
+    let(:activities) do
+      [
+        Orbf::RulesEngine::Activity.with(
+          name:            "act1",
+          activity_code:   "act1",
+          activity_states: [
+            Orbf::RulesEngine::ActivityState.new_data_element(
+              state:  :cap,
+              ext_id: "dhis2_act1_cap",
+              name:   "act1_target"
+            )
+          ]
+        )
+      ]
+    end
+
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:            :facility,
+        kind:            :zone,
+        frequency:       :quarterly,
+        activities:      activities,
+        groupset_ext_id: "zonegroupid",
+        rules:           [
+          Orbf::RulesEngine::Rule.new(
+            kind:     :activity,
+            formulas: [
+              Orbf::RulesEngine::Formula.new("allowed", "cap_zone_main_orgunit", "")
+            ]
+          )
+        ]
+      )
+    end
+
+    let(:dhis2_values) do
+      [
+        { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "default", "value" => "33", "period" => "2016", "orgUnit" => "country_id", "comment" => "" },
+        { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "default", "value" => "12", "period" => "2016", "orgUnit" => "county_id",  "comment" => "" }
+      ]
+    end
+
+    let(:expected_vars) do
+      [
+        Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "facility_act1_cap_for_1_and_2016",
+          expression:     "0",
+          state:          "cap",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: "1",
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ), Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "facility_act1_cap_for_2_and_2016",
+          expression:     "0",
+          state:          "cap",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: "2",
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        ), Orbf::RulesEngine::Variable.with(
+          period:         "2016",
+          key:            "facility_act1_cap_zone_main_orgunit_for_1_and_2016",
+          expression:     "0",
+          state:          "cap_zone_main_orgunit",
+          activity_code:  "act1",
+          type:           "activity",
+          orgunit_ext_id: "1",
+          formula:        nil,
+          package:        package,
+          payment_rule:   nil
+        )
+      ]
+    end
+
+    it "registers activity_variables" do
+      result = described_class.new(package, orgunits, dhis2_values).convert("2016")
+      expect(result).to eq_vars(expected_vars)
+    end
+  end
 end
