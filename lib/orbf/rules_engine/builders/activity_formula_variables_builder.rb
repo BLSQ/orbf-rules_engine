@@ -73,17 +73,15 @@ module Orbf
         hash
       end
 
-      def zone_main_orgunit_substitutions
-        @zone_main_orgunit_substitutions ||= package.states.each_with_object({}) do |state, hash|
-          package.all_activities_codes.each do |activity_code|
-            state_level = state + "_zone_main_orgunit"
-            hash[state_level] = suffix_activity_pattern(
-              package.code, activity_code, state_level,
-              "zone_main_orgunit_id".to_sym
-            )
-          end
+      def zone_main_orgunit_substitutions(activity_code)
+        activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
+        package.harmonized_activity_states(activity).each_with_object({}) do |activity_state, hash|
+          state_level = activity_state.state + "_zone_main_orgunit"
+          hash[state_level] = suffix_activity_pattern(
+            package.code, activity_code, state_level,
+            "zone_main_orgunit_id".to_sym
+          )
         end
-        @zone_main_orgunit_substitutions
       end
 
       def substitutions(activity_code)
@@ -91,8 +89,8 @@ module Orbf
           .merge(null_substitutions(activity_code))
           .merge(level_substitutions)
           .merge(package_substitutions)
-          .merge(zone_main_orgunit_substitutions)
           .merge(formulas_substitutions(activity_code))
+          .merge(zone_main_orgunit_substitutions(activity_code))
           .merge(decision_table_substitutions(activity_code))
           .merge(orgunit_counts_substitutions(activity_code))
       end
