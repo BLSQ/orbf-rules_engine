@@ -78,6 +78,14 @@ module Orbf
             )
           )
         end
+
+        def new_alias(params)
+          Variable.with(
+            params.merge!(
+              type:         Orbf::RulesEngine::Variable::Types::ALIAS
+           )
+          )
+        end
       end
 
       module Types
@@ -89,6 +97,7 @@ module Orbf
         PACKAGE_RULE = "package_rule"
         PAYMENT_RULE = "payment_rule"
         ZONE_RULE = "zone_rule"
+        ALIAS = "alias"
         TYPES = [
           ACTIVITY_CONSTANT,
           ACTIVITY_RULE,
@@ -97,12 +106,21 @@ module Orbf
           CONTRACT,
           PACKAGE_RULE,
           PAYMENT_RULE,
-          ZONE_RULE
+          ZONE_RULE,
+          ALIAS
         ].freeze
       end
 
       def exportable?
         !!(orgunit_ext_id && dhis2_data_element)
+      end
+
+      def dhis2_in_data_element
+        return nil if type != Types::ACTIVITY
+        activity = package.activities.detect { |activity| activity.activity_code == activity_code }
+        return nil unless activity
+        activity_state = activity.activity_states.detect {|as| as.state == state }
+        activity_state&.ext_id
       end
 
       def dhis2_data_element

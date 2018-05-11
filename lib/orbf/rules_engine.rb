@@ -48,6 +48,7 @@ require_relative "./rules_engine/services/fetch_and_solve"
 
 require_relative "./rules_engine/builders/sum_if"
 require_relative "./rules_engine/builders/dhis2_indexed_values"
+require_relative "./rules_engine/builders/alias_post_processor"
 require_relative "./rules_engine/builders/solver_factory"
 require_relative "./rules_engine/builders/calculator_factory"
 require_relative "./rules_engine/builders/variables_builder_support"

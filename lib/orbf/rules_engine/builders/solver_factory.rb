@@ -18,10 +18,16 @@ module Orbf
           solver.register_variables(package_vars)
           register_packages(solver)
           register_payment_rules(solver)
+          register_aliases(solver)
         end
       end
 
       private
+
+      def register_aliases(solver)
+        alias_post_processor = AliasPostProcessor.new solver.variables
+        solver.register_variables(alias_post_processor.call)
+      end
 
       def register_packages(solver)
         project.packages.each do |package|
