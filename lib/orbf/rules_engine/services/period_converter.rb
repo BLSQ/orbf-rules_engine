@@ -24,8 +24,8 @@ module Orbf
 
       class YearQuarterParser
         def self.from(period)
-          return unless period.include?('Q')
-          components = period.split('Q')
+          return unless period.include?("Q")
+          components = period.split("Q")
           quarter = Integer(components.last)
           year = Integer(components.first)
           month = (3 * (quarter - 1)) + 1
@@ -39,7 +39,7 @@ module Orbf
         def self.from(period)
           return unless period.length == 6
           year = period[0..3]
-          month = Integer(period[4..5])
+          month = period[4..5].to_i
           start_date = Date.parse("#{year}-#{month}-01")
           end_date = start_date.end_of_month
 
@@ -47,7 +47,19 @@ module Orbf
         end
       end
 
-      PARSERS = [YearParser, YearQuarterParser, YearMonthParser].freeze
+      class FinancialJulyParser
+        def self.from(period)
+          return unless period.length == 8
+          year = period[0..3]
+          month = 7
+          start_date = Date.parse("#{year}-#{month}-01")
+          end_date = (start_date - 1.day).end_of_month + 1.year
+
+          start_date..end_date
+        end
+      end
+
+      PARSERS = [YearParser, YearQuarterParser, YearMonthParser, FinancialJulyParser].freeze
     end
   end
 end

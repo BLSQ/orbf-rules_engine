@@ -39,7 +39,7 @@ module Orbf
         end
 
         def format(date)
-          date.strftime('%Y%m')
+          date.strftime("%Y%m")
         end
 
         def first_date
@@ -53,7 +53,7 @@ module Orbf
         end
 
         def format(date)
-          date.strftime('%Y') + 'Q' + (date.month / 3.0).ceil.to_s
+          date.strftime("%Y") + "Q" + (date.month / 3.0).ceil.to_s
         end
 
         def first_date
@@ -67,7 +67,7 @@ module Orbf
         end
 
         def format(date)
-          date.strftime('%Y')
+          date.strftime("%Y")
         end
 
         def first_date
@@ -75,10 +75,26 @@ module Orbf
         end
       end
 
+      class ExtractFinancialJulyPeriod < ExtractPeriod
+        def next_date(date)
+          date.next_year
+        end
+
+        def format(date)
+          date.strftime("%YJuly")
+        end
+
+        def first_date
+          anniv_date = range.first.beginning_of_year + 6.months
+          range.first < anniv_date ? (anniv_date - 1.year) : anniv_date
+        end
+      end
+
       CLASSES_MAPPING = {
-        'monthly'   => ExtractMonthlyPeriod,
-        'quarterly' => ExtractQuarterlyPeriod,
-        'yearly'    => ExtractYearlyPeriod
+        "monthly"        => ExtractMonthlyPeriod,
+        "quarterly"      => ExtractQuarterlyPeriod,
+        "yearly"         => ExtractYearlyPeriod,
+        "financial_july" => ExtractFinancialJulyPeriod
       }.freeze
     end
   end

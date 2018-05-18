@@ -19,7 +19,9 @@ module Orbf
       attr_reader :package, :invoice_period
 
       def from_package_frequency(package, invoice_period)
-        PeriodIterator.periods(invoice_period, package.frequency) + PeriodIterator.periods(invoice_period, "yearly")
+        PeriodIterator.periods(invoice_period, package.frequency) +
+          PeriodIterator.periods(invoice_period, "yearly") +
+          PeriodIterator.periods(invoice_period, "financial_july")
       end
 
       def from_values_span(package, invoice_period)
