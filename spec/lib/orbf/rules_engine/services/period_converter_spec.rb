@@ -44,5 +44,4 @@ RSpec.describe Orbf::RulesEngine::PeriodConverter do
       expect(described_class.as_date_range("2016July")).to eq(july_2016..end_june_2017)
     end
   end
-
 end
