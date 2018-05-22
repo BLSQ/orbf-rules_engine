@@ -69,6 +69,35 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
     end
 
+    describe "and mapping configured with default combos " do
+      let(:data_element_id) { "dhis2_data_element_id" }
+      let(:variable_with_mapping) do
+        build_variable(data_element_id)
+      end
+      it "export values " do
+        result_values = described_class.new(
+          [variable_with_mapping],
+          { variable_with_mapping.key => 1.5 },
+          default_category_option_combo_ext_id:  "coc_id",
+          default_attribute_option_combo_ext_id: "aoc_id"
+        ).print
+
+        expect(result_values).to eq(
+          [
+            {
+              dataElement:          data_element_id,
+              orgUnit:              "1",
+              period:               "201601",
+              value:                1.5,
+              comment:              variable_with_mapping.key,
+              categoryOptionCombo:  "coc_id",
+              attributeOptionCombo: "aoc_id"
+            }
+          ]
+        )
+      end
+    end
+
     def build_variable(single_mapping)
       package = build_package(single_mapping)
 
