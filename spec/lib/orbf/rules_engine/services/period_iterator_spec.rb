@@ -48,7 +48,12 @@ RSpec.describe Orbf::RulesEngine::PeriodIterator do
       expect(described_class.periods("201803", "financial_july")).to eq(
         ["2017July"]
       )
-
+      expect(described_class.periods("201806", "financial_july")).to eq(
+        ["2017July"]
+      )
+      expect(described_class.periods("201807", "financial_july")).to eq(
+        ["2018July"]
+      )
       expect(described_class.periods("201808", "financial_july")).to eq(
         ["2018July"]
       )
