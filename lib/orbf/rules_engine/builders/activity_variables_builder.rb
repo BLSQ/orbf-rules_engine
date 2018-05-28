@@ -117,7 +117,8 @@ module Orbf
       def build_keys_with_yearly(key)
         [
           key,
-          [key[0], PeriodIterator.periods(key[1], "yearly").first, key[2]]
+          [key[0], PeriodIterator.periods(key[1], "yearly").first, key[2]],
+          [key[0], PeriodIterator.periods(key[1], "financial_july").first, key[2]]
         ]
       end
     end
