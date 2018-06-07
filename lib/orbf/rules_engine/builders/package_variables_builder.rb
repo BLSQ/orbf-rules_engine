@@ -50,6 +50,7 @@ module Orbf
       def values(orgunit)
         values_substitutions(orgunit).merge(package_substitutions(orgunit))
                                      .merge(zone_substitutions)
+                                     .merge(decision_table_substitutions(orgunit))
       end
 
       def values_substitutions(orgunit)
@@ -73,6 +74,16 @@ module Orbf
                .flat_map(&:formulas)
                .each_with_object({}) do |formula, hash|
           hash[formula.code] = suffix_for(package.code, formula.code, orgunit, period)
+        end
+      end
+
+      def decision_table_substitutions(orgunit)
+        package.package_rules
+               .flat_map(&:decision_tables)
+               .each_with_object({}) do |decision_table, hash|
+          decision_table.headers(:out).each do |header_out|
+            hash[header_out] = suffix_for(package.code, header_out, orgunit, period)
+          end
         end
       end
 

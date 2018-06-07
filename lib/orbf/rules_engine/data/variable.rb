@@ -17,6 +17,28 @@ module Orbf
           )
         end
 
+        def new_package_decision_table(params)
+          Variable.with(
+            params.merge!(
+              type:          Orbf::RulesEngine::Variable::Types::PACKAGE_RULE_DECISION,
+              formula:       nil,
+              payment_rule:  nil,
+              activity_code: nil
+            )
+          )
+        end
+
+        def new_activity_constant(params)
+          Variable.with(
+            params.merge!(
+              type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
+              formula:        nil,
+              payment_rule:   nil,
+              orgunit_ext_id: nil
+            )
+          )
+        end
+
         def new_payment(params)
           Variable.with(
             params.merge!(
@@ -58,17 +80,6 @@ module Orbf
           )
         end
 
-        def new_activity_constant(params)
-          Variable.with(
-            params.merge!(
-              type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
-              orgunit_ext_id: nil,
-              formula:        nil,
-              payment_rule:   nil
-            )
-          )
-        end
-
         def new_activity(params)
           Variable.with(
             params.merge!(
@@ -83,7 +94,7 @@ module Orbf
           Variable.with(
             params.merge!(
               type:         Orbf::RulesEngine::Variable::Types::ALIAS
-           )
+            )
           )
         end
       end
@@ -92,6 +103,7 @@ module Orbf
         ACTIVITY_CONSTANT = "activity_constant"
         ACTIVITY_RULE = "activity_rule"
         ACTIVITY_RULE_DECISION = "activity_rule_decision"
+        PACKAGE_RULE_DECISION = "package_rule_decision"
         ACTIVITY = "activity"
         CONTRACT = "contract"
         PACKAGE_RULE = "package_rule"
@@ -102,6 +114,7 @@ module Orbf
           ACTIVITY_CONSTANT,
           ACTIVITY_RULE,
           ACTIVITY_RULE_DECISION,
+          PACKAGE_RULE_DECISION,
           ACTIVITY,
           CONTRACT,
           PACKAGE_RULE,
@@ -119,7 +132,7 @@ module Orbf
         return nil if type != Types::ACTIVITY
         activity = package.activities.detect { |activity| activity.activity_code == activity_code }
         return nil unless activity
-        activity_state = activity.activity_states.detect {|as| as.state == state || as.state + "_zone_main_orgunit" == state }
+        activity_state = activity.activity_states.detect { |as| as.state == state || as.state + "_zone_main_orgunit" == state }
         activity_state&.ext_id
       end
 

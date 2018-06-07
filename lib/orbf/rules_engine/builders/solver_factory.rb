@@ -67,7 +67,7 @@ module Orbf
           invoice_period
         ).to_variables
         solver.register_variables(variables)
-        end
+      end
 
       attr_reader :project, :package_arguments, :package_vars, :invoice_period, :package_builders
 
@@ -77,6 +77,7 @@ module Orbf
           Orbf::RulesEngine::EntitiesAggregationFormulaVariablesBuilder,
           Orbf::RulesEngine::ActivityConstantVariablesBuilder,
           Orbf::RulesEngine::DecisionVariablesBuilder,
+          Orbf::RulesEngine::PackageDecisionVariablesBuilder,
           Orbf::RulesEngine::ActivityFormulaVariablesBuilder,
           Orbf::RulesEngine::PackageVariablesBuilder,
           Orbf::RulesEngine::ZoneFormulaVariablesBuilder
