@@ -18,7 +18,6 @@ module Orbf
       def to_variables
         decision_tables = package.activity_rules.flat_map(&:decision_tables)
         return [] if decision_tables.none?
-
         decision_tables.each_with_object([]) do |decision_table, array|
           variables = decision_variables(decision_table)
           array.push(*variables)
