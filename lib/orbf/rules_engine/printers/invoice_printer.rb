@@ -21,8 +21,9 @@ module Orbf
             to_activity_item(package, activity, vars, solution_as_string)
           end
           total_items = vars.select { |var| var.activity_code.nil? }
-                            .map do |var|
-            to_total_item(var, solution_as_string)
+                            .each_with_object([]) do |var, array|
+            next unless var.formula
+            array.push(to_total_item(var, solution_as_string))
           end
 
           Orbf::RulesEngine::Invoice.new(
@@ -46,8 +47,9 @@ module Orbf
                          .map do |org_unit_period, vars|
           payment_rule, org_unit, period = org_unit_period
 
-          total_items = vars.map do |var|
-            to_total_item(var, solution_as_string)
+          total_items = vars.each_with_object([]) do |var, array|
+            next unless var.formula
+            array.push(to_total_item(var, solution_as_string))
           end
 
           Orbf::RulesEngine::Invoice.new(
