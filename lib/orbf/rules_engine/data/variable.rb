@@ -28,6 +28,17 @@ module Orbf
           )
         end
 
+        def new_activity_constant(params)
+          Variable.with(
+            params.merge!(
+              type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
+              formula:        nil,
+              payment_rule:   nil,
+              orgunit_ext_id: nil
+            )
+          )
+        end
+
         def new_payment(params)
           Variable.with(
             params.merge!(
@@ -65,17 +76,6 @@ module Orbf
             params.merge!(
               type:         Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
               payment_rule: nil
-            )
-          )
-        end
-
-        def new_activity_constant(params)
-          Variable.with(
-            params.merge!(
-              type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_CONSTANT,
-              orgunit_ext_id: nil,
-              formula:        nil,
-              payment_rule:   nil
             )
           )
         end
