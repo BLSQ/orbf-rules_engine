@@ -13,6 +13,7 @@ module Orbf
         aliases = []
         hash_in.each do |key, in_vals|
           out_vals = hash_out[key]
+
           next unless out_vals
           in_vals.each do |in_val|
             out_vals.each do |out_val|
@@ -41,7 +42,7 @@ module Orbf
         variables.each_with_object({}) do |variable, hash|
           data_element = variable.public_send dhis2_element_meth
           next unless data_element
-          key = { period:       variable.period,
+          key = { period:       variable.dhis2_period,
                   orgunit:      variable.orgunit_ext_id,
                   data_element: data_element }
           hash[key] ||= []

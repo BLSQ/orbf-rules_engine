@@ -18,7 +18,7 @@ module Orbf
           add_coc_and_aoc(
             dataElement: variable.dhis2_data_element,
             orgUnit:     variable.orgunit_ext_id,
-            period:      format_period(variable),
+            period:      variable.dhis2_period,
             value:       ValueFormatter.format(solution[variable.key]),
             comment:     variable.key
           )
@@ -27,8 +27,8 @@ module Orbf
       end
 
       def add_coc_and_aoc(value)
-        value[:categoryOptionCombo] = default_category_option_combo_ext_id unless default_category_option_combo_ext_id.blank?
-        value[:attributeOptionCombo] = default_attribute_option_combo_ext_id unless default_attribute_option_combo_ext_id.blank?
+        value[:categoryOptionCombo] = default_category_option_combo_ext_id if default_category_option_combo_ext_id.present?
+        value[:attributeOptionCombo] = default_attribute_option_combo_ext_id if default_attribute_option_combo_ext_id.present?
         value
       end
 
@@ -39,14 +39,6 @@ module Orbf
            value[:period],
            value[:value]]
         end
-    end
-
-      def format_period(variable)
-        return variable.period unless variable.formula.frequency
-        Orbf::RulesEngine::PeriodIterator.periods(
-          variable.period,
-          variable.formula.frequency
-        ).last
       end
     end
   end

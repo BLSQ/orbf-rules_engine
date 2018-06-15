@@ -6,6 +6,8 @@ module Orbf
       attributes  :key, :period, :expression, :type, :state, :activity_code,
                   :orgunit_ext_id, :formula, :package, :payment_rule
 
+      attr_reader :dhis2_period
+
       class << self
         def new_activity_decision_table(params)
           Variable.with(
@@ -158,6 +160,12 @@ module Orbf
       private
 
       def after_init
+        @dhis2_period = if formula&.frequency
+                                Orbf::RulesEngine::PeriodIterator.periods(period, formula.frequency).last
+                              else
+                                period
+                              end
+
         raise "Variable type '#{type}' must be one of #{Types::TYPES}" unless Types::TYPES.include?(type.to_s)
       end
     end
