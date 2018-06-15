@@ -44,4 +44,11 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
       expect(solution["my_var"]).to eq(1.5)
     end
   end
+
+  describe "support randbetween function" do
+    it "solve" do
+      solution = calculator.solve("my_var" => "randbetween(1, 4)")
+      expect(solution["my_var"]).to be_between(1, 4)
+    end
+  end
 end
