@@ -35,8 +35,8 @@ module Orbf
 
       RANDBETWEEN = ->(a, b) { rand(a..b) }
 
-      def self.build
-        Dentaku::Calculator.new(nested_data_support: false, case_sensitive: true).tap do |calculator|
+      def self.build(options = { nested_data_support: false, case_sensitive: true })
+        Dentaku::Calculator.new(options).tap do |calculator|
           calculator.add_function(:between, :logical, BETWEEN)
           calculator.add_function(:abs, :number, ->(number) { number.abs })
           calculator.add_function(:score_table, :numeric, SCORE_TABLE)

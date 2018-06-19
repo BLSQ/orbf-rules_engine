@@ -9,6 +9,8 @@ module Orbf
         @payment_rule = payment_rule
         @orgunits = if payment_rule.packages.any?(&:subcontract?)
                       arg_orgunits[0..0]
+                    elsif payment_rule.packages.any?(&:zone?)
+                      arg_orgunits[1..-1]
                     else
                       arg_orgunits
                     end
