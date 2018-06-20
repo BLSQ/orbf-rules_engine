@@ -7,8 +7,8 @@ module Orbf
 
       def initialize(package, orgunits, period)
         @package = package
-        @ref_orgunit = orgunits[0]
-        @secondary_orgunits = orgunits[1..-1]
+        @ref_orgunit = orgunits.ref_orgunit
+        @secondary_orgunits = orgunits.secondary_orgunits
         @period = period
       end
 

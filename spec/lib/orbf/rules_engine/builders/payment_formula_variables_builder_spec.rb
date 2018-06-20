@@ -103,7 +103,11 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
 
     it "quarterly payment combines package output in payment rules formulas and add temp variable for quarterly sum for monthly packages" do
       quantity_package.frequency = "quarterly"
-      results = described_class.new(payment_rule, orgunits, "2016Q1").to_variables
+      results = described_class.new(
+        payment_rule,
+        [Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: quantity_package)],
+        "2016Q1"
+      ).to_variables
       expect(results).to eq_vars(expected_results)
     end
   end
@@ -153,7 +157,11 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
 
     it "combines package output in payment rules formulas Re" do
       quantity_package.frequency = "monthly"
-      results = described_class.new(payment_rule, orgunits, "2016Q1").to_variables
+      results = described_class.new(
+        payment_rule,
+        [Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: quantity_package)],
+        "2016Q1"
+      ).to_variables
       expect(results).to eq_vars(expected_results)
     end
   end
@@ -277,7 +285,11 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
       payment_rule.frequency = "monthly"
       quantity_package.frequency = "monthly"
 
-      results = described_class.new(payment_rule, orgunits, "2016Q1").to_variables
+      results = described_class.new(
+        payment_rule,
+        [Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: quantity_package)],
+        "2016Q1"
+      ).to_variables
 
       expect(results).to eq_vars(expected_results)
     end
@@ -308,18 +320,22 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
       )
     end
 
+    let(:org_units_resolved) do
+      [Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: quantity_package)]
+    end
+
     it "expands %{..._previous_values} in variables for month 1" do
-      results = described_class.new(payment_rule, orgunits, "201601").to_variables
+      results = described_class.new(payment_rule, org_units_resolved, "201601").to_variables
       expect(results[1].expression).to eq("SUM(0, #{payment_rule.code}_rbf_amount_for_1_and_201601 )")
     end
 
     it "expands %{..._previous_values} in variables for month 2" do
-      results = described_class.new(payment_rule, orgunits, "201602").to_variables
+      results = described_class.new(payment_rule, org_units_resolved, "201602").to_variables
       expect(results[1].expression).to eq("SUM(#{payment_rule.code}_rbf_amount_for_1_and_201601, #{payment_rule.code}_rbf_amount_for_1_and_201602 )")
     end
 
     it "expands %{..._previous_values} in variables for month 3" do
-      results = described_class.new(payment_rule, orgunits, "201603").to_variables
+      results = described_class.new(payment_rule, org_units_resolved, "201603").to_variables
       expect(results[1].expression).to eq("SUM(#{payment_rule.code}_rbf_amount_for_1_and_201601, #{payment_rule.code}_rbf_amount_for_1_and_201602, #{payment_rule.code}_rbf_amount_for_1_and_201603 )")
     end
   end

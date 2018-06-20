@@ -1,7 +1,7 @@
 
 RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
   def action(main_orgunit)
-    described_class.new(package, pyramid, main_orgunit).call
+    described_class.new(package, pyramid, main_orgunit).call.to_a
   end
 
   let(:package) do

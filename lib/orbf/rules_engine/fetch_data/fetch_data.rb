@@ -24,7 +24,11 @@ module Orbf
       attr_reader :dhis2_connection, :package_arguments
 
       def orgunit_ext_ids
-        package_arguments.flat_map(&:orgunits).flat_map(&:parent_ext_ids).uniq.sort
+        package_arguments.flat_map(&:orgunits)
+                         .flat_map(&:to_a)
+                         .flat_map(&:parent_ext_ids)
+                         .uniq
+                         .sort
       end
 
       def dataset_ext_ids

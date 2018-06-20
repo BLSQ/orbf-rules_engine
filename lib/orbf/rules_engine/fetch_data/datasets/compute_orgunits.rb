@@ -23,7 +23,7 @@ module Orbf
           project.packages.each do |package|
             orgunits = OrgunitsResolver.new(package, pyramid, orgunit).call
             # subcontracts only the first one has out dhis2 values
-            orgunits = orgunits[0..0] if package.subcontract?
+            orgunits = orgunits.out_list
             registry[package.code].merge(orgunits)
           end
         end

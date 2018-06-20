@@ -1,5 +1,13 @@
 
 RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
+  def action
+    described_class.new(
+      package,
+      Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: package),
+      "2016Q1"
+    ).to_variables
+  end
+
   let(:activities) do
     [
       Orbf::RulesEngine::Activity.with(
@@ -96,8 +104,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
   end
 
   it "does the susbstitions of spans and instantiate other states for activity variable" do
-    results = described_class.new(package, orgunits, "2016Q1").to_variables
-    expect(results).to eq_vars(expected_results)
+    expect(action).to eq_vars(expected_results)
   end
 
   describe "Spans substitutions" do
@@ -176,8 +183,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     end
 
     it "does the susbstitions of spans and instantiate other states for activity variable" do
-      results = described_class.new(package, orgunits, "2016Q1").to_variables
-      expect(results).to eq_vars(expected_results)
+      expect(action).to eq_vars(expected_results)
     end
   end
 
@@ -246,8 +252,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     end
 
     it "substitute decision tables variables" do
-      results = described_class.new(package, orgunits, "2016Q1").to_variables
-      expect(results).to eq_vars(expected_results)
+      expect(action).to eq_vars(expected_results)
     end
   end
 
@@ -306,8 +311,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
       ]
     end
     it "substitute decision tables variables" do
-      results = described_class.new(package, orgunits, "2016Q1").to_variables
-      expect(results).to eq_vars(expected_results)
+      expect(action).to eq_vars(expected_results)
     end
   end
 end

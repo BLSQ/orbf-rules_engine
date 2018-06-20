@@ -7,13 +7,7 @@ module Orbf
 
       def initialize(payment_rule, arg_orgunits, invoice_period)
         @payment_rule = payment_rule
-        @orgunits = if payment_rule.packages.any?(&:subcontract?)
-                      arg_orgunits[0..0]
-                    elsif payment_rule.packages.any?(&:zone?)
-                      arg_orgunits[1..-1]
-                    else
-                      arg_orgunits
-                    end
+        @orgunits = arg_orgunits.flat_map(&:out_list)
         @invoice_period = invoice_period
       end
 

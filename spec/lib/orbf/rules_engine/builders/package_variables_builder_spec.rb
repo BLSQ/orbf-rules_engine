@@ -104,7 +104,9 @@ RSpec.describe Orbf::RulesEngine::PackageVariablesBuilder do
   end
 
   it "should instantiate per orgunit and period the activity rules values" do
-    results = described_class.new(quantity_package, orgunits, "201601").to_variables
+    results = described_class.new(quantity_package,
+                                  Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: quantity_package),
+                                  "201601").to_variables
 
     expect(results).to eq_vars(expected_results)
   end

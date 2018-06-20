@@ -26,19 +26,27 @@ RSpec.describe Orbf::RulesEngine::FetchData do
     )
   end
 
+  let(:package) do
+    double(:package)
+  end
+
   let(:package_arguments) do
     [
       Orbf::RulesEngine::PackageArguments.with(
         periods:          %w[201601 201602 201603],
-        orgunits:         [orgunit_1],
+        orgunits:         Orbf::RulesEngine::OrgUnits.new(
+          orgunits: [orgunit_1], package: package
+        ),
         datasets_ext_ids: %w[dataset1],
-        package:          nil
+        package:          package
       ),
       Orbf::RulesEngine::PackageArguments.with(
         periods:          %w[2016Q1 2015Q1],
-        orgunits:         [orgunit_2],
+        orgunits:         Orbf::RulesEngine::OrgUnits.new(
+          orgunits: [orgunit_2], package: package
+        ),
         datasets_ext_ids: %w[dataset1 dataset2],
-        package:          nil
+        package:          package
       )
     ]
   end

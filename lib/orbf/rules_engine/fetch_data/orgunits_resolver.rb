@@ -10,11 +10,12 @@ module Orbf
       end
 
       def call
-        if package.subcontract? then handle_subcontract
-        elsif package.single?      then handle_single
-        elsif package.zone?        then handle_zone
-        else raise("unhandled package kind: #{package.kind}")
+        selected_orgunits = if package.subcontract? then handle_subcontract
+                            elsif package.single?      then handle_single
+                            elsif package.zone?        then handle_zone
+                            else raise("unhandled package kind: #{package.kind}")
         end
+        OrgUnits.new(orgunits: selected_orgunits, package: package)
       end
 
       private

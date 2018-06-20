@@ -78,7 +78,11 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
   end
 
   it "gives access to package vars for all org units" do
-    result = described_class.new(package, orgunits, "2016Q1").to_variables
+    result = described_class.new(
+      package,
+      Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: package),
+      "2016Q1"
+    ).to_variables
     expect(result).to eq_vars(expected_result)
   end
 end

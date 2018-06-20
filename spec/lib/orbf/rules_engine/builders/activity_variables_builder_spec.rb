@@ -500,7 +500,11 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
     end
 
     it "registers activity_variables" do
-      result = described_class.new(package, orgunits, dhis2_values).convert("2016")
+      result = described_class.new(
+        package,
+        Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: package),
+        dhis2_values
+      ).convert("2016")
       expect(result).to eq_vars(expected_vars)
     end
   end

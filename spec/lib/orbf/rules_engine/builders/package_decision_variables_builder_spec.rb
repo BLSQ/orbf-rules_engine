@@ -65,7 +65,7 @@ RSpec.describe Orbf::RulesEngine::PackageDecisionVariablesBuilder do
     ]
   end
 
-  let(:builder) { Orbf::RulesEngine::PackageDecisionVariablesBuilder.new(package, orgunits, "2016Q1") }
+  let(:builder) { Orbf::RulesEngine::PackageDecisionVariablesBuilder.new(package, Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: package), "2016Q1") }
 
   it "should be able to use the package decision table" do
     expect(builder.to_variables).to eq_vars expected_variables
