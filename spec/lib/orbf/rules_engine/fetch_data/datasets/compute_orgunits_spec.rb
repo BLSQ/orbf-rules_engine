@@ -1,5 +1,5 @@
 
-RSpec.describe Orbf::RulesEngine::ComputeOrgunits do
+RSpec.describe Orbf::RulesEngine::Datasets::ComputeOrgunits do
   let(:org_units) do
     [
       Orbf::RulesEngine::OrgUnit.with(
@@ -90,7 +90,7 @@ RSpec.describe Orbf::RulesEngine::ComputeOrgunits do
 
   it "gives all orgunits that can be invoiced per package" do
     expect(pyramid)
-    orgunits = Orbf::RulesEngine::ComputeOrgunits.new(project, pyramid, "contracted").call
+    orgunits = described_class.new(project, pyramid, "contracted").call
     expect(orgunits[package.code].map(&:ext_id)).to eq(%w[1 2])
   end
 end
