@@ -51,7 +51,7 @@ module Orbf
         end
 
         def organistation_unit_groups(dhis2_resource)
-          dhis2_resource["organisationUnitGroups"] || dhis2_resource["organisation_unit_groups"]
+          dhis2_resource["organisationUnitGroups"] || dhis2_resource["organisation_unit_groups"] || []
         end
 
         def to_code(dhis2_ressource)

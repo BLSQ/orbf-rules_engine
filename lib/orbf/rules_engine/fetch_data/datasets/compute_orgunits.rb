@@ -22,9 +22,11 @@ module Orbf
         def fill_registry
           pyramid.orgunits_in_groups([group_ext_id]).each do |orgunit|
             project.packages.each do |package|
-              orgunits = OrgunitsResolver.new(package, pyramid, orgunit).call
-              # subcontracts only the first one has out dhis2 values
-              orgunits = orgunits.out_list
+              resolved_orgunits = OrgunitsResolver.new(package, pyramid, orgunit).call
+              orgunits = resolved_orgunits.out_list
+              if package.zone?
+                orgunits.push(resolved_orgunits.ref_orgunit)
+              end
               registry[package.code].merge(orgunits)
             end
           end

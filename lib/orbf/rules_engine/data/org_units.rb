@@ -18,7 +18,7 @@ module Orbf
         if package.subcontract?
           orgunits[0..0]
         elsif package.zone?
-          orgunits[1..-1]
+          orgunits[1..-1] || []
         else
           orgunits
         end
