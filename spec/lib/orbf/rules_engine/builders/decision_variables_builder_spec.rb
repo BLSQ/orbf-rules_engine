@@ -91,7 +91,13 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
     ]
   end
 
-  let(:builder) { Orbf::RulesEngine::DecisionVariablesBuilder.new(package, orgunits, "2016Q1") }
+  let(:builder) do
+    Orbf::RulesEngine::DecisionVariablesBuilder.new(
+      package,
+      Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: package),
+      "2016Q1"
+    )
+  end
 
   it "build" do
     expect(builder.to_variables).to eq_vars expected_variables

@@ -7,11 +7,7 @@ module Orbf
 
       def initialize(package, orgunits, period)
         @package = package
-        @orgunits = if package.subcontract?
-                      orgunits[0..0]
-                    else
-                      orgunits
-                    end
+        @orgunits = orgunits.out_list
         @period = period
       end
 

@@ -30,7 +30,10 @@ module Orbf
 
           hash[package] = PackageArguments.with(
             periods:          PeriodsResolver.new(package, invoicing_period).call,
-            orgunits:         decorate_with_facts(OrgunitsResolver.new(package, pyramid, main_orgunit).call),
+            orgunits:         OrgUnits.new(
+              package:  package,
+              orgunits: decorate_with_facts(OrgunitsResolver.new(package, pyramid, main_orgunit).call)
+            ),
             datasets_ext_ids: DatasetsResolver.dataset_extids(package),
             package:          package
           )

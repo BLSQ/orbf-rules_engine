@@ -20,8 +20,8 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
           name:   "act1_target"
         ),
         Orbf::RulesEngine::ActivityState.new_constant(
-          state:  "price",
-          name:   "act1_price",
+          state:   "price",
+          name:    "act1_price",
           formula: "10"
         )
       ]
@@ -143,7 +143,11 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
     end
 
     it "creates proper variables" do
-      variables = described_class.new(package, orgunits, "2016").to_variables
+      variables = described_class.new(
+        package,
+        Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: package),
+        "2016"
+      ).to_variables
       expect(variables).to eq_vars expected_variables
     end
   end
@@ -238,7 +242,11 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
     end
 
     it "creates proper variables without level2 mention" do
-      variables = described_class.new(package, orgunits, "2016").to_variables
+      variables = described_class.new(
+        package,
+        Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: package),
+        "2016"
+      ).to_variables
       expect(variables).to eq_vars expected_variables
     end
   end

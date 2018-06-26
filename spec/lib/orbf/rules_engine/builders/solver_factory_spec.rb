@@ -36,13 +36,13 @@ RSpec.describe Orbf::RulesEngine::SolverFactory do
       package_arguments = [
         Orbf::RulesEngine::PackageArguments.with(
           periods:          ["2016Q1"],
-          orgunits:         orgunits,
+          orgunits:         Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: project.packages[0]),
           datasets_ext_ids: [],
           package:          project.packages[0]
         ),
         Orbf::RulesEngine::PackageArguments.with(
           periods:          ["2016Q1"],
-          orgunits:         orgunits,
+          orgunits:         Orbf::RulesEngine::OrgUnits.new(orgunits: orgunits, package: project.packages[1]),
           datasets_ext_ids: [],
           package:          project.packages[1]
         )

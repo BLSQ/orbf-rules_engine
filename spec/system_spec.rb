@@ -303,14 +303,30 @@ RSpec.describe "System" do
   end
 
   it "should build package variables" do
-    variable = Orbf::RulesEngine::PackageVariablesBuilder.new(project.packages.first, orgunits_full, period).to_variables.last
+    package = project.packages.first
+    variable = Orbf::RulesEngine::PackageVariablesBuilder.new(
+      package,
+      Orbf::RulesEngine::OrgUnits.new(
+        orgunits: orgunits_full,
+        package:  package
+      ),
+      period
+    ).to_variables.last
     expect(variable.key).to eq("facility_fosa_available_budget_for_20_and_2016q1")
 
     expect(variable.expression).to eq("facility_fosa_indicators_reported_weighted_for_county_for_20_and_2016q1 * max(facility_act1_actual_regional_bonus_for_20_and_2016q1, facility_act2_actual_regional_bonus_for_20_and_2016q1, facility_act3_actual_regional_bonus_for_20_and_2016q1, facility_act4_actual_regional_bonus_for_20_and_2016q1, facility_act5_actual_regional_bonus_for_20_and_2016q1, facility_act6_actual_regional_bonus_for_20_and_2016q1, facility_act7_actual_regional_bonus_for_20_and_2016q1, facility_act8_actual_regional_bonus_for_20_and_2016q1, facility_act9_actual_regional_bonus_for_20_and_2016q1)")
   end
 
   it "should build formula variables" do
-    variable = Orbf::RulesEngine::ActivityFormulaVariablesBuilder.new(project.packages.first, orgunits_full, period).to_variables.last
+    package = project.packages.first
+    variable = Orbf::RulesEngine::ActivityFormulaVariablesBuilder.new(
+      package,
+      Orbf::RulesEngine::OrgUnits.new(
+        orgunits: orgunits_full,
+        package:  package
+      ),
+      period
+    ).to_variables.last
     expect(variable.key).to eq("facility_act9_actual_regional_bonus_for_20_and_2016q1")
     expect(variable.expression).to eq("facility_act9_regional_bonus_level_1_for_country_id_and_2016q1")
   end
@@ -327,6 +343,7 @@ RSpec.describe "System" do
       orgunit_ext_id:   orgs[0].ext_id,
       invoicing_period: "2016Q1"
     ).call
+
     package_vars = Orbf::RulesEngine::ActivityVariablesBuilder.to_variables(package_arguments, dhis2_values)
     Orbf::RulesEngine::SolverFactory.new(
       project,

@@ -31,6 +31,16 @@ module Orbf
         return single_mapping if single_mapping
       end
 
+      def data_elements_ids
+        if single_mapping
+          [single_mapping]
+        elsif activity_mappings
+          activity_mappings.values
+        else
+          []
+        end
+      end
+
       private
 
       attr_reader :single_mapping, :activity_mappings
