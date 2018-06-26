@@ -24,9 +24,7 @@ module Orbf
             project.packages.each do |package|
               resolved_orgunits = OrgunitsResolver.new(package, pyramid, orgunit).call
               orgunits = resolved_orgunits.out_list
-              if package.zone?
-                orgunits.push(resolved_orgunits.ref_orgunit)
-              end
+              orgunits.push(resolved_orgunits.ref_orgunit) if package.zone?
               registry[package.code].merge(orgunits)
             end
           end

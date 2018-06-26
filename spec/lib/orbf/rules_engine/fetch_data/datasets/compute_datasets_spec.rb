@@ -179,7 +179,7 @@ RSpec.describe Orbf::RulesEngine::Datasets do
       expect(dataset.frequency).to eq("quarterly")
       expect(dataset.payment_rule_code).to eq("test_pay")
       expect(dataset.data_elements).to eq(%w[de_act1_quarter de2_pack_quarter])
-      expect(dataset.orgunits.map(&:ext_id)).to eq(["1", "2"])
+      expect(dataset.orgunits.map(&:ext_id)).to eq(%w[1 2])
     end
   end
 end
