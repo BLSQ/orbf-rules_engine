@@ -135,8 +135,9 @@ module Orbf
         activity = package.activities.detect { |activity| activity.activity_code == activity_code }
         return nil unless activity
         activity_state = activity.activity_states.detect do |as|
-          as.state == state || as.state + "_zone_main_orgunit" == state || as.state+"_raw"
+          as.state == state || as.state + "_zone_main_orgunit" == state || as.state+"_raw" == state
         end
+
         activity_state&.ext_id
       end
 
