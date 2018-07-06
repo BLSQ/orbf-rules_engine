@@ -106,7 +106,7 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
           key:            "quality_eval_subcontract_act1_price_for_1_and_2016",
-          expression:     "act1_price_for_2016",
+          expression:     "const_act1_price_for_2016",
           state:          "price",
           activity_code:  "act1",
           type:           "contract",
@@ -205,7 +205,7 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
         Orbf::RulesEngine::Variable.with(
           period:         "2016",
           key:            "quality_eval_subcontract_act1_price_for_1_and_2016",
-          expression:     "act1_price_for_2016",
+          expression:     "const_act1_price_for_2016",
           state:          "price",
           activity_code:  "act1",
           type:           "contract",

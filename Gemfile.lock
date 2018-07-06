@@ -43,7 +43,7 @@ GEM
       httparty
       terminal-table
     hashdiff (0.3.2)
-    hesabu (0.1.2)
+    hesabu (0.1.5)
       parslet
     http-cookie (1.0.3)
       domain_name (~> 0.5)

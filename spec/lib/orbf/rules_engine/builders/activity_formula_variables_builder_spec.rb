@@ -170,7 +170,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
         Orbf::RulesEngine::Variable.with(
           key:            "#{package.code}_act1_half_price_for_1_and_2016q1",
           period:         "2016Q1",
-          expression:     "act1_price_for_2016q1/2",
+          expression:     "const_act1_price_for_2016q1/2",
           type:           "activity_rule",
           state:          "half_price",
           activity_code:  "act1",
@@ -239,7 +239,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
         Orbf::RulesEngine::Variable.with(
           key:            "facility_act1_equity_price_for_1_and_2016q1",
           period:         "2016Q1",
-          expression:     "act1_price_for_2016q1 * facility_act1_equity_bonus_for_1_and_2016q1",
+          expression:     "const_act1_price_for_2016q1 * facility_act1_equity_bonus_for_1_and_2016q1",
           type:           "activity_rule",
           state:          "equity_price",
           activity_code:  "act1",

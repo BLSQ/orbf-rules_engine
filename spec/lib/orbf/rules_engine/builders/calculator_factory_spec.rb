@@ -5,7 +5,7 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
   describe "support avg function" do
     it "solve " do
       solution = calculator.solve("myavg" => "AVG(1,3,9)")
-      expect(solution["myavg"]).to eq(4.333333333333333)
+      expect(solution["myavg"].to_f).to eq(4.333333333333333)
     end
   end
 
