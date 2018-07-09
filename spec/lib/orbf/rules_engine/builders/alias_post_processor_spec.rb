@@ -161,8 +161,8 @@ RSpec.describe "Packages cross referencies" do
           "main_m_act1_score_for_1_and_2016q1"                 => "referenced_referenced_amount_for_1_and_2016q1",
           "main_m_act1_score_for_1_and_2016"                   => "0",
           "main_m_act1_score_for_1_and_2015july"               => "0",
-          "referenced_act1_achieved_for_2016q1"                => "10",
-          "referenced_referenced_act1_amount_for_1_and_2016q1" => "referenced_act1_achieved_for_2016q1 * 100",
+          "const_referenced_act1_achieved_for_2016q1"                => "10",
+          "referenced_referenced_act1_amount_for_1_and_2016q1" => "const_referenced_act1_achieved_for_2016q1 * 100",
           "referenced_referenced_amount_for_1_and_2016q1"      => "SUM(referenced_referenced_act1_amount_for_1_and_2016q1)",
           "main_m_act1_amount_for_1_and_2016q1"                => "main_m_act1_score_for_1_and_2016q1 * 2",
           "main_quantity_amount_for_1_and_2016q1"              => "SUM(main_m_act1_amount_for_1_and_2016q1)"

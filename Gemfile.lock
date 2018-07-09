@@ -43,8 +43,7 @@ GEM
       httparty
       terminal-table
     hashdiff (0.3.2)
-    hesabu (0.1.5)
-      parslet
+    hesabu (0.1.6)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httparty (0.16.0)
@@ -64,7 +63,6 @@ GEM
     parallel (1.12.1)
     parser (2.5.0.2)
       ast (~> 2.4.0)
-    parslet (1.8.2)
     path_expander (1.0.2)
     powerpack (0.1.1)
     pronto (0.9.5)
