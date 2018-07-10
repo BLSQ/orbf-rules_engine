@@ -61,13 +61,6 @@ module Orbf
 
           attr_reader :parser, :interpreter, :solver
 
-          def dependencies(expression)
-            if expression.is_a?(Numeric)
-              return []
-            end
-            LegacyCalculatorFactory.build().dependencies(expression)
-          end
-
           def store(values_hash)
             values_hash.each do |k, v|
               solver.add(k, v.to_s)
@@ -83,9 +76,20 @@ module Orbf
         end
       end
 
-      def self.build(_options = { nested_data_support: false, case_sensitive: true })
+      def self.build(engine_version, options = { nested_data_support: false, case_sensitive: true })
+        if engine_version < 3
+          return LegacyCalculatorFactory.build(options)
+        end
         Orbf::RulesEngine::CalculatorFactory::Hesabu::Calculator.new
       end
+
+      def self.dependencies(expression)
+        if expression.is_a?(Numeric)
+          return []
+        end
+        LegacyCalculatorFactory.build().dependencies(expression)
+      end
+
     end
   end
 end

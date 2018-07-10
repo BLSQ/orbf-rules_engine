@@ -27,7 +27,8 @@ RSpec.describe Orbf::RulesEngine::SolverFactory do
   context "iterates over proper package and org units" do
     it "takes both packages and org units" do
       project = build_project(
-        [
+        engine_version: 1,
+        packages:       [
           build_package(%w[Group1 Group2]),
           build_package(%w[Group1 Group2])
         ]
@@ -55,10 +56,11 @@ RSpec.describe Orbf::RulesEngine::SolverFactory do
     end
   end
 
-  def build_project(packages)
+  def build_project(engine_version:, packages:)
     Orbf::RulesEngine::Project.new(
-      packages:      packages,
-      payment_rules: [
+      engine_version: engine_version,
+      packages:       packages,
+      payment_rules:  [
         Orbf::RulesEngine::PaymentRule.new(
           frequency: :quarterly,
           packages:  packages,

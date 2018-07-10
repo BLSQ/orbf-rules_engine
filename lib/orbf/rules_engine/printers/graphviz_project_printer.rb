@@ -23,15 +23,13 @@ module Orbf
       end
 
       def print_packages(packages)
-        calc = CalculatorFactory.build
-
         diagrams = []
         packages.each do |package|
           diagram = package.rules.flat_map(&:formulas).map do |formula|
             sep = SEPERATORS[formula.rule.kind.to_s]
             raise "no separators for #{formula.rule.kind} vs #{separators}" unless sep
 
-            dependencies = calc.dependencies(formula.expression.gsub("%{", "").gsub("_values}", ""))
+            dependencies = CalculatorFactory.dependencies(formula.expression.gsub("%{", "").gsub("_values}", ""))
             dig = dependencies.map do |dependency|
               formula.code + "--> " + dependency + ";"
             end

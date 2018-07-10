@@ -1,6 +1,6 @@
 
 RSpec.describe Orbf::RulesEngine::CalculatorFactory do
-  let(:calculator) { described_class.build }
+  let(:calculator) { described_class.build(3) }
 
   describe "support avg function" do
     it "solve " do
