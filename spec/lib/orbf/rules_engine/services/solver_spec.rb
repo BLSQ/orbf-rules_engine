@@ -32,7 +32,10 @@ RSpec.describe Orbf::RulesEngine::Solver do
         ]
       )
       solver.solve!
-    end.to raise_error(Dentaku::ArgumentError)
+    end.to raise_error(
+      Hesabu::Error,
+      "In equation nil_key Unexpected end of expression nil_key := "
+    )
   end
 
   it "throws error when equations don't match" do
@@ -42,6 +45,9 @@ RSpec.describe Orbf::RulesEngine::Solver do
         build_variable("key2", "key_missing")
       ]
     )
-    expect { solver.solve! }.to raise_error(Dentaku::UnboundVariableError)
+    expect { solver.solve! }.to raise_error(
+      Hesabu::Error,
+      "In equation key2 No parameter 'key_missing' found. key2 := key_missing"
+    )
   end
 end
