@@ -14,7 +14,7 @@ module Orbf
       end
 
       def new_solver
-        Orbf::RulesEngine::Solver.new.tap do |solver|
+        Orbf::RulesEngine::Solver.new(engine_version: project.engine_version).tap do |solver|
           solver.register_variables(package_vars)
           register_packages(solver)
           register_payment_rules(solver)

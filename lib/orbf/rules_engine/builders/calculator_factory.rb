@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require "hesabu"
 module Orbf
   module RulesEngine
-    class CalculatorFactory
+
+    class LegacyCalculatorFactory
       SCORE_TABLE = lambda do |*args|
         target = args.shift
         matching_rules = args.each_slice(3).find do |lower, greater, result|
@@ -47,6 +49,47 @@ module Orbf
           calculator.add_function(:randbetween, :numeric, RANDBETWEEN)
         end
       end
+    end
+
+
+    class CalculatorFactory
+      module Hesabu
+        class Calculator
+          def initialize
+            @solver = ::Hesabu::Solver.new
+          end
+
+          attr_reader :parser, :interpreter, :solver
+
+          def store(values_hash)
+            values_hash.each do |k, v|
+              solver.add(k, v.to_s)
+            end
+          end
+
+          def solve(values_hash)
+            values_hash.each do |k, v|
+              solver.add(k, v.to_s)
+            end
+            solver.solve!
+          end
+        end
+      end
+
+      def self.build(engine_version, options = { nested_data_support: false, case_sensitive: true })
+        if engine_version < 3
+          return LegacyCalculatorFactory.build(options)
+        end
+        Orbf::RulesEngine::CalculatorFactory::Hesabu::Calculator.new
+      end
+
+      def self.dependencies(expression)
+        if expression.is_a?(Numeric)
+          return []
+        end
+        LegacyCalculatorFactory.build().dependencies(expression)
+      end
+
     end
   end
 end

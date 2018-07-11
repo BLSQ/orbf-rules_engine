@@ -5,9 +5,10 @@ require "colorized_string"
 module Orbf
   module RulesEngine
     class Solver
-      attr_reader :variables, :solution, :timings, :equations
+      attr_reader :variables, :solution, :timings, :equations, :engine_version
 
-      def initialize
+      def initialize(engine_version:)
+        @engine_version = engine_version
         @variables = []
         @timings = {}
       end
@@ -50,7 +51,7 @@ module Orbf
       private
 
       def solve(problem)
-        calc = CalculatorFactory.build
+        calc = CalculatorFactory.build(engine_version)
         @equations = {}
         begin
           split_problem(problem, calc)

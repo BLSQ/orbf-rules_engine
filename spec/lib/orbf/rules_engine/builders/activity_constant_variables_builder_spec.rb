@@ -42,7 +42,7 @@ RSpec.describe Orbf::RulesEngine::ActivityConstantVariablesBuilder do
   let(:expected_results) do
     [
       Orbf::RulesEngine::Variable.with(
-        key:            "act1_active_for_2016q1",
+        key:            "const_act1_active_for_2016q1",
         period:         "2016Q1",
         expression:     "10",
         type:           "activity_constant",
