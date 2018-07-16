@@ -11,9 +11,14 @@ module Orbf
 
       def self.periods(period, frequency)
         raise "no support for #{frequency} only #{CLASSES_MAPPING.keys.join(',')}" unless CLASSES_MAPPING.key?(frequency)
-        date_range = RulesEngine::PeriodConverter.as_date_range(period)
 
-        extract_periods(date_range, frequency)
+        @periods ||= {}
+        @periods[[period, frequency]] ||= begin
+          date_range = RulesEngine::PeriodConverter.as_date_range(period)
+          resulting_periods = extract_periods(date_range, frequency)
+          resulting_periods.freeze
+          resulting_periods
+        end
       end
 
       def self.extract_periods(range, period_type)
