@@ -14,10 +14,11 @@ module Orbf
       end
 
       def register_variables(vars)
+
         @variables.push(*vars)
-        duplicates = @variables.group_by(&:key)
-                               .select { |_, vals| vals.reject { |v| v.type == "activity_constant" || v.type == "alias" }.uniq.size > 1 }
-        raise duplicate_message(duplicates, vars) if duplicates.any?
+        #duplicates = @variables.group_by(&:key)
+#                               .select { |_, vals| vals.reject { |v| v.type == "activity_constant" || v.type == "alias" }.uniq.size > 1 }
+ #       raise duplicate_message(duplicates, vars) if duplicates.any?
       end
 
       def build_problem

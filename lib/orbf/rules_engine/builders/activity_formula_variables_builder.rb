@@ -23,14 +23,16 @@ module Orbf
       def activity_formula_variables
         orgunits.each_with_object([]) do |orgunit, array|
           package.all_activities_codes.each do |activity_code|
-            package.activity_rules.flat_map(&:formulas).each do |formula|
-              substitued = ActivityFormulaValuesExpander.new(
-                package.code, activity_code, formula, orgunit, period
-              ).expand_values
+            package.activity_rules.each do |rule|
+              rule.formulas.each do |formula|
+                substitued = ActivityFormulaValuesExpander.new(
+                  package.code, activity_code, formula, orgunit, period
+                ).expand_values
 
-              substitued = format(substitued, entities_aggregation_values(activity_code))
+                substitued = format(substitued, entities_aggregation_values(activity_code))
 
-              array.push(build_variable(orgunit, activity_code, formula, substitued))
+                array.push(build_variable(orgunit, activity_code, formula, substitued))
+              end
             end
           end
         end
@@ -79,14 +81,17 @@ module Orbf
       end
 
       def substitutions(activity_code)
-        states_substitutions(activity_code)
-          .merge(null_substitutions(activity_code))
-          .merge(level_substitutions)
-          .merge(package_substitutions)
-          .merge(formulas_substitutions(activity_code))
-          .merge(zone_main_orgunit_substitutions(activity_code))
-          .merge(decision_table_substitutions(activity_code))
-          .merge(orgunit_counts_substitutions(activity_code))
+        hashes = [
+          states_substitutions(activity_code),
+          null_substitutions(activity_code),
+          level_substitutions,
+          package_substitutions,
+          formulas_substitutions(activity_code),
+          zone_main_orgunit_substitutions(activity_code),
+          decision_table_substitutions(activity_code),
+          orgunit_counts_substitutions(activity_code)
+        ]
+        hashes.each_with_object({}) { |hash, acc| acc.merge!(hash)}
       end
 
       def null_substitutions(activity_code)
