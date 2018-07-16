@@ -91,7 +91,7 @@ module Orbf
           decision_table_substitutions(activity_code),
           orgunit_counts_substitutions(activity_code)
         ]
-        hashes.each_with_object({}) { |hash, acc| acc.merge!(hash)}
+        hashes.each_with_object({}) { |hash, acc| acc.merge!(hash) }
       end
 
       def null_substitutions(activity_code)
