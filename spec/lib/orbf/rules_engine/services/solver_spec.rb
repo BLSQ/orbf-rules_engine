@@ -18,13 +18,6 @@ RSpec.describe Orbf::RulesEngine::Solver do
 
       let(:solver) { described_class.new(engine_version: engine_version) }
 
-      it "raise error on duplicate variables" do
-        solver.register_variables([build_variable("key1")])
-        expect do
-          solver.register_variables([build_variable("key1", "duuu")])
-        end.to raise_error(/Duplicates for key1=/)
-      end
-
       it "logs Dentaku::ArgumentError" do
         expect do
           solver.register_variables(
@@ -67,13 +60,6 @@ RSpec.describe Orbf::RulesEngine::Solver do
       end
 
       let(:solver) { described_class.new(engine_version: engine_version) }
-
-      it "raise error on duplicate variables" do
-        solver.register_variables([build_variable("key1")])
-        expect do
-          solver.register_variables([build_variable("key1", "duuu")])
-        end.to raise_error(/Duplicates for key1=/)
-      end
 
       it "logs Dentaku::ArgumentError" do
         expect do

@@ -109,6 +109,7 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
+    ruby-prof (0.17.0)
     ruby-progressbar (1.9.0)
     ruby_parser (3.11.0)
       sexp_processor (~> 4.9)
@@ -152,6 +153,7 @@ DEPENDENCIES
   pronto-simplecov
   rake (~> 10.0)
   rspec (~> 3.0)
+  ruby-prof
   simplecov
   stackprof
   webmock
