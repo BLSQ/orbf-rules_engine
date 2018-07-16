@@ -5,6 +5,10 @@ module Orbf
     class OrgUnit < Orbf::RulesEngine::ValueObject
       attributes :ext_id, :name, :path, :group_ext_ids
 
+      def ext_id 
+        @ext_id
+      end
+      
       def parent_ext_ids
         path.split("/").reject(&:empty?)
       end

@@ -15,7 +15,8 @@ RSpec.describe "Liberia System" do
     it "works" do
 
         #fetch_and_solve.call
-
+        project
+        pyramid
         
         RubyProf.start if ENV["PROF"]
         fetch_and_solve.call
@@ -23,10 +24,10 @@ RSpec.describe "Liberia System" do
 
         if ENV["PROF"]
             printer = RubyProf::GraphPrinter.new(result)
-            printer.print(STDOUT, {min_percent: 4})
+            printer.print(STDOUT, {})
 
             printer = RubyProf::FlatPrinter.new(result)
-            printer.print(STDOUT, {min_percent: 4})
+            printer.print(STDOUT, {})
         end
 
         expect(fetch_and_solve.solver.solution.size).to eq(32149)

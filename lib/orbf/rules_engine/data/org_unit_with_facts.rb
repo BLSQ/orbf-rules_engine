@@ -10,6 +10,10 @@ module Orbf
         self.class == other.class && ext_id == other.ext_id
       end
 
+      def ext_id
+        @orgunit.ext_id
+      end
+
       delegate :hash, to: :ext_id
 
       def method_missing(method, *args)

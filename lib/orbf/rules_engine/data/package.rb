@@ -65,7 +65,7 @@ module Orbf
       end
 
       def all_activities_codes
-        Set.new(activities.map(&:activity_code))
+        @all_activities_codes ||=Set.new(activities.map(&:activity_code))
       end
 
       def harmonized_activity_states(activity)
@@ -83,7 +83,7 @@ module Orbf
       end
 
       def package_rules
-        rules.select(&:package_kind?)
+        @package_rules ||= rules.select(&:package_kind?).freeze
       end
 
       def zone_rules
@@ -91,7 +91,7 @@ module Orbf
       end
 
       def activity_rules
-        rules.select(&:activity_kind?)
+        @activity_rules ||= rules.select(&:activity_kind?).freeze
       end
 
       def entities_aggregation_rules

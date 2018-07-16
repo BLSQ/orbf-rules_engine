@@ -56,6 +56,10 @@ module Orbf
         )
       end
 
+      def state 
+        @state
+      end
+
       def constant?
         kind == Kinds::KIND_CONSTANT
       end
