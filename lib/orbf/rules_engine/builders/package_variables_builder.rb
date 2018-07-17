@@ -59,7 +59,7 @@ module Orbf
         package.zone_rules
                .flat_map(&:formulas)
                .each_with_object({}) do |formula, hash|
-          hash[formula.code] = formula.code + "_for_" + period.downcase
+          hash[formula.code] = formula.code + "_for_" + downcase(period)
         end
       end
 

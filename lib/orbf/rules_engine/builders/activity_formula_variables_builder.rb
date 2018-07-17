@@ -44,7 +44,7 @@ module Orbf
           substitutions(activity_code),
           level_pattern_values(orgunit).merge(
             orgunit_id: orgunit.ext_id,
-            period:     period.downcase
+            period:     downcase(period)
           )
         )
         Orbf::RulesEngine::Variable.new_activity_rule(

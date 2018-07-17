@@ -2,9 +2,20 @@ module Orbf
   module RulesEngine
     class ActivityItem < Orbf::RulesEngine::ValueObject
       attributes :activity, :solution, :problem, :substitued, :variables
+      attr_reader :activity, :solution, :problem, :substitued, :variables
+
+      def initialize(activity: nil, solution: nil, problem: nil, substitued: nil, variables: nil)
+        @activity = activity
+        @solution = solution
+        @problem = problem
+        @substitued = substitued
+        @variables = variables
+        @indexed_variables = variables.index_by { |v| [v.state, v.activity_code] }
+        freeze
+      end
 
       def variable(code)
-        variables.detect { |v| v.state == code && v.activity_code == activity.activity_code }
+        @indexed_variables[[code, activity.activity_code]] 
       end
 
       def input?(code)
@@ -23,6 +34,14 @@ module Orbf
 
     class TotalItem < Orbf::RulesEngine::ValueObject
       attributes :formula, :explanations, :value
+      attr_reader  :formula, :explanations, :value
+
+      def initialize(formula: nil, explanations: nil, value: nil)
+        @formula = formula
+        @explanations = explanations
+        @value = value
+        freeze
+      end
 
       def inspect
         "TotalItem(#{formula.code} #{explanations})"

@@ -7,12 +7,14 @@ module Orbf
 
       attr_reader :name, :activity_code, :activity_states
 
-      def states
-        @states
+      def initialize(name:, activity_code:, activity_states:)
+        @name = name
+        @activity_code = activity_code
+        @activity_states = activity_states
       end
 
-      def after_init 
-        @states ||=activity_states.map(&:state).freeze
+      def states 
+        @states ||= activity_states.map(&:state).freeze
       end
     end
   end

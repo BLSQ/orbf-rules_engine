@@ -18,6 +18,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    allocation_stats (0.1.5)
     ast (2.4.0)
     byebug (10.0.0)
     colorize (0.8.1)
@@ -144,6 +145,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  allocation_stats
   bundler (~> 1.16)
   byebug
   orbf-rules_engine!
