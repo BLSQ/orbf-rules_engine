@@ -61,14 +61,14 @@ module Orbf
       end
 
       def states
-        @states ||= Set.new(activities.flat_map(&:states).map(&:to_s))
+        @states ||= Set.new(activities.flat_map(&:states))
       end
 
       def all_activities_codes
         @all_activities_codes ||=Set.new(activities.map(&:activity_code))
       end
 
-      def harmonized_activity_states(activity)
+      def harmonized_activity_states(activity)     
         all_states = states.to_a
         existing_activity_states = activity.activity_states
         missing_states = all_states - existing_activity_states.map(&:state)
@@ -79,7 +79,7 @@ module Orbf
             ext_id: "fakeone"
           )
         end
-        existing_activity_states + missing_activity_states
+        existing_activity_states.concat(missing_activity_states)
       end
 
       def package_rules
@@ -87,7 +87,7 @@ module Orbf
       end
 
       def zone_rules
-        rules.select(&:zone_kind?)
+        @zone_rules ||= rules.select(&:zone_kind?).freeze
       end
 
       def activity_rules
@@ -99,7 +99,7 @@ module Orbf
       end
 
       def activity_dependencies
-        activity_rules.flat_map(&:formulas).flat_map(&:dependencies).to_set
+        @activity_dependencies ||= activity_rules.flat_map(&:formulas).flat_map(&:dependencies).to_set
       end
 
       def single?

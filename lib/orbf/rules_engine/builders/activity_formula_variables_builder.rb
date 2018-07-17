@@ -41,7 +41,7 @@ module Orbf
       def build_variable(orgunit, activity_code, formula, substitued)
         expression = Tokenizer.replace_token_from_expression(
           substitued,
-          substitutions(activity_code),
+          substitutions(formula, activity_code),
           level_pattern_values(orgunit).merge(
             orgunit_id: orgunit.ext_id,
             period:     downcase(period)
@@ -80,7 +80,7 @@ module Orbf
         end
       end
 
-      def substitutions(activity_code)
+      def substitutions(formula, activity_code)
         hashes = [
           states_substitutions(activity_code),
           null_substitutions(activity_code),
@@ -118,6 +118,7 @@ module Orbf
           end
         end
       end
+
 
       def level_substitutions
         @level_subs ||= package.states.each_with_object({}) do |state, hash|
