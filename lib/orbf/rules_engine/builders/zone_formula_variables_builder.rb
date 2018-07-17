@@ -32,7 +32,7 @@ module Orbf
           )
           Orbf::RulesEngine::Variable.with(
             period:         period,
-            key:            zone_formula.code + "_for_" + period.downcase,
+            key:            zone_formula.code + "_for_" + downcase(period),
             expression:     formatted,
             state:          zone_formula.code,
             type:           Orbf::RulesEngine::Variable::Types::ZONE_RULE,
@@ -47,7 +47,7 @@ module Orbf
 
       def zone_substitions
         package.zone_rules.flat_map(&:formulas).each_with_object({}) do |zone_formula, hash|
-          hash[zone_formula.code] = zone_formula.code + "_for_" + period.downcase
+          hash[zone_formula.code] = zone_formula.code + "_for_" + downcase(period)
         end
       end
 

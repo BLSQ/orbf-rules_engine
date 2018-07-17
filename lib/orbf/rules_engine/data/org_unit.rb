@@ -5,8 +5,17 @@ module Orbf
     class OrgUnit < Orbf::RulesEngine::ValueObject
       attributes :ext_id, :name, :path, :group_ext_ids
 
+      attr_reader :ext_id, :name, :path, :group_ext_ids, :parent_ext_ids
+
+      def initialize(ext_id:, name:, path:, group_ext_ids:)
+        @ext_id = ext_id
+        @name = name
+        @path = path
+        @group_ext_ids = group_ext_ids || []
+      end
+
       def parent_ext_ids
-        path.split("/").reject(&:empty?)
+        @parent_ext_ids ||= path.split("/").reject(&:empty?)
       end
 
       def eql?(other)
@@ -14,10 +23,6 @@ module Orbf
       end
 
       delegate :hash, to: :ext_id
-
-      def group_ext_ids
-        @group_ext_ids || []
-      end
     end
   end
 end

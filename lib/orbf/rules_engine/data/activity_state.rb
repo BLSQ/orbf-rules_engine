@@ -9,13 +9,16 @@ module Orbf
         KIND_INDICATOR = "indicator".freeze
 
         KINDS = [KIND_CONSTANT, KIND_DATA_ELEMENT, KIND_INDICATOR].freeze
+        KINDS_SET = KINDS.to_set.freeze
         KINDS_WITH_FORMULA = [KIND_CONSTANT, KIND_INDICATOR].freeze
+        KINDS_WITH_FORMULA_SET = KINDS_WITH_FORMULA.to_set.freeze
+
         def self.formula_required?(kind)
-          KINDS_WITH_FORMULA.include?(kind)
+          KINDS_WITH_FORMULA_SET.include?(kind)
         end
 
         def self.assert_valid_kind(activity_state_kind)
-          return if KINDS.include?(activity_state_kind)
+          return if KINDS_SET.include?(activity_state_kind)
           raise "Invalid activity state kind '#{activity_state_kind}' only supports #{KINDS}"
         end
 
@@ -55,6 +58,19 @@ module Orbf
           formula: expression
         )
       end
+
+      def initialize(state: nil, ext_id: nil, name: nil, kind: nil, formula: nil)
+        @state = state
+        @ext_id = ext_id
+        @name = name
+        @kind = kind
+        @formula = formula
+        after_init
+      end
+
+      attr_reader :state, :ext_id, :name, :kind, :formula
+
+      attr_reader :state
 
       def constant?
         kind == Kinds::KIND_CONSTANT

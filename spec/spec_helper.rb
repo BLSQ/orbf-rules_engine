@@ -3,7 +3,9 @@ require "rspec"
 require "simplecov"
 require "byebug"
 
-SimpleCov.start
+SimpleCov.start do
+  add_filter "/spec/"
+end
 
 RSpec.configure do |config|
     config.example_status_persistence_file_path = ".rspec_status"

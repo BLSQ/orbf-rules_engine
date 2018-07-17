@@ -42,7 +42,7 @@ module Orbf
             formula.expression,
             substitutions(activity_code),
             orgunit_id: orgunit.ext_id,
-            period:     period.downcase
+            period:     downcase(period)
           ),
           state:          formula.code,
           type:           Orbf::RulesEngine::Variable::Types::CONTRACT,

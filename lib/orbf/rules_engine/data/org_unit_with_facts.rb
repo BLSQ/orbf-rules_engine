@@ -6,8 +6,24 @@ module Orbf
     class OrgUnitWithFacts < Orbf::RulesEngine::ValueObject
       attributes :orgunit, :facts
 
+      attr_reader :orgunit, :facts
+
+      def initialize(orgunit:, facts:)
+        @orgunit = orgunit
+        @facts = facts
+        freeze
+      end
+
       def eql?(other)
         self.class == other.class && ext_id == other.ext_id
+      end
+
+      def ext_id
+        @orgunit.ext_id
+      end
+
+      def parent_ext_ids
+        @orgunit.parent_ext_ids
       end
 
       delegate :hash, to: :ext_id

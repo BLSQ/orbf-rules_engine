@@ -7,6 +7,14 @@ module Orbf
 
       class ValueLookup < Orbf::RulesEngine::ValueObject
         attributes :value, :is_null
+
+        attr_reader :value, :is_null
+
+        def initialize(value:, is_null:)
+          @value = value
+          @is_null = is_null
+          freeze
+        end
       end
 
       class << self

@@ -28,7 +28,17 @@ module Orbf
       end
 
       def suffix_for_id(code, orgunit_id, period)
-        "#{code}_for_#{orgunit_id}_and_#{period.downcase}"
+        "#{code}_for_#{orgunit_id}_and_#{downcase(period)}"
+      end
+
+      def downcase(period)
+        @@periods ||= {}
+        period_downcase = @@periods[period]
+        unless period_downcase
+          period_downcase = period.downcase
+          @@periods[period] = period_downcase
+        end
+        period_downcase
       end
 
       def suffix_activity_pattern(package_code, activity_code, name, orgunit_pattern = :orgunit_id)
