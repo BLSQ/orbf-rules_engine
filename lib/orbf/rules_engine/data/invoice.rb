@@ -15,7 +15,13 @@ module Orbf
       end
 
       def variable(code)
-        @indexed_variables[[code, activity.activity_code]] 
+        @indexed_variables[[code, activity.activity_code]]
+      end
+
+      def not_exported?(code)
+        var = variable(code)
+        return false unless var&.formula&.exportable_formula_code
+        !solution[var.formula.exportable_formula_code]
       end
 
       def input?(code)

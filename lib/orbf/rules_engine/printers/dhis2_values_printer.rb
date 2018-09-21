@@ -16,6 +16,7 @@ module Orbf
         values = variables.select(&:exportable?)
                           .map do |variable|
           value = ValueFormatter.format(variable.exportable_value(solution))
+
           add_coc_and_aoc(
             dataElement: variable.dhis2_data_element,
             orgUnit:     variable.orgunit_ext_id,
@@ -24,6 +25,7 @@ module Orbf
             comment:     variable.key
           )
         end
+
         uniq_values(values)
       end
 

@@ -163,7 +163,10 @@ module Orbf
       end
 
       def exportable_value(solution)
-        return nil if exportable_variable_key && !solution[exportable_variable_key]
+        return solution[key] unless exportable_variable_key
+
+        return nil if !solution[exportable_variable_key]
+        return nil if solution[exportable_variable_key] == 0
         solution[key]
       end
 

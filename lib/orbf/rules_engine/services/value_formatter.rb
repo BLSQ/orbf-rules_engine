@@ -5,12 +5,15 @@ module Orbf
     class ValueFormatter
       def self.format(value)
         return nil unless value
+        return value if value.is_a?(TrueClass) || value.is_a?(FalseClass)
+
         val_as_i = value.to_i
         val_as_f = value.to_f
         val_as_i.to_f == val_as_f ? val_as_i : val_as_f
       end
 
       def self.d_to_s(decimal, number_of_decimal = 2)
+        return decimal.to_s if decimal.is_a?(TrueClass) || decimal.is_a?(FalseClass)
         return decimal.to_i.to_s if number_of_decimal > 2 && decimal.to_i == decimal.to_f
         return decimal.to_f.to_s if number_of_decimal > 2
         return Kernel.format("%.#{number_of_decimal}f", decimal) if decimal.is_a? Numeric

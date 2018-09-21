@@ -86,7 +86,9 @@ module Orbf
         values = package_codes(activity, package).each_with_object({}) do |state, hash|
           vars.select { |v| v.state == state && v.activity_code == activity.activity_code }
               .each do |activity_variable|
-            hash[state] = solution[activity_variable.key] || activity_variable.expression
+            value = solution[activity_variable.key]
+            value = activity_variable.expression if value.nil?
+            hash[state] = value
             problem[state] = activity_variable.expression
             substitued[state] = Tokenizer.replace_token_from_expression(
               activity_variable.expression,
