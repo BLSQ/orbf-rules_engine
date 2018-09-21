@@ -121,11 +121,14 @@ module Orbf
         ].freeze
       end
 
-      attributes  :key, :period, :expression, :type, :state, :activity_code, :orgunit_ext_id, :formula, :package, :payment_rule
-
+      ATTRIBUTES = %i[key period expression type state activity_code orgunit_ext_id formula package payment_rule exportable_variable_key].freeze
+      attributes(*ATTRIBUTES)
+      attr_reader(*ATTRIBUTES)
       attr_reader :dhis2_period
 
-      def initialize(key: nil, period: nil, expression: nil, type: nil, state: nil, activity_code: nil, orgunit_ext_id: nil, formula: nil, package: nil, payment_rule: nil)
+      def initialize(key: nil, period: nil, expression: nil, type: nil, state: nil,
+                     activity_code: nil, orgunit_ext_id: nil, formula: nil, package: nil, payment_rule: nil,
+                     exportable_variable_key: nil)
         @key = key
         @period = period
         @expression = expression
@@ -136,10 +139,9 @@ module Orbf
         @formula = formula
         @package = package
         @payment_rule = payment_rule
+        @exportable_variable_key = exportable_variable_key
         after_init
       end
-
-      attr_reader :key, :period, :expression, :type, :state, :activity_code, :orgunit_ext_id, :formula, :package, :payment_rule
 
       def exportable?
         !!(orgunit_ext_id && dhis2_data_element)
@@ -147,7 +149,7 @@ module Orbf
 
       def dhis2_in_data_element
         return nil if type != Types::ACTIVITY
-        activity = package.activities.detect { |activity| activity.activity_code == activity_code }
+        activity = package.activity(activity_code)
         return nil unless activity
         activity_state = activity.activity_states.detect do |as|
           as.state == state || as.state + "_zone_main_orgunit" == state || as.state + "_raw" == state
@@ -158,6 +160,11 @@ module Orbf
 
       def dhis2_data_element
         formula&.dhis2_mapping(activity_code)
+      end
+
+      def exportable_value(solution)
+        return nil if exportable_variable_key && !solution[exportable_variable_key]
+        solution[key]
       end
 
       def inspect

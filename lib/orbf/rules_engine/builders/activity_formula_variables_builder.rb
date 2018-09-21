@@ -41,23 +41,29 @@ module Orbf
       def build_variable(orgunit, activity_code, formula, substitued)
         expression = Tokenizer.replace_token_from_expression(
           substitued,
-          substitutions(formula, activity_code),
+          substitutions(activity_code),
           level_pattern_values(orgunit).merge(
             orgunit_id: orgunit.ext_id,
             period:     downcase(period)
           )
         )
         Orbf::RulesEngine::Variable.new_activity_rule(
-          period:         period,
-          key:            suffix_for_activity(package.code, activity_code, formula.code, orgunit, period),
-          expression:     expression,
-          state:          formula.code,
-          type:           Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
-          activity_code:  activity_code,
-          orgunit_ext_id: orgunit.ext_id,
-          formula:        formula,
-          package:        package
+          period:                  period,
+          key:                     suffix_for_activity(package.code, activity_code, formula.code, orgunit, period),
+          expression:              expression,
+          state:                   formula.code,
+          type:                    Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
+          activity_code:           activity_code,
+          orgunit_ext_id:          orgunit.ext_id,
+          formula:                 formula,
+          package:                 package,
+          exportable_variable_key: exportable_variable_key(orgunit, activity_code, formula)
         )
+      end
+
+      def exportable_variable_key(orgunit, activity_code, formula)
+        return nil unless formula.exportable_formula_code
+        suffix_for_activity(package.code, activity_code, formula.exportable_formula_code, orgunit, period)
       end
 
       def level_pattern_values(orgunit)
@@ -80,7 +86,7 @@ module Orbf
         end
       end
 
-      def substitutions(formula, activity_code)
+      def substitutions(activity_code)
         hashes = [
           states_substitutions(activity_code),
           null_substitutions(activity_code),
@@ -118,7 +124,6 @@ module Orbf
           end
         end
       end
-
 
       def level_substitutions
         @level_subs ||= package.states.each_with_object({}) do |state, hash|

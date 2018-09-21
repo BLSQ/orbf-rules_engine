@@ -207,6 +207,111 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
     end
 
+    describe " and mapping and exportable_formula_code " do
+      let(:variables) do
+        build_variables
+      end
+
+      it "export nil when export formula code is falsy" do
+        activity_variable_with_exportable_formula_code = variables[0]
+        exportable_variable = variables[1]
+
+        result_values = described_class.new(
+          variables,
+          activity_variable_with_exportable_formula_code.key => 15.0,
+          exportable_variable.key                            => false
+        ).print
+
+        expect(result_values).to eq(
+          [
+            { dataElement: "dhis2_data_element_id_act1",
+              orgUnit:     "1",
+              period:      "2016Q1",
+              value:       nil,
+              comment:     "act1_achieved_for_1_and_2016q1" }
+          ]
+        )
+      end
+
+      it "export the value when export formula code is truethy" do
+        activity_variable_with_exportable_formula_code = variables[0]
+        exportable_variable = variables[1]
+
+        result_values = described_class.new(
+          variables,
+          activity_variable_with_exportable_formula_code.key => 15.0,
+          exportable_variable.key                            => true
+        ).print
+
+        expect(result_values).to eq(
+          [
+            { dataElement: "dhis2_data_element_id_act1",
+              orgUnit:     "1",
+              period:      "2016Q1",
+              value:       15,
+              comment:     "act1_achieved_for_1_and_2016q1" }
+          ]
+        )
+      end
+
+      def build_variables
+        package = build_package(
+          activity_mappings: {
+            activity.activity_code => "dhis2_data_element_id_act1"
+          }
+        )
+        [
+          Orbf::RulesEngine::Variable.with(
+            period:                  "2016Q1",
+            key:                     "act1_achieved_for_1_and_2016q1",
+            expression:              "33",
+            state:                   "achieved",
+            activity_code:           "act1",
+            type:                    :activity,
+            orgunit_ext_id:          orgunit.ext_id,
+            formula:                 package.rules.first.formulas.first,
+            package:                 package,
+            payment_rule:            nil,
+            exportable_variable_key: "act1_exportable_for_1_and_2016q1"
+          ),
+          Orbf::RulesEngine::Variable.with(
+            period:         "2016Q1",
+            key:            "act1_exportable_for_1_and_2016q1",
+            expression:     "33",
+            state:          "exportable",
+            activity_code:  "act1",
+            type:           :activity,
+            orgunit_ext_id: orgunit.ext_id,
+            formula:        package.rules.first.formulas.last,
+            package:        package
+          )
+        ]
+      end
+
+      def build_package(options)
+        Orbf::RulesEngine::Package.new(
+          code:       :quantity,
+          kind:       :single,
+          frequency:  :quarterly,
+          activities: [],
+          rules:      [
+            Orbf::RulesEngine::Rule.new(
+              kind:     :activity,
+              formulas: [
+                Orbf::RulesEngine::Formula.new(
+                  "quality_score", "31", "",
+                  options
+                ),
+                Orbf::RulesEngine::Formula.new(
+                  "exportable", "1 == 1", ""
+                )
+              ]
+            )
+          ]
+        )
+      end
+    end
+
     describe " and mapping and frequency configured " do
       let(:activity_variable_with_mapping_and_frequency) do
         build_activity_variable(
