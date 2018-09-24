@@ -103,16 +103,19 @@ module Orbf
               )
 
               array.push RulesEngine::Variable.with(
-                period:         period,
-                key:            suffix_for(payment_rule.code, formula.code, orgunit, period),
-                expression:     substitued,
-                state:          formula.code,
-                type:           Orbf::RulesEngine::Variable::Types::PAYMENT_RULE,
-                activity_code:  nil,
-                orgunit_ext_id: orgunit.ext_id,
-                formula:        formula,
-                package:        nil,
-                payment_rule:   payment_rule
+                period:                  period,
+                key:                     suffix_for(payment_rule.code, formula.code, orgunit, period),
+                expression:              substitued,
+                state:                   formula.code,
+                type:                    Orbf::RulesEngine::Variable::Types::PAYMENT_RULE,
+                activity_code:           nil,
+                orgunit_ext_id:          orgunit.ext_id,
+                formula:                 formula,
+                package:                 nil,
+                payment_rule:            payment_rule,
+                exportable_variable_key: if formula.exportable_formula_code
+                                           suffix_for(payment_rule.code, formula.exportable_formula_code, orgunit, period)
+                                         end
               )
             end
           end

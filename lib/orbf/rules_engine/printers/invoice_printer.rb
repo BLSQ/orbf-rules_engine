@@ -65,18 +65,34 @@ module Orbf
       end
 
       def to_total_item(var, solution_as_string)
+        explanations = [
+          var.formula.expression,
+          Tokenizer.replace_token_from_expression(
+            var.expression,
+            solution_as_string,
+            {}
+          ),
+          wrap(var.expression)
+        ]
+
+        not_exported = false
+        if var.exportable_variable_key
+          not_exported = var.exportable_value(solution).nil?
+          code = var.formula.exportable_formula_code
+          explanations.push(wrap("export ? #{code} = #{@variables_by_key[var.exportable_variable_key].formula.expression}"))
+          explanations.push(wrap("export ? #{code} = #{@variables_by_key[var.exportable_variable_key].expression}"))
+          explanations.push(wrap("export ? #{code} = #{Tokenizer.replace_token_from_expression(
+            @variables_by_key[var.exportable_variable_key].expression,
+            solution_as_string,
+            {}
+          )}"))
+          explanations.push(wrap("export ? #{code} = #{solution[var.exportable_variable_key]}"))
+        end
         Orbf::RulesEngine::TotalItem.new(
           formula:      var.formula,
-          explanations: [
-            var.formula.expression,
-            Tokenizer.replace_token_from_expression(
-              var.expression,
-              solution_as_string,
-              {}
-            ),
-            wrap(var.expression)
-          ],
-          value:        solution[var.key]
+          explanations: explanations,
+          value:        solution[var.key],
+          not_exported: not_exported
         )
       end
 
@@ -146,6 +162,7 @@ module Orbf
       end
 
       def wrap(s, width = 120, extra = "\t")
+        return "" if s.nil?
         s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n#{extra}")
       end
 

@@ -57,13 +57,10 @@ module Orbf
           orgunit_ext_id:          orgunit.ext_id,
           formula:                 formula,
           package:                 package,
-          exportable_variable_key: exportable_variable_key(orgunit, activity_code, formula)
+          exportable_variable_key: if formula.exportable_formula_code
+                                     suffix_for_activity(package.code, activity_code, formula.exportable_formula_code, orgunit, period)
+                                   end
         )
-      end
-
-      def exportable_variable_key(orgunit, activity_code, formula)
-        return nil unless formula.exportable_formula_code
-        suffix_for_activity(package.code, activity_code, formula.exportable_formula_code, orgunit, period)
       end
 
       def level_pattern_values(orgunit)

@@ -29,13 +29,16 @@ module Orbf
               period:     period
             )
             array.push Orbf::RulesEngine::Variable.new_package_rule(
-              period:         period,
-              key:            suffix_for(package.code, formula.code, orgunit, period),
-              expression:     format(substitued, activity_substitutions(orgunit)),
-              state:          formula.code,
-              orgunit_ext_id: orgunit.ext_id,
-              formula:        formula,
-              package:        package
+              period:                  period,
+              key:                     suffix_for(package.code, formula.code, orgunit, period),
+              expression:              format(substitued, activity_substitutions(orgunit)),
+              state:                   formula.code,
+              orgunit_ext_id:          orgunit.ext_id,
+              formula:                 formula,
+              package:                 package,
+              exportable_variable_key: if formula.exportable_formula_code
+                                         suffix_for(package.code, formula.exportable_formula_code, orgunit, period)
+                                       end
             )
           end
         end
