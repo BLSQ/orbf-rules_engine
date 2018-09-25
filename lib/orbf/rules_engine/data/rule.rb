@@ -68,9 +68,11 @@ module Orbf
       end
 
       def validate_formulas_references
+        exportable_formula_codes = formulas.map(&:exportable_formula_code).reject(&:empty?)
+        return if exportable_formula_codes.none?
         known_formula_codes = formulas.map(&:code)
-        unknown_exportable_formulas_codes = formulas.map(&:exportable_formula_code).compact - known_formula_codes
-        raise "Unknown exportable_formula_code : #{unknown_exportable_formulas_codes.join(', ')}. see #{known_formula_codes.join(", ")}" if unknown_exportable_formulas_codes.any?
+        unknown_exportable_formulas_codes = exportable_formula_codes - known_formula_codes
+        raise "Unknown exportable_formula_code : #{unknown_exportable_formulas_codes.join(', ')}. see #{known_formula_codes.join(', ')}" if unknown_exportable_formulas_codes.any?
       end
     end
   end
