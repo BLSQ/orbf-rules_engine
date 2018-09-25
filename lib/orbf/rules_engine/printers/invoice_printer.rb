@@ -23,6 +23,7 @@ module Orbf
           total_items = vars.select { |var| var.activity_code.nil? }
                             .each_with_object([]) do |var, array|
             next unless var.formula
+
             array.push(to_total_item(var, solution_as_string))
           end
 
@@ -49,6 +50,7 @@ module Orbf
 
           total_items = vars.each_with_object([]) do |var, array|
             next unless var.formula
+
             array.push(to_total_item(var, solution_as_string))
           end
 
@@ -65,19 +67,44 @@ module Orbf
       end
 
       def to_total_item(var, solution_as_string)
+        explanations = [
+          var.formula.expression,
+          Tokenizer.replace_token_from_expression(
+            var.expression,
+            solution_as_string,
+            {}
+          ),
+          wrap(var.expression)
+        ]
+
+        not_exported = export_explanations(explanations, var, solution_as_string)
+
         Orbf::RulesEngine::TotalItem.new(
           formula:      var.formula,
-          explanations: [
-            var.formula.expression,
-            Tokenizer.replace_token_from_expression(
-              var.expression,
-              solution_as_string,
-              {}
-            ),
-            wrap(var.expression)
-          ],
-          value:        solution[var.key]
+          explanations: explanations,
+          value:        solution[var.key],
+          not_exported: not_exported
         )
+      end
+
+      def export_explanations(explanations, var, solution_as_string)
+        return false unless var.exportable_variable_key
+
+        code = var.formula.exportable_formula_code
+        exportable_variable = @variables_by_key[var.exportable_variable_key]
+        prefix = "export ? #{code} = "
+        explanations.push(
+          wrap(prefix + exportable_variable.formula.expression.to_s),
+          wrap(prefix + exportable_variable.expression.to_s),
+          wrap(prefix + Tokenizer.replace_token_from_expression(
+            exportable_variable.expression,
+            solution_as_string,
+            {}
+          ).to_s),
+          wrap(prefix + solution[var.exportable_variable_key].to_s)
+        )
+
+        var.exportable_value(solution).nil?
       end
 
       def to_activity_item(package, activity, vars, solution_as_string)
@@ -86,7 +113,9 @@ module Orbf
         values = package_codes(activity, package).each_with_object({}) do |state, hash|
           vars.select { |v| v.state == state && v.activity_code == activity.activity_code }
               .each do |activity_variable|
-            hash[state] = solution[activity_variable.key] || activity_variable.expression
+            value = solution[activity_variable.key]
+            value = activity_variable.expression if value.nil?
+            hash[state] = value
             problem[state] = activity_variable.expression
             substitued[state] = Tokenizer.replace_token_from_expression(
               activity_variable.expression,
@@ -144,6 +173,8 @@ module Orbf
       end
 
       def wrap(s, width = 120, extra = "\t")
+        return "" if s.nil?
+
         s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n#{extra}")
       end
 

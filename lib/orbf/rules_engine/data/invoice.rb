@@ -15,7 +15,15 @@ module Orbf
       end
 
       def variable(code)
-        @indexed_variables[[code, activity.activity_code]] 
+        @indexed_variables[[code, activity.activity_code]]
+      end
+
+      def not_exported?(code)
+        var = variable(code)
+        return false unless var&.formula&.exportable_formula_code
+
+        val = solution[var.formula.exportable_formula_code]
+        val == false || val == 0
       end
 
       def input?(code)
@@ -33,14 +41,19 @@ module Orbf
     end
 
     class TotalItem < Orbf::RulesEngine::ValueObject
-      attributes :formula, :explanations, :value
-      attr_reader  :formula, :explanations, :value
+      attributes :formula, :explanations, :value, :not_exported
+      attr_reader :formula, :explanations, :value, :not_exported
 
-      def initialize(formula: nil, explanations: nil, value: nil)
+      def initialize(formula: nil, explanations: nil, value: nil, not_exported:)
         @formula = formula
         @explanations = explanations
         @value = value
+        @not_exported = not_exported
         freeze
+      end
+
+      def not_exported?
+        @not_exported
       end
 
       def inspect

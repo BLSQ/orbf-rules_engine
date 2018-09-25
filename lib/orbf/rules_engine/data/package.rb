@@ -68,7 +68,7 @@ module Orbf
         @all_activities_codes ||=Set.new(activities.map(&:activity_code))
       end
 
-      def harmonized_activity_states(activity)     
+      def harmonized_activity_states(activity)
         all_states = states.to_a
         existing_activity_states = activity.activity_states
         missing_states = all_states - existing_activity_states.map(&:state)
@@ -112,6 +112,10 @@ module Orbf
 
       def zone?
         kind == Kinds::ZONE
+      end
+
+      def activity(activity_code)
+        activities.detect { |activity| activity.activity_code == activity_code }
       end
 
       private

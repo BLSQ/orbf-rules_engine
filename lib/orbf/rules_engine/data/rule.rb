@@ -64,6 +64,13 @@ module Orbf
 
       def validate
         Kinds.assert_valid(kind)
+        validate_formulas_references
+      end
+
+      def validate_formulas_references
+        known_formula_codes = formulas.map(&:code)
+        unknown_exportable_formulas_codes = formulas.map(&:exportable_formula_code).compact - known_formula_codes
+        raise "Unknown exportable_formula_code : #{unknown_exportable_formulas_codes.join(', ')}. see #{known_formula_codes.join(", ")}" if unknown_exportable_formulas_codes.any?
       end
     end
   end

@@ -3,7 +3,7 @@ AllCops:
   Exclude:
     - db/schema.rb
 Rails:
-  Enabled: true
+  Enabled: false
 Layout/AlignHash:
   # Alignment of entries using hash rocket as separator. Valid values are:
   #
@@ -52,9 +52,8 @@ Style/FormatStringToken:
   EnforcedStyle: template
 Metrics/LineLength:
   Exclude:
-    - 'spec/**/*.rb'  
+    - 'spec/**/*.rb'
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
 
-    

@@ -44,7 +44,7 @@ GEM
       httparty
       terminal-table
     hashdiff (0.3.2)
-    hesabu (0.1.12)
+    hesabu (0.1.13)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httparty (0.16.0)
@@ -161,4 +161,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.1
+   1.16.4

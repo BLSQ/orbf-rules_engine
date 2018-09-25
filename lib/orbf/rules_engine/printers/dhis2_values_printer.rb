@@ -15,14 +15,17 @@ module Orbf
       def print
         values = variables.select(&:exportable?)
                           .map do |variable|
+          value = ValueFormatter.format(variable.exportable_value(solution))
+
           add_coc_and_aoc(
             dataElement: variable.dhis2_data_element,
             orgUnit:     variable.orgunit_ext_id,
             period:      variable.dhis2_period,
-            value:       ValueFormatter.format(solution[variable.key]),
+            value:       value,
             comment:     variable.key
           )
         end
+
         uniq_values(values)
       end
 
