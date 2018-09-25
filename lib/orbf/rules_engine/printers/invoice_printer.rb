@@ -23,6 +23,7 @@ module Orbf
           total_items = vars.select { |var| var.activity_code.nil? }
                             .each_with_object([]) do |var, array|
             next unless var.formula
+
             array.push(to_total_item(var, solution_as_string))
           end
 
@@ -49,6 +50,7 @@ module Orbf
 
           total_items = vars.each_with_object([]) do |var, array|
             next unless var.formula
+
             array.push(to_total_item(var, solution_as_string))
           end
 
@@ -163,6 +165,7 @@ module Orbf
 
       def wrap(s, width = 120, extra = "\t")
         return "" if s.nil?
+
         s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n#{extra}")
       end
 

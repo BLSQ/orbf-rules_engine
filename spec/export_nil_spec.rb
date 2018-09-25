@@ -153,7 +153,14 @@ RSpec.describe "allow to export nil" do
     it "exports nil values to dhis2 when no dhis2 values" do
       fetch_and_solve.call
 
-      puts JSON.pretty_generate(fetch_and_solve.solver.equations)
+      invoices = Orbf::RulesEngine::InvoicePrinter.new(
+        fetch_and_solve.solver.variables,
+        fetch_and_solve.solver.solution
+      ).print
+
+      invoice = invoices.first
+      expect(invoice.activity_items.last.not_exported?("score")).to eq(true)
+      expect(invoice.total_items.first.not_exported?).to eq(true)
 
       expect(fetch_and_solve.exported_values).to eq(
         [
@@ -195,10 +202,17 @@ RSpec.describe "allow to export nil" do
       )
     end
 
-    it "exports non nil values to dhis2 when no dhis2 values" do
+    it "exports non nil values to dhis2" do
       fetch_and_solve.call
 
-      puts JSON.pretty_generate(fetch_and_solve.solver.equations)
+      invoices = Orbf::RulesEngine::InvoicePrinter.new(
+        fetch_and_solve.solver.variables,
+        fetch_and_solve.solver.solution
+      ).print
+
+      invoice = invoices.first
+      expect(invoice.activity_items.last.not_exported?("score")).to eq(false)
+      expect(invoice.total_items.first.not_exported?).to eq(false)
 
       expect(fetch_and_solve.exported_values).to eq(
         [

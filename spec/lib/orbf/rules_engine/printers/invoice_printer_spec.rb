@@ -1,4 +1,3 @@
-
 RSpec.describe Orbf::RulesEngine::InvoicePrinter do
   let(:orgunit) do
     Orbf::RulesEngine::OrgUnit.with(
@@ -158,7 +157,6 @@ RSpec.describe Orbf::RulesEngine::InvoicePrinter do
             explanations: %W[31 31 31\n\t],
             value:        31,
             not_exported: false
-
           )
         ]
       )

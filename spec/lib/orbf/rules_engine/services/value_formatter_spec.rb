@@ -20,4 +20,16 @@ RSpec.describe Orbf::RulesEngine::ValueFormatter do
     expect(described_class.format("1")).to eq(1)
     expect(described_class.format("1").to_s).to eq("1")
   end
+  it "keeps nil as nil" do
+    expect(described_class.format(nil)).to eq nil
+  end
+
+  it "keeps true as true" do
+    expect(described_class.format(true)).to eq true
+  end
+  it "keeps false as false" do
+    expect(described_class.format(false)).to eq false
+  end
+
+
 end

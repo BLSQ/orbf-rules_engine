@@ -49,7 +49,13 @@ module Orbf
         )
         Orbf::RulesEngine::Variable.new_activity_rule(
           period:                  period,
-          key:                     suffix_for_activity(package.code, activity_code, formula.code, orgunit, period),
+          key:                     suffix_for_activity(
+            package.code,
+            activity_code,
+            formula.code,
+            orgunit,
+            period
+          ),
           expression:              expression,
           state:                   formula.code,
           type:                    Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,
@@ -58,7 +64,13 @@ module Orbf
           formula:                 formula,
           package:                 package,
           exportable_variable_key: if formula.exportable_formula_code
-                                     suffix_for_activity(package.code, activity_code, formula.exportable_formula_code, orgunit, period)
+                                     suffix_for_activity(
+                                       package.code,
+                                       activity_code,
+                                       formula.exportable_formula_code,
+                                       orgunit,
+                                       period
+                                     )
                                    end
         )
       end

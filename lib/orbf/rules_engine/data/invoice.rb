@@ -21,6 +21,7 @@ module Orbf
       def not_exported?(code)
         var = variable(code)
         return false unless var&.formula&.exportable_formula_code
+
         val = solution[var.formula.exportable_formula_code]
         val == false || val == 0
       end
