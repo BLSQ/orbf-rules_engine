@@ -73,6 +73,7 @@ module Orbf
 
       def exportable_variable_key(orgunit, activity_code, formula)
         return unless formula.exportable_formula_code
+
         suffix_for_activity(
           package.code,
           activity_code,
@@ -126,6 +127,7 @@ module Orbf
 
       def orgunit_counts_substitutions(activity_code)
         return {} unless package.subcontract?
+
         counts = Orbf::RulesEngine::ContractVariablesBuilder::COUNTS
         counts.each_with_object({}) do |count, hash|
           hash[count] = suffix_activity_pattern(package.code, activity_code, count)
@@ -135,6 +137,7 @@ module Orbf
       def states_substitutions(activity_code)
         package.activities.each_with_object({}) do |activity, hash|
           next if activity_code != activity.activity_code
+
           package.harmonized_activity_states(activity).each do |activity_state|
             hash[activity_state.state] = activity_state_substitution(package.code, activity, activity_state)
           end

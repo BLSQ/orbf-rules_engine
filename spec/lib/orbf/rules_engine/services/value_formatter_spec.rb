@@ -1,4 +1,3 @@
-
 RSpec.describe Orbf::RulesEngine::ValueFormatter do
   it "keeps decimals as they are" do
     expect(described_class.format(1.0001)).to eq(1.0001)
@@ -30,6 +29,4 @@ RSpec.describe Orbf::RulesEngine::ValueFormatter do
   it "keeps false as false" do
     expect(described_class.format(false)).to eq false
   end
-
-
 end

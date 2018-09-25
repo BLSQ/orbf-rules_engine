@@ -161,6 +161,17 @@ RSpec.describe "allow to export nil" do
       invoice = invoices.first
       expect(invoice.activity_items.last.not_exported?("score")).to eq(true)
       expect(invoice.total_items.first.not_exported?).to eq(true)
+      expect(invoice.total_items.first.explanations.map(&:strip)).to eq(
+        [
+          "sum(%{score_values})",
+          "sum(0)",
+          "sum(quantity_act1_score_for_1_and_2018q1)",
+          "export ? package_score_exportable = sum(%{score_exportable_values})",
+          "export ? package_score_exportable = sum(quantity_act1_score_exportable_for_1_and_2018q1)",
+          "export ? package_score_exportable = sum(0)",
+          "export ? package_score_exportable = 0"
+        ]
+      )
 
       expect(fetch_and_solve.exported_values).to eq(
         [

@@ -77,25 +77,34 @@ module Orbf
           wrap(var.expression)
         ]
 
-        not_exported = false
-        if var.exportable_variable_key
-          not_exported = var.exportable_value(solution).nil?
-          code = var.formula.exportable_formula_code
-          explanations.push(wrap("export ? #{code} = #{@variables_by_key[var.exportable_variable_key].formula.expression}"))
-          explanations.push(wrap("export ? #{code} = #{@variables_by_key[var.exportable_variable_key].expression}"))
-          explanations.push(wrap("export ? #{code} = #{Tokenizer.replace_token_from_expression(
-            @variables_by_key[var.exportable_variable_key].expression,
-            solution_as_string,
-            {}
-          )}"))
-          explanations.push(wrap("export ? #{code} = #{solution[var.exportable_variable_key]}"))
-        end
+        not_exported = export_explanations(explanations, var, solution_as_string)
+
         Orbf::RulesEngine::TotalItem.new(
           formula:      var.formula,
           explanations: explanations,
           value:        solution[var.key],
           not_exported: not_exported
         )
+      end
+
+      def export_explanations(explanations, var, solution_as_string)
+        return false unless var.exportable_variable_key
+
+        code = var.formula.exportable_formula_code
+        exportable_variable = @variables_by_key[var.exportable_variable_key]
+        prefix = "export ? #{code} = "
+        explanations.push(
+          wrap(prefix + exportable_variable.formula.expression.to_s),
+          wrap(prefix + exportable_variable.expression.to_s),
+          wrap(prefix + Tokenizer.replace_token_from_expression(
+            exportable_variable.expression,
+            solution_as_string,
+            {}
+          ).to_s),
+          wrap(prefix + solution[var.exportable_variable_key].to_s)
+        )
+
+        var.exportable_value(solution).nil?
       end
 
       def to_activity_item(package, activity, vars, solution_as_string)
