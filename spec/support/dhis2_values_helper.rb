@@ -18,14 +18,15 @@ class Dhis2ValuesHelper
 
     dhis2_values = grouped_values.map do |key, values|
       raise "multiple values for #{key} #{values}" if values.map { |v| v["value"] }.uniq.size > 1
+
       values.first
     end
 
     dhis2_values
   end
 
-    # make sure they are strings and not symbols
-    def self.ensure_strings(raw_dhis2_values)
+  # make sure they are strings and not symbols
+  def self.ensure_strings(raw_dhis2_values)
     JSON.parse(JSON.generate(raw_dhis2_values))
   end
 

@@ -120,8 +120,8 @@ module Orbf
           next unless vals
           if vals.size == 1
             return ValueLookup.new(value: vals.first["value"], is_null: false)
-          else vals.size > 1
-            return ValueLookup.new(value: vals.map { |v| v["value"] }.join(" + "), is_null: false)
+          elsif vals.size > 1
+            return ValueLookup.new(value: vals.map { |v| v["value"] }.compact.join(" + "), is_null: false)
           end
         end
         ValueLookup.new(value: "0", is_null: true)
