@@ -536,7 +536,11 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
           Orbf::RulesEngine::Rule.new(
             kind:     :activity,
             formulas: [
-              Orbf::RulesEngine::Formula.new("allowed", "cap", "")
+              Orbf::RulesEngine::Formula.new("allowed", "cap", ""),
+              Orbf::RulesEngine::Formula.new(
+                "cap_check",
+                "if(cap_is_null=1,4,7)"
+              )
             ]
           )
         ]
@@ -565,6 +569,18 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
             formula:        nil,
             package:        package,
             payment_rule:   nil
+          ),
+          Orbf::RulesEngine::Variable.with(
+            period:         "2016",
+            key:            "facility_act1_cap_is_null_for_2_and_2016",
+            expression:     "0",
+            state:          "cap_is_null",
+            activity_code:  "act1",
+            type:           "activity",
+            orgunit_ext_id: "2",
+            formula:        nil,
+            package:        package,
+            payment_rule:   nil
           )
         ]
       end
@@ -579,7 +595,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
       end
     end
 
-    describe "sums category combos values and remove nil one" do
+    describe "default to 0 when all dhis2 values are nil" do
       let(:dhis2_values) do
         [
           { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "1to4", "value" => nil, "period" => "2016", "orgUnit" => "2", "comment" => "" },
@@ -595,6 +611,18 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
             key:            "facility_act1_cap_for_2_and_2016",
             expression:     "0",
             state:          "cap",
+            activity_code:  "act1",
+            type:           "activity",
+            orgunit_ext_id: "2",
+            formula:        nil,
+            package:        package,
+            payment_rule:   nil
+          ),
+          Orbf::RulesEngine::Variable.with(
+            period:         "2016",
+            key:            "facility_act1_cap_is_null_for_2_and_2016",
+            expression:     "1",
+            state:          "cap_is_null",
             activity_code:  "act1",
             type:           "activity",
             orgunit_ext_id: "2",
