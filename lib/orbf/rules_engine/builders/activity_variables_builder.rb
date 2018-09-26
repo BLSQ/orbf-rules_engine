@@ -116,8 +116,13 @@ module Orbf
 
       def lookup_value(keys)
         keys.each do |key|
-          val = lookup[key]
-          return ValueLookup.new(value: val.first["value"], is_null: false) if val
+          vals = lookup[key]
+          next unless vals
+          if vals.size == 1
+            return ValueLookup.new(value: vals.first["value"], is_null: false)
+          else vals.size > 1
+            return ValueLookup.new(value: vals.map { |v| v["value"] }.join(" + "), is_null: false)
+          end
         end
         ValueLookup.new(value: "0", is_null: true)
       end

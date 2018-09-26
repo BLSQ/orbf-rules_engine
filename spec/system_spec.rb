@@ -248,7 +248,7 @@ RSpec.describe "System" do
   end
 
   let(:dhis2_values) do
-    JSON.parse(JSON.generate((dhis2_orgunit_values + dhis2_country_values).flatten))
+    Dhis2ValuesHelper.ensure_valid(Dhis2ValuesHelper.uniq((dhis2_orgunit_values + dhis2_country_values).flatten))
   end
 
   let(:solver) do

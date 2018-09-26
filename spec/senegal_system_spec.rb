@@ -126,18 +126,16 @@ RSpec.describe "Senegal System" do
   end
 
   let(:dhis2_values) do
-    [
+    Dhis2ValuesHelper.ensure_valid([
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "33", "period" => "201601", "orgUnit" => "1" },
       { "dataElement" => "dhis2_act2_validated", "categoryOptionCombo" => "default", "value" => "80", "period" => "201601", "orgUnit" => "1" },
-      { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "41", "period" => "201601", "orgUnit" => "1" },
       { "dataElement" => "dhis2_act1_claimed", "categoryOptionCombo" => "default", "value" => "40", "period" => "201601", "orgUnit" => "1" },
 
       { "dataElement" => "dhis2_act1_claimed", "categoryOptionCombo" => "default", "value" => "12", "period" => "201601", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act2_verified", "categoryOptionCombo" => "default", "value" => "92", "period" => "201601", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act1_verified", "categoryOptionCombo" => "default", "value" => "31", "period" => "201601", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act1_validated", "categoryOptionCombo" => "default", "value" => "37", "period" => "201601", "orgUnit" => "2" }
-
-    ]
+    ])
   end
 
   let(:solver) do

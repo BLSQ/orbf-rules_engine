@@ -20,6 +20,7 @@ require "webmock/rspec"
 
 require_relative "./support/eq_vars"
 require_relative "./support/dhis2_stubs"
+require_relative "./support/dhis2_values_helper"
 
 require_relative "../lib/orbf/rules_engine"
 
