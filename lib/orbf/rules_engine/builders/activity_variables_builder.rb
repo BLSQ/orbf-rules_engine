@@ -89,6 +89,7 @@ module Orbf
         parents_with_level.each do |hash|
           code = "#{activity_state.state}_level_#{hash[:level]}"
           next unless dependencies.include?(code)
+
           hash_value = lookup_value(build_keys_with_yearly([hash[:id], period, activity_state.ext_id]))
           yield(hash[:id], code, hash_value)
         end
@@ -97,6 +98,7 @@ module Orbf
       def main_orgunit_values(activity_state, period, dependencies)
         code = "#{activity_state.state}_zone_main_orgunit"
         return unless dependencies.include?(code)
+
         main_orgunit_ext_id = orgunits.first.ext_id
         key = [main_orgunit_ext_id, period, activity_state.ext_id]
         hash_value = lookup_value(build_keys_with_yearly(key))
@@ -118,6 +120,7 @@ module Orbf
         keys.each do |key|
           vals = lookup[key]
           next unless vals
+
           vals = vals.map { |v| v["value"] }.compact
           if vals.size == 1
             return ValueLookup.new(value: vals.first, is_null: false)
