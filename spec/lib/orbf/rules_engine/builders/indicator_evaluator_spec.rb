@@ -37,16 +37,21 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
            "value" => "33", "period" => "2016Q1", "orgUnit" => "1" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => "67", "period" => "2016Q1", "orgUnit" => "1" },
+          "value" => "33 + 34", "period" => "2016Q1", "orgUnit" => "1" },
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
            "value" => "3", "period" => "2016Q1", "orgUnit" => "2" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => "27", "period" => "2016Q1", "orgUnit" => "2" }
+          "value" => "3 + 24", "period" => "2016Q1", "orgUnit" => "2" }
       ]
     end
 
     it "computer DHIS2 values" do
       dhis2_values = described_class.new(indicators, in_dhis2_values).to_dhis2_values
+      expect(dhis2_values).to match_array(expected_dhis2_values)
+    end
+
+    it "doesn't duplicate dhis2_values when indicators pass twice" do
+      dhis2_values = described_class.new(indicators + indicators, in_dhis2_values).to_dhis2_values
       expect(dhis2_values).to match_array(expected_dhis2_values)
     end
 

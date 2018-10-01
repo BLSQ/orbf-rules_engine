@@ -6,10 +6,10 @@ module Orbf
       include VariablesBuilderSupport
 
       def initialize(indicators, dhis2_values)
-        @indicators = Array(indicators)
+        @indicators = Array(indicators).uniq
         @indexed_values = Dhis2IndexedValues.new(dhis2_values)
         @period_orgunits = dhis2_values.map do |value|
-          [value['period'], value['org_unit'] || value['orgUnit']]
+          [value["period"], value["org_unit"] || value["orgUnit"]]
         end
 
         @period_orgunits = @period_orgunits.uniq
@@ -28,17 +28,19 @@ module Orbf
         @period_orgunits.map do |period, orgunit|
           value = indicator_value(period, orgunit, parsed_expressions)
           {
-             'dataElement'         => indicator.ext_id,
-            'categoryOptionCombo' => 'default',
-            'value'               => ValueFormatter.format(value).to_s,
-            'period'              => period,
-            'orgUnit'             => orgunit
-           }
+            "dataElement"         => indicator.ext_id,
+            "categoryOptionCombo" => "default",
+            "value"               => value,
+            "period"              => period,
+            "orgUnit"             => orgunit
+          }
         end
       end
 
       def sum_values(values)
-        values.inject(0) { |sum, v| sum + v['value'].to_f }
+        return "0" if values.empty?
+
+        values.map { |v| v["value"] }.join(" + ")
       end
 
       def indicator_value(period, orgunit, parsed_expressions)

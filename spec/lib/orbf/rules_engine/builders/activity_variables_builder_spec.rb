@@ -508,4 +508,139 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
       expect(result).to eq_vars(expected_vars)
     end
   end
+
+  context "data elements with multiple category combo" do
+    let(:activities) do
+      [
+        Orbf::RulesEngine::Activity.with(
+          name:            "act1",
+          activity_code:   "act1",
+          activity_states: [
+            Orbf::RulesEngine::ActivityState.new_data_element(
+              state:  :cap,
+              ext_id: "dhis2_act1_cap",
+              name:   "act1_cap"
+            )
+          ]
+        )
+      ]
+    end
+
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:       :facility,
+        kind:       :single,
+        frequency:  :quarterly,
+        activities: activities,
+        rules:      [
+          Orbf::RulesEngine::Rule.new(
+            kind:     :activity,
+            formulas: [
+              Orbf::RulesEngine::Formula.new("allowed", "cap", ""),
+              Orbf::RulesEngine::Formula.new(
+                "cap_check",
+                "if(cap_is_null=1,4,7)"
+              )
+            ]
+          )
+        ]
+      )
+    end
+
+    describe "sums category combos values and remove nil one" do
+      let(:dhis2_values) do
+        [
+          { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "1to4", "value" => "33", "period" => "2016", "orgUnit" => "2", "comment" => "" },
+          { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "5to20", "value" => nil, "period" => "2016", "orgUnit" => "2", "comment" => "" },
+          { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "morethan20", "value" => "12", "period" => "2016", "orgUnit" => "2", "comment" => "" }
+        ]
+      end
+
+      let(:expected_vars) do
+        [
+          Orbf::RulesEngine::Variable.with(
+            period:         "2016",
+            key:            "facility_act1_cap_for_2_and_2016",
+            expression:     "33 + 12",
+            state:          "cap",
+            activity_code:  "act1",
+            type:           "activity",
+            orgunit_ext_id: "2",
+            formula:        nil,
+            package:        package,
+            payment_rule:   nil
+          ),
+          Orbf::RulesEngine::Variable.with(
+            period:         "2016",
+            key:            "facility_act1_cap_is_null_for_2_and_2016",
+            expression:     "0",
+            state:          "cap_is_null",
+            activity_code:  "act1",
+            type:           "activity",
+            orgunit_ext_id: "2",
+            formula:        nil,
+            package:        package,
+            payment_rule:   nil
+          )
+        ]
+      end
+
+      it "registers activity_variables" do
+        result = described_class.new(
+          package,
+          Orbf::RulesEngine::OrgUnits.new(orgunits: [orgunits.last], package: package),
+          dhis2_values
+        ).convert("2016")
+        expect(result).to eq_vars(expected_vars)
+      end
+    end
+
+    describe "default to 0 when all dhis2 values are nil" do
+      let(:dhis2_values) do
+        [
+          { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "1to4", "value" => nil, "period" => "2016", "orgUnit" => "2", "comment" => "" },
+          { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "5to20", "value" => nil, "period" => "2016", "orgUnit" => "2", "comment" => "" },
+          { "dataElement" => "dhis2_act1_cap", "categoryOptionCombo" => "morethan20", "value" => nil, "period" => "2016", "orgUnit" => "2", "comment" => "" }
+        ]
+      end
+
+      let(:expected_vars) do
+        [
+          Orbf::RulesEngine::Variable.with(
+            period:         "2016",
+            key:            "facility_act1_cap_for_2_and_2016",
+            expression:     "0",
+            state:          "cap",
+            activity_code:  "act1",
+            type:           "activity",
+            orgunit_ext_id: "2",
+            formula:        nil,
+            package:        package,
+            payment_rule:   nil
+          ),
+          Orbf::RulesEngine::Variable.with(
+            period:         "2016",
+            key:            "facility_act1_cap_is_null_for_2_and_2016",
+            expression:     "1",
+            state:          "cap_is_null",
+            activity_code:  "act1",
+            type:           "activity",
+            orgunit_ext_id: "2",
+            formula:        nil,
+            package:        package,
+            payment_rule:   nil
+          )
+        ]
+      end
+
+      it "registers activity_variables" do
+        result = described_class.new(
+          package,
+          Orbf::RulesEngine::OrgUnits.new(orgunits: [orgunits.last], package: package),
+          dhis2_values
+        ).convert("2016")
+        expect(result).to eq_vars(expected_vars)
+      end
+    end
+  end
 end
