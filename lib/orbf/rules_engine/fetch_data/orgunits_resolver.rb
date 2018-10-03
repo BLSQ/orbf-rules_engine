@@ -44,7 +44,22 @@ module Orbf
       end
 
       def within_package_groups?
-        (main_orgunit.group_ext_ids & package.org_unit_group_ext_ids).present?
+        if package.matching_groupset_ext_ids.empty?
+          return (main_orgunit.group_ext_ids & package.org_unit_group_ext_ids).present?
+        end
+
+        package_groups_by_groupset = package.org_unit_group_ext_ids.group_by do |group_id|
+          pyramid.org_unit_groupsets.detect do |group_set|
+            groupset_match = package.matching_groupset_ext_ids.include?(group_set.ext_id)
+            group_in_groupset = group_set.group_ext_ids.include?(group_id)
+            (groupset_match && group_in_groupset)
+          end
+        end
+
+        non_matching = package_groups_by_groupset.reject do |_group_set, package_group_ext_ids|
+          (main_orgunit.group_ext_ids & package_group_ext_ids).present?
+        end
+        non_matching.empty?
       end
     end
   end

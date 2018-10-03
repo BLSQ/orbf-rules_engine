@@ -27,10 +27,12 @@ module Orbf
       end
 
       attr_reader :activities, :kind, :rules, :frequency, :code,
-                  :org_unit_group_ext_ids, :groupset_ext_id, :dataset_ext_ids
+                  :org_unit_group_ext_ids, :groupset_ext_id, :dataset_ext_ids,
+                  :matching_groupset_ext_ids
 
       KNOWN_ATTRIBUTES = %i[kind rules code activities frequency
-                            org_unit_group_ext_ids groupset_ext_id dataset_ext_ids].freeze
+                            org_unit_group_ext_ids groupset_ext_id dataset_ext_ids
+                            matching_groupset_ext_ids].freeze
 
       def initialize(args)
         Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
@@ -44,6 +46,7 @@ module Orbf
         end
         @frequency = args[:frequency].to_s if args[:frequency]
         @groupset_ext_id = args[:groupset_ext_id]
+        @matching_groupset_ext_ids = Array(args[:matching_groupset_ext_ids])
         @dataset_ext_ids = args[:dataset_ext_ids]
         validate
       end
@@ -65,7 +68,7 @@ module Orbf
       end
 
       def all_activities_codes
-        @all_activities_codes ||=Set.new(activities.map(&:activity_code))
+        @all_activities_codes ||= Set.new(activities.map(&:activity_code))
       end
 
       def harmonized_activity_states(activity)

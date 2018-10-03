@@ -32,6 +32,10 @@ module Orbf
         orgunits[1..-1]
       end
 
+      def empty?
+        orgunits.empty?
+      end
+
       private
 
       attr_reader :orgunits, :package
