@@ -126,14 +126,17 @@ module Orbf
                  end
 
           next unless vals
+
           looked_vals = vals.map { |val| val["value"] }.compact
+
           next if looked_vals.empty?
+
           if looked_vals.size == 1
             # preserved type of original value (avoid to string)
             return ValueLookup.new(value: looked_vals.first, is_null: false)
-          else
-            return ValueLookup.new(value: looked_vals.join(" + "), is_null: false)
           end
+
+          return ValueLookup.new(value: looked_vals.join(" + "), is_null: false)
         end
         ValueLookup.new(value: "0", is_null: true)
       end

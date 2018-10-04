@@ -1,4 +1,3 @@
-
 RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
   let(:orgunits) do
     [
@@ -740,44 +739,44 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
       end
 
       describe "when some values" do
-      let(:expected_vars) do
-        [
-          Orbf::RulesEngine::Variable.with(
-            period:         "2016Q1",
-            key:            "facility_act1_cap_for_2_and_2016q1",
-            expression:     "1 + 3",
-            state:          "cap",
-            activity_code:  "act1",
-            type:           "activity",
-            orgunit_ext_id: "2",
-            formula:        nil,
-            package:        package,
-            payment_rule:   nil
-          ),
-          Orbf::RulesEngine::Variable.with(
-            period:         "2016Q1",
-            key:            "facility_act1_cap_is_null_for_2_and_2016q1",
-            expression:     "0",
-            state:          "cap_is_null",
-            activity_code:  "act1",
-            type:           "activity",
-            orgunit_ext_id: "2",
-            formula:        nil,
-            package:        package,
-            payment_rule:   nil
-          )
-        ]
-      end
+        let(:expected_vars) do
+          [
+            Orbf::RulesEngine::Variable.with(
+              period:         "2016Q1",
+              key:            "facility_act1_cap_for_2_and_2016q1",
+              expression:     "1 + 3",
+              state:          "cap",
+              activity_code:  "act1",
+              type:           "activity",
+              orgunit_ext_id: "2",
+              formula:        nil,
+              package:        package,
+              payment_rule:   nil
+            ),
+            Orbf::RulesEngine::Variable.with(
+              period:         "2016Q1",
+              key:            "facility_act1_cap_is_null_for_2_and_2016q1",
+              expression:     "0",
+              state:          "cap_is_null",
+              activity_code:  "act1",
+              type:           "activity",
+              orgunit_ext_id: "2",
+              formula:        nil,
+              package:        package,
+              payment_rule:   nil
+            )
+          ]
+        end
 
-      it "registers activity_variables" do
-        result = described_class.new(
-          package,
-          Orbf::RulesEngine::OrgUnits.new(orgunits: [orgunits.last], package: package),
-          dhis2_values
-        ).convert("2016Q1")
-        expect(result).to eq_vars(expected_vars)
+        it "registers activity_variables" do
+          result = described_class.new(
+            package,
+            Orbf::RulesEngine::OrgUnits.new(orgunits: [orgunits.last], package: package),
+            dhis2_values
+          ).convert("2016Q1")
+          expect(result).to eq_vars(expected_vars)
+        end
       end
-    end
 
       describe "when null values" do
         let(:expected_vars) do
