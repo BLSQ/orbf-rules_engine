@@ -118,25 +118,42 @@ module Orbf
 
       def lookup_value(keys)
         keys.each do |key|
-          vals = lookup[key]
-          next unless vals
+          vals = if key.first.is_a?(Array)
+                   v = key.map { |k| lookup[k] }.compact
+                   v.empty? ? nil : v.flatten(1)
+                 else
+                   lookup[key]
+                 end
 
-          vals = vals.map { |v| v["value"] }.compact
-          if vals.size == 1
-            return ValueLookup.new(value: vals.first, is_null: false)
-          elsif vals.size > 1
-            return ValueLookup.new(value: vals.join(" + "), is_null: false)
+          next unless vals
+          looked_vals = vals.map { |val| val["value"] }.compact
+          next if looked_vals.empty?
+          if looked_vals.size == 1
+            # preserved type of original value (avoid to string)
+            return ValueLookup.new(value: looked_vals.first, is_null: false)
+          else
+            return ValueLookup.new(value: looked_vals.join(" + "), is_null: false)
           end
         end
         ValueLookup.new(value: "0", is_null: true)
       end
 
       def build_keys_with_yearly(key)
-        [
+        orgunit = key[0]
+        period = key[1]
+        de = key[2]
+
+        keys = [
           key,
-          [key[0], PeriodIterator.periods(key[1], "yearly").first, key[2]],
-          [key[0], PeriodIterator.periods(key[1], "financial_july").first, key[2]]
+          [orgunit, PeriodIterator.periods(period, "yearly").first, de],
+          [orgunit, PeriodIterator.periods(period, "financial_july").first, de]
         ]
+
+        if period.include?("Q")
+          keys << PeriodIterator.periods(period, "monthly").map { |pe| [orgunit, pe, de] }
+        end
+
+        keys
       end
     end
   end
