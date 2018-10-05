@@ -4,15 +4,20 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
     described_class.new(package, pyramid, main_orgunit).call.to_a
   end
 
+  let(:matching_groupset_ext_ids) do
+    []
+  end
+
   let(:package) do
     Orbf::RulesEngine::Package.new(
-      code:                   :quantity,
-      kind:                   package_kind,
-      frequency:              :monthly,
-      activities:             [],
-      rules:                  [],
-      org_unit_group_ext_ids: ["GROUP_X"],
-      groupset_ext_id:        "GROUPSET_ID"
+      code:                      :quantity,
+      kind:                      package_kind,
+      frequency:                 :monthly,
+      activities:                [],
+      rules:                     [],
+      org_unit_group_ext_ids:    ["GROUP_X"],
+      groupset_ext_id:           "GROUPSET_ID",
+      matching_groupset_ext_ids: matching_groupset_ext_ids
     )
   end
 
@@ -101,6 +106,36 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
 
     it "returns empty array if doesnt belong to package's org_unit_group_ext_ids" do
       expect(action(orgunit3)).to eq []
+    end
+  end
+
+  context "single package and matching groupset" do
+    describe "when correct groupset" do
+      let(:package_kind) { :single }
+      let(:matching_groupset_ext_ids) { "GROUPSET_ID" }
+
+      it "only matching" do
+        expect(action(orgunit4)).to eq [orgunit4]
+        expect(action(orgunitx)).to eq [orgunitx]
+      end
+
+      it "returns empty array if doesnt belong to package's org_unit_group_ext_ids" do
+        expect(action(orgunit3)).to eq []
+      end
+    end
+
+    describe "when other groupset" do
+      let(:package_kind) { :single }
+      let(:matching_groupset_ext_ids) { "GROUPSET_other_ID" }
+
+      it "only matching" do
+        expect(action(orgunit4)).to eq [orgunit4]
+        expect(action(orgunitx)).to eq [orgunitx]
+      end
+
+      it "returns empty array if doesnt belong to package's org_unit_group_ext_ids" do
+        expect(action(orgunit3)).to eq []
+      end
     end
   end
 
