@@ -13,6 +13,8 @@ module Orbf
       end
 
       def to_variables
+        return [] unless package.zone_rules.any?
+
         zone_orgs_formula_variables
       end
 

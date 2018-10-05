@@ -1,6 +1,7 @@
 --- !ruby/object:Orbf::RulesEngine::Project
 packages:
 - &2 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &1 !ruby/object:Orbf::RulesEngine::Rule
     kind: activity
@@ -9,25 +10,25 @@ packages:
       code: max_points
       expression: applicable
       comment: max_points
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *1
     - !ruby/object:Orbf::RulesEngine::Formula
       code: attributed_points
       expression: verified
       comment: attributed_points
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *1
     - !ruby/object:Orbf::RulesEngine::Formula
       code: percentage_achieved
       expression: safe_div(verified,applicable)
       comment: percentage_achieved
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *1
     decision_tables: []
     package: *2
@@ -38,9 +39,9 @@ packages:
       code: qualtity_score
       expression: safe_div(SUM(%{attributed_points_values}), SUM(%{max_points_values}))
       comment: quality_score
-      frequency: 
+      frequency:
       single_mapping: d9mIxIx0OtD
-      activity_mappings: 
+      activity_mappings:
       rule: *3
       values_dependencies:
       - attributed_points_values
@@ -57,13 +58,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Aggregated Process of Care Score
-      formula: 
+      formula:
       kind: data_element
       ext_id: ctFJhNv6uXJ
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: applicable
       name: Aggregated Process of Care Score - applicable
-      formula: 
+      formula:
       kind: data_element
       ext_id: QSLhY5tUkYu
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -73,13 +74,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Equipment and Supplies
-      formula: 
+      formula:
       kind: data_element
       ext_id: IQ4gwgJtH6W
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: applicable
       name: Equipment and Supplies - applicable
-      formula: 
+      formula:
       kind: data_element
       ext_id: gfejUabfKFW
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -89,13 +90,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Drugs Management
-      formula: 
+      formula:
       kind: data_element
       ext_id: SynAZGPJWtm
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: applicable
       name: Drugs Management - applicable
-      formula: 
+      formula:
       kind: data_element
       ext_id: JguUeTaKlQW
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -105,13 +106,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Hygiene and Medical Waste Disposal
-      formula: 
+      formula:
       kind: data_element
       ext_id: CNmbkQrKQ4l
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: applicable
       name: Hygiene and Medical Waste Disposal - applicable
-      formula: 
+      formula:
       kind: data_element
       ext_id: K5PSDR4gmNM
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -121,13 +122,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Human Resources for Health
-      formula: 
+      formula:
       kind: data_element
       ext_id: iCx3J6AhsHh
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: applicable
       name: Human Resources for Health - applicable
-      formula: 
+      formula:
       kind: data_element
       ext_id: Qra5xBch2Mj
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -137,23 +138,24 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: General Management
-      formula: 
+      formula:
       kind: data_element
       ext_id: DuAUVRHNjGo
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: applicable
       name: General Management - applicable
-      formula: 
+      formula:
       kind: data_element
       ext_id: NmXda02CApX
   kind: single
   code: hospital_quality
   frequency: quarterly
-  groupset_ext_id: 
+  groupset_ext_id:
   dataset_ext_ids:
   - gm259ceOo6p
   - ihOpt2gZ1mz
 - &5 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &4 !ruby/object:Orbf::RulesEngine::Rule
     kind: activity
@@ -162,9 +164,9 @@ packages:
       code: budget
       expression: verified
       comment: 'budget '
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *4
     decision_tables: []
     package: *5
@@ -175,9 +177,9 @@ packages:
       code: total_quality_budget
       expression: SUM(%{budget_values})
       comment: total_quality_budget
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *6
       values_dependencies:
       - budget_values
@@ -195,13 +197,14 @@ packages:
       name: PBF - Verified - HOSPITAL_QUALITY_BUDGET hospital_quality_budget
       formula: '159678'
       kind: constant
-      ext_id: 
+      ext_id:
   kind: single
   code: hospital_budget
   frequency: quarterly
-  groupset_ext_id: 
+  groupset_ext_id:
   dataset_ext_ids: []
 - &8 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &7 !ruby/object:Orbf::RulesEngine::Rule
     kind: activity
@@ -210,9 +213,9 @@ packages:
       code: amount
       expression: verified * incentive
       comment: amount
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *7
     decision_tables: []
     package: *8
@@ -223,9 +226,9 @@ packages:
       code: quantity_total_amount
       expression: SUM(%{amount_values})
       comment: quantity_total_amount
-      frequency: 
+      frequency:
       single_mapping: kRVlKHCI1gB
-      activity_mappings: 
+      activity_mappings:
       rule: *9
       values_dependencies:
       - amount_values
@@ -241,13 +244,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: declared
       name: Claimed - Complicated and assisted pregnancy and delivery (including C-section)
-      formula: 
+      formula:
       kind: data_element
       ext_id: HhNSWBDeJi6
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Complicated and assisted pregnancy and delivery (including C-section)
-      formula: 
+      formula:
       kind: data_element
       ext_id: Uxnm0lkeKXH
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -256,7 +259,7 @@ packages:
         and delivery (including C-section)
       formula: '17'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Normal deliveries of at-risk referrals
     activity_code: hosp02
@@ -264,13 +267,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: declared
       name: Claimed - Normal deliveries of at-risk referrals
-      formula: 
+      formula:
       kind: data_element
       ext_id: urHekuEbCCL
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Normal deliveries of at-risk referrals
-      formula: 
+      formula:
       kind: data_element
       ext_id: BsabCbsvzAY
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -278,7 +281,7 @@ packages:
       name: PBF - Incentive - ACT_HOSP_QUANT_2 Normal deliveries of at-risk referrals
       formula: '17'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Newborn referred for emergency neonatal care treatment
     activity_code: hosp04
@@ -286,13 +289,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: declared
       name: 'Claimed - Newborn referred for emergency neonatal care treatment '
-      formula: 
+      formula:
       kind: data_element
       ext_id: eMVJI65I861
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Newborn referred for emergency neonatal care treatment
-      formula: 
+      formula:
       kind: data_element
       ext_id: dW7fVXVyiQq
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -301,7 +304,7 @@ packages:
         care treatment
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Neonatal death audits carried out routinely according to the MNDSR
     activity_code: hosp03
@@ -310,13 +313,13 @@ packages:
       state: declared
       name: Claimed - Neonatal death audits carried out routinely according to the
         MNDSR
-      formula: 
+      formula:
       kind: data_element
       ext_id: UrAhqBeYILo
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: verif - Neonatal death audits carried out routinely according to the MNDSR
-      formula: 
+      formula:
       kind: data_element
       ext_id: D9UOYqigaNJ
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -325,7 +328,7 @@ packages:
         according to the MNDSR
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Referred under-fives with fever
     activity_code: hosp05
@@ -333,13 +336,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: declared
       name: Claimed - Referred under-fives with fever
-      formula: 
+      formula:
       kind: data_element
       ext_id: jQ11z4ljXQt
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Referred under-fives with fever
-      formula: 
+      formula:
       kind: data_element
       ext_id: WJMCXpLg835
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -347,7 +350,7 @@ packages:
       name: PBF - Incentive - ACT_HOSP_QUANT_5 Referred under-fives with fever
       formula: '2.5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Minor surgical intervention
     activity_code: hosp06
@@ -355,13 +358,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: declared
       name: Claimed - Minor surgical intervention
-      formula: 
+      formula:
       kind: data_element
       ext_id: Yk6Alq6Pngq
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Minor surgical intervention
-      formula: 
+      formula:
       kind: data_element
       ext_id: LGVHlygN6tV
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -369,7 +372,7 @@ packages:
       name: PBF - Incentive - ACT_HOSP_QUANT_6 Minor surgical intervention
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Major surgery (including major trauma, excluding C-section)
     activity_code: hosp07
@@ -377,13 +380,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Major surgery (including major trauma excluding C-section)
-      formula: 
+      formula:
       kind: data_element
       ext_id: oedpCoECyO5
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: declared
       name: Claimed - Major surgery (including major trauma excluding C-section)
-      formula: 
+      formula:
       kind: data_element
       ext_id: s4VJPbrUpWk
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -392,7 +395,7 @@ packages:
         excluding C-section)
       formula: '18'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Maternal death audits carried out routinely according to the National Technical
       Guidelines for Maternal & Newborn Death Surveillance and Response (MNDSR)
@@ -403,7 +406,7 @@ packages:
       name: Claimed - Maternal death audits carried out routinely according to the
         National Technical Guidelines for Maternal & Newborn Death Surveillance and
         Response (MNDSR)
-      formula: 
+      formula:
       kind: data_element
       ext_id: GELTVBu0W37
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -411,7 +414,7 @@ packages:
       name: verif - Maternal death audits carried out routinely according to the National
         Technical Guidelines for Maternal & Newborn Death Surveillance and Response
         (MNDSR)
-      formula: 
+      formula:
       kind: data_element
       ext_id: HppsJPSxYpt
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -421,7 +424,7 @@ packages:
         Surveillance and Response (MNDSR)
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Number of training sessions held by faculty for nurses, midwives, and physician
       assistants according to in-service curriculum and defined protocols
@@ -434,19 +437,19 @@ packages:
         curriculum and defined protocols
       formula: '50'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: declared
       name: Claimed - Number of training sessions held by faculty for nurses (midwives)
         and physician assistants according to in-service curriculum and defined protocols
-      formula: 
+      formula:
       kind: data_element
       ext_id: WfmiDu224eD
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Number of training sessions held by faculty for nurses (midwives)
         and physician assistants according to in-service curriculum and defined protocols
-      formula: 
+      formula:
       kind: data_element
       ext_id: DCrEFCs84zH
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -458,14 +461,14 @@ packages:
       state: declared
       name: Claimed - Number of nurses (midwives) and physician assistants that received
         specialized in-service training
-      formula: 
+      formula:
       kind: data_element
       ext_id: O6nZtSBBRwN
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: verified
       name: Verif - Number of nurses (midwives) and physician assistants that received
         specialized in-service training
-      formula: 
+      formula:
       kind: data_element
       ext_id: x8lAzRowipa
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -474,15 +477,16 @@ packages:
         assistants that received specialized in-service training
       formula: '10'
       kind: constant
-      ext_id: 
+      ext_id:
   kind: single
   code: hospital_quantity
   frequency: monthly
-  groupset_ext_id: 
+  groupset_ext_id:
   dataset_ext_ids:
   - Rdx39HWabU3
   - oeLgdOZ3nC9
 - &11 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &10 !ruby/object:Orbf::RulesEngine::Rule
     kind: activity
@@ -491,9 +495,9 @@ packages:
       code: actual_target
       expression: if(activity_type = 1, target, 100)
       comment: actual_target
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *10
       values_dependencies: []
       dependencies:
@@ -503,9 +507,9 @@ packages:
       code: act_cht_score
       expression: cht_score_zone_main_orgunit
       comment: act_cht_score (dummy to be used in upper rules)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *10
       values_dependencies: []
       dependencies:
@@ -514,9 +518,9 @@ packages:
       code: reported
       expression: '1'
       comment: is the activity reported
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *10
       values_dependencies: []
       dependencies: []
@@ -524,8 +528,8 @@ packages:
       code: percent_overall
       expression: if(weight=0,0,(percent_weight/100)*percent_allowed)
       comment: "% Overall  [A x E]"
-      frequency: 
-      single_mapping: 
+      frequency:
+      single_mapping:
       activity_mappings:
         hf01: vQkUTSE9RRA
         hf02: waafdUg1zGw
@@ -547,8 +551,8 @@ packages:
       expression: if(min(percent_target_achieved,cap) < 75, 0, min(percent_target_achieved,cap)
         )
       comment: Allowed  [E]
-      frequency: 
-      single_mapping: 
+      frequency:
+      single_mapping:
       activity_mappings:
         hf01: v8jX1c5HRmg
         hf02: IMVgyQzJRTk
@@ -568,8 +572,8 @@ packages:
       code: percent_weight
       expression: safe_div(weight , hf_total_actual_weight )*100
       comment: percent_weight Column [A] of invoice
-      frequency: 
-      single_mapping: 
+      frequency:
+      single_mapping:
       activity_mappings:
         hf01: qfrYgOyxbVb
         hf02: DoKJ7IxeN3J
@@ -589,9 +593,9 @@ packages:
       code: actual_weight
       expression: weight
       comment: actual_weight
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *10
       values_dependencies: []
       dependencies:
@@ -600,8 +604,8 @@ packages:
       code: percent_target_achieved
       expression: safe_div(achieved, actual_target)*100
       comment: "% of Target Achieved [B x C]"
-      frequency: 
-      single_mapping: 
+      frequency:
+      single_mapping:
       activity_mappings:
         hf01: LEAIsySucru
         hf03: P84w8gua61y
@@ -621,9 +625,9 @@ packages:
       code: bonus_available_zone
       expression: bonus_available_zone_main_orgunit
       comment: bonus_available_zone
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *10
       values_dependencies: []
       dependencies:
@@ -632,9 +636,9 @@ packages:
       code: actual_clinic_type
       expression: max(clinic_type,1)
       comment: Actual Clinic Type
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *10
       values_dependencies: []
       dependencies:
@@ -643,9 +647,9 @@ packages:
       code: act_overall_performance_score
       expression: overall_score_zone_main_orgunit
       comment: act_overall_performance_score
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *10
       values_dependencies: []
       dependencies:
@@ -659,9 +663,9 @@ packages:
       code: hf_cht_overall_performance_score_values
       expression: MAX(%{act_overall_performance_score_values})
       comment: hf_cht_overall_performance_score_values from overall package
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *12
       values_dependencies:
       - act_overall_performance_score_values
@@ -669,9 +673,9 @@ packages:
       code: hf_cht_score_value
       expression: MAX(%{act_cht_score_values})
       comment: 'cht_score_value  '
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *12
       values_dependencies:
       - act_cht_score_values
@@ -679,45 +683,45 @@ packages:
       code: hf_bonus_earned_for_facility_management_community
       expression: hf_total_health_facility_bonus_earned - hf_bonus_earned_for_staff_payment
       comment: Bonus earned for facility management/community
-      frequency: 
+      frequency:
       single_mapping: qPLsldZfmOy
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: hf_bonus_earned_for_staff_payment
       expression: 0.65 * hf_total_health_facility_bonus_earned
       comment: Bonus earned for staff payment
-      frequency: 
+      frequency:
       single_mapping: jwS856An2S7
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: hf_total_health_facility_bonus_earned
       expression: cht_service_delivery_bonus_earned * (hf_relative_performance_score/100)
       comment: Total Health Facility Bonus earned
-      frequency: 
+      frequency:
       single_mapping: hNqt0UCNyGd
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: hf_bonus_available
       expression: cht_quarterly_bonus_available_for_hf * hf_weighted_clinic_type_indicator
       comment: Amount Available for the quarter (2. Bonus cal_facilities column F)
-      frequency: 
+      frequency:
       single_mapping: qCMSgSDVund
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: hf_cht_bonus_available_zone
       expression: MAX(%{bonus_available_zone_values})
       comment: hf_cht_bonus_available_zone
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *12
       values_dependencies:
       - bonus_available_zone_values
@@ -726,27 +730,27 @@ packages:
       expression: safe_div(hf_performance_score,cht_total_hf_performance_score) *
         100
       comment: Relative performance score
-      frequency: 
+      frequency:
       single_mapping: ltKEuVv5RUc
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: hf_clinic_type_indicators
       expression: hf_number_reported_indicators*hf_clinic_type
       comment: 'Clinic type X # Indicators'
-      frequency: 
+      frequency:
       single_mapping: i3OwFflfUXU
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: hf_clinic_type
       expression: max(%{actual_clinic_type_values})
       comment: Type of health clinic should be 1 or 2
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *12
       values_dependencies:
       - actual_clinic_type_values
@@ -754,9 +758,9 @@ packages:
       code: hf_total_weight
       expression: sum(%{percent_weight_values})
       comment: HF total weight column [A]
-      frequency: 
+      frequency:
       single_mapping: NSTn1aBqlxp
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies:
       - percent_weight_values
@@ -764,9 +768,9 @@ packages:
       code: hf_number_reported_indicators
       expression: sum(%{reported_values})
       comment: HF number of reported indicators
-      frequency: 
+      frequency:
       single_mapping: W6icmNwjCTr
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies:
       - reported_values
@@ -774,9 +778,9 @@ packages:
       code: hf_performance_score
       expression: sum(%{percent_overall_values})
       comment: HF total overall, sum up of [A*E]
-      frequency: 
+      frequency:
       single_mapping: b85BBfaWf7G
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies:
       - percent_overall_values
@@ -784,9 +788,9 @@ packages:
       code: hf_total_actual_weight
       expression: SUM(%{actual_weight_values})
       comment: hf_total_actual_weight
-      frequency: 
+      frequency:
       single_mapping: GcTtDJlgqXs
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies:
       - actual_weight_values
@@ -794,9 +798,9 @@ packages:
       code: hf_weighted_clinic_type_indicator
       expression: safe_div(hf_clinic_type_indicators,cht_total_clinic_type_indicator)
       comment: hf_weighted_clinic_type_indicator
-      frequency: 
+      frequency:
       single_mapping: S6rwLZnicE6
-      activity_mappings: 
+      activity_mappings:
       rule: *12
       values_dependencies: []
     decision_tables: []
@@ -809,18 +813,18 @@ packages:
       expression: cht_service_delivery_bonus_earned - cht_proportional_bonus_earned_for_staff_payment
       comment: Proportional allocation of bonus earned among PBF partners - Facility
         improvement/community partners (35%)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: cht_and_service_delivery_total_bonus_earned
       expression: cht_bonus_earned + cht_service_delivery_bonus_earned
       comment: Total bonus earned (1. Bonus allocation sheet)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
@@ -828,18 +832,18 @@ packages:
       expression: "if(cht_service_delivery_performance_score > 100 , \r\n    cht_quarterly_bonus_available_for_hf,\r\n
         \  (cht_service_delivery_performance_score /100) * cht_quarterly_bonus_available_for_hf)"
       comment: '1. Bonus allocation sheet : Service delivery bonus earned'
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: cht_service_delivery_performance_score
       expression: MAX(%{hf_cht_overall_performance_score_values_values})
       comment: OVERALL FACILITIES PERFORMANCE
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies:
       - hf_cht_overall_performance_score_values_values
@@ -847,9 +851,9 @@ packages:
       code: cht_performance_score
       expression: MAX(%{hf_cht_score_value_values})
       comment: 'CHT performance score 1. Bonus allocation sheet '
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies:
       - hf_cht_score_value_values
@@ -857,9 +861,9 @@ packages:
       code: cht_total_hf_performance_score
       expression: SUM(%{hf_performance_score_values})
       comment: sum of hf's performance score
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies:
       - hf_performance_score_values
@@ -868,9 +872,9 @@ packages:
       expression: sum(%{hf_clinic_type_indicators_values})
       comment: 'CHT total sum of Clinic type X # Indicators (2. Bonus cal_facilities
         Column E)'
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies:
       - hf_clinic_type_indicators_values
@@ -878,36 +882,36 @@ packages:
       code: cht_quarterly_bonus_available_for_cht
       expression: 0.20 * cht_annual_bonus_available
       comment: Bonus available for CHT (20%) (1. Bonus allocation sheet)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: cht_quarterly_bonus_available_for_hf
       expression: 0.80 * cht_annual_bonus_available
       comment: Bonus available for Health facility (80%) (1. Bonus allocation sheet)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: cht_quarterly_bonus_available
       expression: cht_annual_bonus_available / 4
       comment: Total Bonus Available (1. Bonus allocation sheet)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: cht_annual_bonus_available
       expression: MAX(%{hf_cht_bonus_available_zone_values})
       comment: '1. Bonus allocation sheet : cell B5  '
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies:
       - hf_cht_bonus_available_zone_values
@@ -916,18 +920,18 @@ packages:
       expression: 0.65 * cht_service_delivery_bonus_earned
       comment: Proportional allocation of bonus earned among PBF partners - Facility
         staff (65%)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     - !ruby/object:Orbf::RulesEngine::Formula
       code: cht_bonus_earned
       expression: "(cht_performance_score / 100) * cht_quarterly_bonus_available_for_cht"
       comment: CHT bonus earned (1. Bonus allocation sheet)
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *13
       values_dependencies: []
     decision_tables: []
@@ -943,38 +947,38 @@ packages:
       state: achieved
       name: PBF - Achieved - HF01 [# and %] of deliveries in health facility attended
         by skilled personnel
-      formula: 
+      formula:
       kind: data_element
       ext_id: QBeXviw6Dti
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF01 [# and %] of deliveries in health facility attended
         by skilled personnel
-      formula: 
+      formula:
       kind: data_element
       ext_id: TGHDEpJOPL5
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cht_score
       name: PBF CHTNGO Administrative - Total Performance Score
-      formula: 
+      formula:
       kind: data_element
       ext_id: ou9WRHpnv8e
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: overall_score
       name: PBF PHC- HF Overall Performance score
-      formula: 
+      formula:
       kind: data_element
       ext_id: FC3nR54yGUx
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: bonus_available
       name: PBF CHTNGO - Annual Bonus available
-      formula: 
+      formula:
       kind: data_element
       ext_id: siwQkihDump
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: clinic_type
       name: PBF PHC - Type of Health Clinic
-      formula: 
+      formula:
       kind: data_element
       ext_id: WyxY3j5mQHF
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -983,21 +987,21 @@ packages:
         skilled personnel
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: activity_type
       name: PBF - Activity Type - HF01 [# and %] of deliveries in health facility
         attended by skilled personnel
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF01 [# and %] of deliveries in health facility attended
         by skilled personnel
       formula: '6'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of clients counselled for Family Planning"
     activity_code: hf02
@@ -1006,7 +1010,7 @@ packages:
       state: target
       name: PBF PHC - Percentage of women of reproductive age who receive comprehensive
         FP information during visit - Target
-      formula: 
+      formula:
       kind: data_element
       ext_id: qdcIZVrsAtM
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1015,24 +1019,24 @@ packages:
         Planning
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cap
       name: PBF - Cap - HF02 [# and %] of clients counselled for Family Planning
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF02 [# and %] of clients counselled for Family Planning
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - Percentage of women of reproductive age who receive comprehensive
         FP information during visit - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: ss1jZkuH4P6
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -1044,14 +1048,14 @@ packages:
       state: target
       name: PBF - Target - HF03 [# and %] of post partum women attending post natal
         care within 2 days  after delivery  by skilled birth attendants
-      formula: 
+      formula:
       kind: data_element
       ext_id: N51OjJ5T812
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - [# and] % of women that receive PNC after delivery within  24
         hours of childbirth by skilled birth attendant - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: yptYldr6oqT
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1060,21 +1064,21 @@ packages:
         natal care within 2 days after delivery by skilled birth attendants
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cap
       name: PBF - Cap - HF03 [# and %] of post partum women attending post natal care
         within 2 days after delivery by skilled birth attendants
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF03 [# and %] of post partum women attending post natal
         care within 2 days after delivery by skilled birth attendants
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of Pregnant women Post-test counsel for HIV "
     activity_code: hf04
@@ -1083,14 +1087,14 @@ packages:
       state: achieved
       name: PBF - Achieved - HF04 [# and %] of Pregnant women Post-test counsel for
         HIV
-      formula: 
+      formula:
       kind: data_element
       ext_id: J7vejrdIE8d
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF04 [# and %] of Pregnant women Post-test counsel for
         HIV
-      formula: 
+      formula:
       kind: data_element
       ext_id: E7TAIbhqvDM
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1099,20 +1103,20 @@ packages:
         for HIV
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cap
       name: PBF - Cap - HF04 [# and %] of Pregnant women Post-test counsel for HIV
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF04 [# and %] of Pregnant women Post-test counsel for
         HIV
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of children under 1 year of age fully immunized"
     activity_code: hf05
@@ -1120,14 +1124,14 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF05 [# and %] of children under 1 year of age fully immunized
-      formula: 
+      formula:
       kind: data_element
       ext_id: jAMzoRuKoBv
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - HF05 [# and %] of children under 1 year of age fully
         immunized
-      formula: 
+      formula:
       kind: data_element
       ext_id: a4LeN1BCmde
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1136,19 +1140,19 @@ packages:
         immunized
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cap
       name: PBF - Cap - HF05 [# and %] of children under 1 year of age fully immunized
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF05 [# and %] of children under 1 year of age fully immunized
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of pregnant women who took  3rd dose of IPT for malaria"
     activity_code: hf06
@@ -1157,14 +1161,14 @@ packages:
       state: target
       name: PBF - Target - HF06 [# and %] of pregnant women who took  3rd dose of
         IPT for malaria
-      formula: 
+      formula:
       kind: data_element
       ext_id: DLy5y9SdPMH
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - [# and] % of pregnant women took with 2nd dose of IPT for malaria
         - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: muU9X9Cj6hD
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1173,21 +1177,21 @@ packages:
         of IPT for malaria
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cap
       name: PBF - Cap - HF06 [# and %] of pregnant women who took  3rd dose of IPT
         for malaria
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF06 [# and %] of pregnant women who took  3rd dose of
         IPT for malaria
       formula: '6'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "% score obtained by the facility on the quality assessment"
     activity_code: hf07
@@ -1196,7 +1200,7 @@ packages:
       state: achieved
       name: PBF - Achieved - HF07 % score obtained by the facility on the quality
         assessment
-      formula: 
+      formula:
       kind: data_element
       ext_id: xBhlvjlirqP
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1205,19 +1209,19 @@ packages:
         assessment
       formula: '2'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cap
       name: PBF - Cap - HF07 % score obtained by the facility on the quality assessment
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF07 % score obtained by the facility on the quality assessment
       formula: '10'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Number of notified cases of all forms of TB
     activity_code: hf08
@@ -1225,13 +1229,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF08 Number of notified cases of all forms of TB
-      formula: 
+      formula:
       kind: data_element
       ext_id: cEe5dLaIrJy
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - HF08 Number of notified cases of all forms of TB
-      formula: 
+      formula:
       kind: data_element
       ext_id: c3mDrrRuiQx
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1239,19 +1243,19 @@ packages:
       name: PBF - Activity Type - HF08 Number of notified cases of all forms of TB
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: cap
       name: PBF - Cap - HF08 Number of notified cases of all forms of TB
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF08 Number of notified cases of all forms of TB
       formula: '7'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "% score obtained by the facility on the client satisfaction survey"
     activity_code: hf09
@@ -1260,14 +1264,14 @@ packages:
       state: target
       name: PBF PHC - Number of new smear positive TB cases reported during the quarter
         - Target
-      formula: 
+      formula:
       kind: data_element
       ext_id: M1ZBJtiM8zB
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - Number of new smear positive TB cases reported during the quarter
         - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: QFxm7pU8v5c
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1276,14 +1280,14 @@ packages:
         survey
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF09 % score obtained by the facility on the client satisfaction
         survey
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   kind: zone
   code: pbf__hf_performance
   frequency: quarterly
@@ -1307,6 +1311,7 @@ packages:
       activity_type: true
       weight: true
 - &15 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &14 !ruby/object:Orbf::RulesEngine::Rule
     kind: activity
@@ -1315,9 +1320,9 @@ packages:
       code: percent_weight
       expression: safe_div(weight , hfo_total_actual_weight )*100
       comment: percent_weight Column [A] of invoice
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *14
       values_dependencies: []
       dependencies:
@@ -1327,9 +1332,9 @@ packages:
       code: percent_target_achieved
       expression: safe_div(achieved, target)*100
       comment: "% of Target Achieved [B x C]"
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *14
       values_dependencies: []
       dependencies:
@@ -1339,9 +1344,9 @@ packages:
       code: actual_weight
       expression: weight
       comment: Actual weight
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *14
       values_dependencies: []
       dependencies:
@@ -1351,9 +1356,9 @@ packages:
       expression: if(min(percent_target_achieved,cap) < 75, 0, min(percent_target_achieved,cap)
         )
       comment: Allowed [E]
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *14
       values_dependencies: []
       dependencies:
@@ -1363,9 +1368,9 @@ packages:
       code: percent_overall
       expression: if(weight=0,0,(percent_weight/100)*percent_allowed)
       comment: "% Overall  [A x E]"
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *14
       values_dependencies: []
       dependencies:
@@ -1376,9 +1381,9 @@ packages:
       code: actual_clinic_type
       expression: safe_div(clinic_type, org_units_sum_if_count )
       comment: Actual Clinic Type
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *14
       values_dependencies: []
       dependencies:
@@ -1393,9 +1398,9 @@ packages:
       code: hfo_total_actual_weight
       expression: SUM(%{actual_weight_values})
       comment: Total weight
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *16
       values_dependencies:
       - actual_weight_values
@@ -1403,9 +1408,9 @@ packages:
       code: hfo_total_performance_score
       expression: SUM(%{percent_overall_values})
       comment: Sum of % Overall performance score [A x E]
-      frequency: 
+      frequency:
       single_mapping: FC3nR54yGUx
-      activity_mappings: 
+      activity_mappings:
       rule: *16
       values_dependencies:
       - percent_overall_values
@@ -1454,20 +1459,20 @@ packages:
       state: achieved
       name: PBF - Achieved - HF01 [# and %] of deliveries in health facility attended
         by skilled personnel
-      formula: 
+      formula:
       kind: data_element
       ext_id: QBeXviw6Dti
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF01 [# and %] of deliveries in health facility attended
         by skilled personnel
-      formula: 
+      formula:
       kind: data_element
       ext_id: TGHDEpJOPL5
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: clinic_type
       name: PBF PHC - Type of Health Clinic
-      formula: 
+      formula:
       kind: data_element
       ext_id: WyxY3j5mQHF
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1476,14 +1481,14 @@ packages:
         skilled personnel
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF01 [# and %] of deliveries in health facility attended
         by skilled personnel
       formula: '6'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of clients counselled for Family Planning"
     activity_code: hf02
@@ -1492,7 +1497,7 @@ packages:
       state: target
       name: PBF PHC - Percentage of women of reproductive age who receive comprehensive
         FP information during visit - Target
-      formula: 
+      formula:
       kind: data_element
       ext_id: qdcIZVrsAtM
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1500,18 +1505,18 @@ packages:
       name: PBF - Cap - HF02 [# and %] of clients counselled for Family Planning
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF02 [# and %] of clients counselled for Family Planning
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - Percentage of women of reproductive age who receive comprehensive
         FP information during visit - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: ss1jZkuH4P6
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -1522,14 +1527,14 @@ packages:
       state: target
       name: PBF - Target - HF06 [# and %] of pregnant women who took  3rd dose of
         IPT for malaria
-      formula: 
+      formula:
       kind: data_element
       ext_id: DLy5y9SdPMH
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - [# and] % of pregnant women took with 2nd dose of IPT for malaria
         - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: muU9X9Cj6hD
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1538,14 +1543,14 @@ packages:
         for malaria
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF06 [# and %] of pregnant women who took  3rd dose of
         IPT for malaria
       formula: '6'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of Pregnant women Post-test counsel for HIV "
     activity_code: hf04
@@ -1554,14 +1559,14 @@ packages:
       state: achieved
       name: PBF - Achieved - HF04 [# and %] of Pregnant women Post-test counsel for
         HIV
-      formula: 
+      formula:
       kind: data_element
       ext_id: J7vejrdIE8d
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF04 [# and %] of Pregnant women Post-test counsel for
         HIV
-      formula: 
+      formula:
       kind: data_element
       ext_id: E7TAIbhqvDM
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1569,14 +1574,14 @@ packages:
       name: PBF - Cap - HF04 [# and %] of Pregnant women Post-test counsel for HIV
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF04 [# and %] of Pregnant women Post-test counsel for
         HIV
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "% score obtained by the facility on the quality assessment"
     activity_code: hf07
@@ -1585,7 +1590,7 @@ packages:
       state: achieved
       name: PBF - Achieved - HF07 % score obtained by the facility on the quality
         assessment
-      formula: 
+      formula:
       kind: data_element
       ext_id: xBhlvjlirqP
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1593,13 +1598,13 @@ packages:
       name: PBF - Cap - HF07 % score obtained by the facility on the quality assessment
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF07 % score obtained by the facility on the quality assessment
       formula: '10'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Number of notified cases of all forms of TB
     activity_code: hf08
@@ -1607,13 +1612,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF08 Number of notified cases of all forms of TB
-      formula: 
+      formula:
       kind: data_element
       ext_id: cEe5dLaIrJy
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - HF08 Number of notified cases of all forms of TB
-      formula: 
+      formula:
       kind: data_element
       ext_id: c3mDrrRuiQx
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1621,13 +1626,13 @@ packages:
       name: PBF - Cap - HF08 Number of notified cases of all forms of TB
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF08 Number of notified cases of all forms of TB
       formula: '7'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of children under 1 year of age fully immunized"
     activity_code: hf05
@@ -1635,14 +1640,14 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - HF05 [# and %] of children under 1 year of age fully immunized
-      formula: 
+      formula:
       kind: data_element
       ext_id: jAMzoRuKoBv
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - HF05 [# and %] of children under 1 year of age fully
         immunized
-      formula: 
+      formula:
       kind: data_element
       ext_id: a4LeN1BCmde
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1650,13 +1655,13 @@ packages:
       name: PBF - Cap - HF05 [# and %] of children under 1 year of age fully immunized
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF05 [# and %] of children under 1 year of age fully immunized
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of post partum women attending post natal care within 2 days
       after delivery by skilled birth attendants"
@@ -1666,14 +1671,14 @@ packages:
       state: target
       name: PBF - Target - HF03 [# and %] of post partum women attending post natal
         care within 2 days  after delivery  by skilled birth attendants
-      formula: 
+      formula:
       kind: data_element
       ext_id: N51OjJ5T812
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - [# and] % of women that receive PNC after delivery within  24
         hours of childbirth by skilled birth attendant - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: yptYldr6oqT
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1682,14 +1687,14 @@ packages:
         within 2 days after delivery by skilled birth attendants
       formula: '125'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF03 [# and %] of post partum women attending post natal
         care within 2 days after delivery by skilled birth attendants
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "% score obtained by the facility on the client satisfaction survey"
     activity_code: hf09
@@ -1698,14 +1703,14 @@ packages:
       state: target
       name: PBF PHC - Number of new smear positive TB cases reported during the quarter
         - Target
-      formula: 
+      formula:
       kind: data_element
       ext_id: M1ZBJtiM8zB
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF PHC - Number of new smear positive TB cases reported during the quarter
         - Achieved
-      formula: 
+      formula:
       kind: data_element
       ext_id: QFxm7pU8v5c
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1714,14 +1719,14 @@ packages:
         survey
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - HF09 % score obtained by the facility on the client satisfaction
         survey
       formula: '5'
       kind: constant
-      ext_id: 
+      ext_id:
   kind: subcontract
   code: pbf__hf_overall_performance
   frequency: quarterly
@@ -1738,6 +1743,7 @@ packages:
       cap: true
       weight: true
 - &19 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &18 !ruby/object:Orbf::RulesEngine::Rule
     kind: activity
@@ -1747,7 +1753,7 @@ packages:
       expression: "if(activity_type == 1, \r\nSUM(%{monthly_target_todo_current_quarter_values}),\r\nAVG(%{monthly_target_todo_current_quarter_values})\r\n)"
       comment: Quarterly Target
       frequency: quarterly
-      single_mapping: 
+      single_mapping:
       activity_mappings:
         hf01: TGHDEpJOPL5
         hf03: N51OjJ5T812
@@ -1766,7 +1772,7 @@ packages:
       expression: "if(activity_type == 1, \r\nSUM(%{monthly_achieved_current_quarter_values}),\r\nAVG(%{monthly_achieved_current_quarter_values})\r\n)"
       comment: Quarterly achieved
       frequency: quarterly
-      single_mapping: 
+      single_mapping:
       activity_mappings:
         hf01: QBeXviw6Dti
         hf02: ss1jZkuH4P6
@@ -1786,8 +1792,8 @@ packages:
       expression: safe_div(ABS(monthly_declared - monthly_verified ), monthly_verified)
         * 100
       comment: Percentage difference
-      frequency: 
-      single_mapping: 
+      frequency:
+      single_mapping:
       activity_mappings:
         hf01: DFdrv8eauzs
         hf05: yzLVfX9rGoq
@@ -1806,8 +1812,8 @@ packages:
       expression: "if(activity_type == 1, \r\nif(percentage_difference < 10, monthly_verified
         , 0 ),\r\nmonthly_verified)"
       comment: Monthly Achieved
-      frequency: 
-      single_mapping: 
+      frequency:
+      single_mapping:
       activity_mappings:
         hf01: GDdVg4Pn8VL
         hf03: d21bHMVyed4
@@ -1827,8 +1833,8 @@ packages:
       expression: monthly_target
       comment: monthly_target_todo
       frequency: monthly
-      single_mapping: 
-      activity_mappings: 
+      single_mapping:
+      activity_mappings:
       rule: *18
       values_dependencies: []
       dependencies:
@@ -1846,21 +1852,21 @@ packages:
       state: monthly_declared
       name: PBF - Monthly Declared - HF01 [# and %] of deliveries in health facility
         attended by skilled personnel
-      formula: 
+      formula:
       kind: data_element
       ext_id: aVXlNCkqMGH
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_verified
       name: PBF - Monthly Verified - HF01 [# and %] of deliveries in health facility
         attended by skilled personnel
-      formula: 
+      formula:
       kind: data_element
       ext_id: RRvsMfAcr5W
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_target
       name: PBF - MTarget - HF01 [# and %] of deliveries in health facility attended
         by skilled personnel
-      formula: 
+      formula:
       kind: data_element
       ext_id: Fu5FCr8IhNf
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1869,7 +1875,7 @@ packages:
         attended by skilled personnel
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of clients counselled for Family Planning"
     activity_code: hf02
@@ -1878,20 +1884,20 @@ packages:
       state: monthly_declared
       name: PBF - Monthly Declared - HF02 [# and %] of clients counselled for Family
         Planning
-      formula: 
+      formula:
       kind: data_element
       ext_id: v9lh5BvCfnH
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_target
       name: PBF - MTarget - HF02 [# and %] of clients counselled for Family Planning
-      formula: 
+      formula:
       kind: data_element
       ext_id: dZPcNBgtbdM
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_verified
       name: PBF - Monthly Verified - HF02 [# and %] of clients counselled for Family
         Planning
-      formula: 
+      formula:
       kind: data_element
       ext_id: cQiC0T5A13D
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1900,7 +1906,7 @@ packages:
         Planning
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of post partum women attending post natal care within 2 days
       after delivery by skilled birth attendants"
@@ -1910,21 +1916,21 @@ packages:
       state: monthly_target
       name: PBF - MTarget - HF03 [# and %] of post partum women attending post natal
         care within 2 days  after delivery  by skilled birth attendants
-      formula: 
+      formula:
       kind: data_element
       ext_id: vrr2BlT2XOf
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_verified
       name: PBF - Monthly Verified - HF03 [# and %] of post partum women attending
         post natal care within 2 days  after delivery  by skilled birth attendants
-      formula: 
+      formula:
       kind: data_element
       ext_id: r4PPZ55miax
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_declared
       name: PBF - MDeclared - HF03 [# and %] of post partum women attending post natal
         care within 2 days after delivery by skilled birth attendants
-      formula: 
+      formula:
       kind: data_element
       ext_id: GWfXeCy5Dm6
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1933,7 +1939,7 @@ packages:
         natal care within 2 days after delivery by skilled birth attendants
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of Pregnant women Post-test counsel for HIV "
     activity_code: hf04
@@ -1942,21 +1948,21 @@ packages:
       state: monthly_declared
       name: PBF - Monthly Declared - HF04 [# and %] of Pregnant women Post-test counsel
         for HIV
-      formula: 
+      formula:
       kind: data_element
       ext_id: uYTcdXjSZvS
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_target
       name: PBF - MTarget - HF04 [# and %] of Pregnant women Post-test counsel for
         HIV
-      formula: 
+      formula:
       kind: data_element
       ext_id: vWk5BPvxaMT
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_verified
       name: PBF - Monthly Verified - HF04 [# and %] of Pregnant women Post-test counsel
         for HIV
-      formula: 
+      formula:
       kind: data_element
       ext_id: uqIavCuccrl
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1965,7 +1971,7 @@ packages:
         for HIV
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "[# and %] of children under 1 year of age fully immunized"
     activity_code: hf05
@@ -1973,21 +1979,21 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_target
       name: PBF - MTarget - HF05 [# and %] of children under 1 year of age fully immunized
-      formula: 
+      formula:
       kind: data_element
       ext_id: KaklAgZwi2E
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_verified
       name: PBF - Monthly Verified - HF05 [# and %] of children under 1 year of age
         fully immunized
-      formula: 
+      formula:
       kind: data_element
       ext_id: nucrRJ0J0gD
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_declared
       name: PBF - Monthly Declared - HF05 [# and %] of children under 1 year of age
         fully immunized
-      formula: 
+      formula:
       kind: data_element
       ext_id: pq31qHDeSHh
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -1996,7 +2002,7 @@ packages:
         immunized
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: "% score obtained by the facility on the quality assessment"
     activity_code: hf07
@@ -2004,7 +2010,7 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_verified
       name: PBF - HF QoC - Hf monthly qualtity score
-      formula: 
+      formula:
       kind: data_element
       ext_id: wWVxNJO1ZLh
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -2013,7 +2019,7 @@ packages:
         assessment
       formula: '2'
       kind: constant
-      ext_id: 
+      ext_id:
   - !ruby/object:Orbf::RulesEngine::Activity
     name: Number of notified cases of all forms of TB
     activity_code: hf08
@@ -2022,20 +2028,20 @@ packages:
       state: monthly_declared
       name: PBF - Monthly Declared - HF08 Number of notified cases of all forms  of
         TB
-      formula: 
+      formula:
       kind: data_element
       ext_id: quWQKNX9tt6
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_verified
       name: PBF - Monthly Verified - HF08 Number of notified cases of all forms  of
         TB
-      formula: 
+      formula:
       kind: data_element
       ext_id: l34qwnO8Lvi
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: monthly_target
       name: PBF - MTarget - HF08 Number of notified cases of all forms of TB
-      formula: 
+      formula:
       kind: data_element
       ext_id: B91I0MXfe3U
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -2043,7 +2049,7 @@ packages:
       name: PBF - Activity Type - HF08 Number of notified cases of all forms of TB
       formula: '1'
       kind: constant
-      ext_id: 
+      ext_id:
   kind: zone
   code: pbf__hf_performance_monthly
   frequency: monthly
@@ -2059,6 +2065,7 @@ packages:
       monthly_target: true
       activity_type: true
 - &21 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &20 !ruby/object:Orbf::RulesEngine::Rule
     kind: package
@@ -2068,9 +2075,9 @@ packages:
       expression: safe_div(SUM(%{attributed_points_values}), SUM(%{max_points_values}))
         * 100
       comment: HF MonthlyQuality Score
-      frequency: 
+      frequency:
       single_mapping: wWVxNJO1ZLh
-      activity_mappings: 
+      activity_mappings:
       rule: *20
       values_dependencies:
       - attributed_points_values
@@ -2084,9 +2091,9 @@ packages:
       code: percentage_achieved
       expression: safe_div(attributed_points,max_points) * 100
       comment: Percentage achieved
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *22
       values_dependencies: []
       dependencies:
@@ -2096,9 +2103,9 @@ packages:
       code: attributed_points
       expression: acquired_points
       comment: attributed_points
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *22
       values_dependencies: []
       dependencies:
@@ -2107,9 +2114,9 @@ packages:
       code: max_points
       expression: possible_points
       comment: Max Points
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *22
       values_dependencies: []
       dependencies:
@@ -2126,13 +2133,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: District Admin - total acquired score
-      formula: 
+      formula:
       kind: data_element
       ext_id: M19mxheizXU
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District ADM - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: tpXljZLddqC
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2142,13 +2149,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: District ANC - total acquired score
-      formula: 
+      formula:
       kind: data_element
       ext_id: egjeNpHj5Uz
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District ANC - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: OLDQO1uz2jH
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2158,13 +2165,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: District FP - total acquired score
-      formula: 
+      formula:
       kind: data_element
       ext_id: JBpVCQxBdw8
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District FP - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: AEjgTD01GC8
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2174,13 +2181,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: 'District NLD - total acquired score '
-      formula: 
+      formula:
       kind: data_element
       ext_id: ci6YEHUPckr
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District NLD - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: zQ51dU9KtAr
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2190,13 +2197,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: District PP - total acquired score
-      formula: 
+      formula:
       kind: data_element
       ext_id: usSLQgITP2i
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District PP - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: QVetDZPmJRv
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2206,13 +2213,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: 'District OC - total acquired score '
-      formula: 
+      formula:
       kind: data_element
       ext_id: z2T4M8XinNS
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District OC - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: oLhCFRdpQ7z
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2222,13 +2229,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: 'District EPI - total acquired score '
-      formula: 
+      formula:
       kind: data_element
       ext_id: GChOe1GpN06
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District EPI - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: QcIrfyD4A7Y
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2238,13 +2245,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: 'District HIV - total acquired score '
-      formula: 
+      formula:
       kind: data_element
       ext_id: kYEKsIm5iBL
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District HIV - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: IUZzPZOG6Ob
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2254,13 +2261,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: 'District Malaria - total acquired score '
-      formula: 
+      formula:
       kind: data_element
       ext_id: bTqQS6cSrfH
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District Malaria - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: AB7jZdhtPvZ
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2270,13 +2277,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: District IPC - total acquired score
-      formula: 
+      formula:
       kind: data_element
       ext_id: HENPZJaM1ve
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District IPC - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: lZqhUZFoWZh
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2286,13 +2293,13 @@ packages:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: acquired_points
       name: District TB - total acquired score
-      formula: 
+      formula:
       kind: data_element
       ext_id: yQ8hoIxIrhu
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: possible_points
       name: District TB - Total of available points
-      formula: 
+      formula:
       kind: data_element
       ext_id: DVY7JCzwW1O
   kind: zone
@@ -2307,6 +2314,7 @@ packages:
       acquired_points: true
       possible_points: true
 - &24 !ruby/object:Orbf::RulesEngine::Package
+  matching_groupset_ext_ids: []
   rules:
   - &23 !ruby/object:Orbf::RulesEngine::Rule
     kind: activity
@@ -2315,9 +2323,9 @@ packages:
       code: percent_overall
       expression: "(percent_weight/100)*(percent_allowed/100)*100"
       comment: "% Overall performance score [A x E]"
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *23
       values_dependencies: []
       dependencies:
@@ -2328,9 +2336,9 @@ packages:
       expression: if(min(percent_target_achieved,cap) < 75, 0, min(percent_target_achieved,cap)
         )
       comment: Allowed [E]
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *23
       values_dependencies: []
       dependencies:
@@ -2340,9 +2348,9 @@ packages:
       code: percent_target_achieved
       expression: safe_div(achieved,target)*100
       comment: "% of Target Achieved [B x C]"
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *23
       values_dependencies: []
       dependencies:
@@ -2352,9 +2360,9 @@ packages:
       code: percent_weight
       expression: safe_div(actual_weight,cht_total_weight)*100
       comment: "% Weight  [A]"
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *23
       values_dependencies: []
       dependencies:
@@ -2364,9 +2372,9 @@ packages:
       code: actual_weight
       expression: weight
       comment: weight
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *23
       values_dependencies: []
       dependencies:
@@ -2380,9 +2388,9 @@ packages:
       code: cht_total_performance_score
       expression: SUM(%{percent_overall_values})
       comment: Sum of % Overall performance score [A x E]
-      frequency: 
+      frequency:
       single_mapping: ou9WRHpnv8e
-      activity_mappings: 
+      activity_mappings:
       rule: *25
       values_dependencies:
       - percent_overall_values
@@ -2390,9 +2398,9 @@ packages:
       code: cht_total_weight
       expression: SUM(%{actual_weight_values})
       comment: Total weight
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *25
       values_dependencies:
       - actual_weight_values
@@ -2414,7 +2422,7 @@ packages:
         folate, ACT) [0 day of stock out]
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - CHTNGO01 [# and] % of facilities with no stock-out of tracer
@@ -2422,13 +2430,13 @@ packages:
         folate, ACT) [0 day of stock out]
       formula: '10'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - CHTNGO01 [# and] % of facilities with no stock-out of tracer
         drugs during the quarter (amoxicillin, cotrimoxazole, paracetamol, ORS, iron
         folate, ACT) [0 day of stock out]
-      formula: 
+      formula:
       kind: data_element
       ext_id: jzQOMZpDaxJ
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -2436,7 +2444,7 @@ packages:
       name: PBF - Achieved - CHTNGO01 [# and] % of facilities with no stock-out of
         tracer drugs during the quarter (amoxicillin, cotrimoxazole, paracetamol,
         ORS, iron folate, ACT) [0 day of stock out]
-      formula: 
+      formula:
       kind: data_element
       ext_id: Z1rgdJcMiov
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2449,26 +2457,26 @@ packages:
         HFDC meetings
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - CHTNGO04 [# and %] of facilities that held at least three
         HFDC meetings
       formula: '8'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - CHTNGO04 [# and %] of facilities that held at least three
         HFDC meetings
-      formula: 
+      formula:
       kind: data_element
       ext_id: w797yLCpWGi
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - CHTNGO04 [# and %] of facilities that held at least three
         HFDC meetings
-      formula: 
+      formula:
       kind: data_element
       ext_id: RHBS4771vki
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2482,26 +2490,26 @@ packages:
         HMIS reports to the MOH during the quarter
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - CHTNGO03 [# and] % of facilities submitted timely and complete
         HMIS reports to the MOH during the quarter
       formula: '10'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - CHTNGO03 [# and] % of facilities submitted timely and
         complete HMIS reports to the MOH during the quarter
-      formula: 
+      formula:
       kind: data_element
       ext_id: ueS9vc91iof
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - CHTNGO03 [# and] % of facilities submitted timely and complete
         HMIS reports to the MOH during the quarter
-      formula: 
+      formula:
       kind: data_element
       ext_id: zHnGSAFeq9Y
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2515,26 +2523,26 @@ packages:
         implemented at least 80% of planned activities in updated business plan
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - CHTNGO02 [# and %] of sampled facilities assessed to have
         implemented at least 80% of planned activities in updated business plan
       formula: '10'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - CHTNGO02 [# and %] of sampled facilities assessed to
         have implemented at least 80% of planned activities in updated business plan
-      formula: 
+      formula:
       kind: data_element
       ext_id: eWP2nzSi2h3
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: target
       name: PBF - Target - CHTNGO02 [# and %] of sampled facilities assessed to have
         implemented at least 80% of planned activities in updated business plan
-      formula: 
+      formula:
       kind: data_element
       ext_id: i2LovWO49dJ
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2545,14 +2553,14 @@ packages:
       state: target
       name: PBF - Target - CHTNGO05 Timely and complete quarterly financial and program
         reports submitted
-      formula: 
+      formula:
       kind: data_element
       ext_id: VQwClP1xXCc
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: achieved
       name: PBF - Achieved - CHTNGO05 Timely and complete quarterly financial and
         program reports submitted
-      formula: 
+      formula:
       kind: data_element
       ext_id: vsrb73Cnt1G
     - !ruby/object:Orbf::RulesEngine::ActivityState
@@ -2561,18 +2569,18 @@ packages:
         reports submitted
       formula: '100'
       kind: constant
-      ext_id: 
+      ext_id:
     - !ruby/object:Orbf::RulesEngine::ActivityState
       state: weight
       name: PBF - Weight - CHTNGO05 Timely and complete quarterly financial and program
         reports submitted
       formula: '10'
       kind: constant
-      ext_id: 
+      ext_id:
   kind: single
   code: cht_administrative_performance
   frequency: quarterly
-  groupset_ext_id: 
+  groupset_ext_id:
   dataset_ext_ids:
   - pnUFfNTUqef
   - uluG6r2h5Oe
@@ -2595,25 +2603,25 @@ payment_rules:
       code: total_payment
       expression: quantity_quarter_total_amount + quality_quarter_total_amount
       comment: total_payment
-      frequency: 
+      frequency:
       single_mapping: AHyQclhSAl4
-      activity_mappings: 
+      activity_mappings:
       rule: *26
     - !ruby/object:Orbf::RulesEngine::Formula
       code: quality_quarter_total_amount
       expression: qualtity_score * total_quality_budget
       comment: quality_quarter_total_amount
-      frequency: 
+      frequency:
       single_mapping: nI6qaUve8sb
-      activity_mappings: 
+      activity_mappings:
       rule: *26
     - !ruby/object:Orbf::RulesEngine::Formula
       code: quantity_quarter_total_amount
       expression: quantity_total_amount
       comment: quantity_quarter_amount
-      frequency: 
+      frequency:
       single_mapping: UXj0BJDXl7U
-      activity_mappings: 
+      activity_mappings:
       rule: *26
     decision_tables: []
   frequency: quarterly
@@ -2630,9 +2638,9 @@ payment_rules:
       code: dummy
       expression: '1'
       comment: dummy
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *27
       values_dependencies: []
     decision_tables: []
@@ -2648,9 +2656,9 @@ payment_rules:
       code: dummy
       expression: '1'
       comment: dummy
-      frequency: 
-      single_mapping: 
-      activity_mappings: 
+      frequency:
+      single_mapping:
+      activity_mappings:
       rule: *28
       values_dependencies: []
     decision_tables: []
