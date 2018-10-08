@@ -18,6 +18,10 @@ module Orbf
 
       private
 
+      EMPTY_SUBSTITUTIONS = {}.freeze
+
+      LEVELS_RANGES = (1..5).freeze
+
       attr_reader :package, :orgunits, :period
 
       def activity_formula_variables
@@ -41,12 +45,13 @@ module Orbf
       def build_variable(orgunit, activity_code, formula, substitued)
         expression = Tokenizer.replace_token_from_expression(
           substitued,
-          substitutions(activity_code),
+          substitutions(formula, activity_code),
           level_pattern_values(orgunit).merge(
             orgunit_id: orgunit.ext_id,
             period:     downcase(period)
           )
         )
+
         Orbf::RulesEngine::Variable.new_activity_rule(
           period:                  period,
           key:                     variable_key(orgunit, activity_code, formula),
@@ -103,11 +108,11 @@ module Orbf
         end
       end
 
-      def substitutions(activity_code)
+      def substitutions(formula, activity_code)
         hashes = [
           states_substitutions(activity_code),
           null_substitutions(activity_code),
-          level_substitutions,
+          level_substitutions(formula, activity_code),
           package_substitutions,
           formulas_substitutions(activity_code),
           zone_main_orgunit_substitutions(activity_code),
@@ -144,19 +149,18 @@ module Orbf
         end
       end
 
-      def level_substitutions
-        @level_subs ||= package.states.each_with_object({}) do |state, hash|
-          package.all_activities_codes.each do |activity_code|
-            (1..5).each do |level_index|
-              state_level = state + "_level_#{level_index}"
-              hash[state_level] = suffix_activity_pattern(
-                package.code, activity_code, state_level,
-                "orgunit_parent_level#{level_index}_id".to_sym
-              )
-            end
+      def level_substitutions(formula, activity_code)
+        return EMPTY_SUBSTITUTIONS unless formula.expression.include?("_level_")
+
+        package.states.each_with_object({}) do |state, hash|
+          LEVELS_RANGES.each do |level_index|
+            state_level = state + "_level_#{level_index}"
+            hash[state_level] = suffix_activity_pattern(
+              package.code, activity_code, state_level,
+              "orgunit_parent_level#{level_index}_id".to_sym
+            )
           end
         end
-        @level_subs
       end
 
       def package_substitutions
