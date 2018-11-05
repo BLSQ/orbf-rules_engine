@@ -77,12 +77,12 @@ RSpec.describe Orbf::RulesEngine::SolverFactory do
     )
   end
 
-  def build_package(org_unit_group_ext_ids)
+  def build_package(main_org_unit_group_ext_ids)
     Orbf::RulesEngine::Package.new(
       code:                   :facility,
       kind:                   :single,
       frequency:              :monthly,
-      org_unit_group_ext_ids: Array(org_unit_group_ext_ids),
+      main_org_unit_group_ext_ids: Array(main_org_unit_group_ext_ids),
       rules:                  [
         Orbf::RulesEngine::Rule.new(
           kind:     :activity,

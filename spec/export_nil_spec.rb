@@ -65,7 +65,7 @@ RSpec.describe "allow to export nil" do
       kind:                   :single,
       frequency:              :quarterly,
       activities:             [activity],
-      org_unit_group_ext_ids: ["contracgroup1"],
+      main_org_unit_group_ext_ids: ["contracgroup1"],
       rules:                  [
         Orbf::RulesEngine::Rule.new(
           kind:     :activity,

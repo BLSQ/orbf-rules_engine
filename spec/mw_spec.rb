@@ -120,7 +120,7 @@ RSpec.describe "Malawi System" do
       code:                   :quantity_subcontract,
       kind:                   :subcontract,
       frequency:              :monthly,
-      org_unit_group_ext_ids: ["primary"],
+      main_org_unit_group_ext_ids: ["primary"],
       groupset_ext_id:        "contracts_groupset_ext_id",
       activities:             activities,
       rules:                  [

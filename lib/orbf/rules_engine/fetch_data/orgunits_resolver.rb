@@ -45,10 +45,10 @@ module Orbf
 
       def within_package_groups?
         if package.matching_groupset_ext_ids.empty?
-          return (main_orgunit.group_ext_ids & package.org_unit_group_ext_ids).present?
+          return (main_orgunit.group_ext_ids & package.main_org_unit_group_ext_ids).present?
         end
 
-        package_groups_by_groupset = package.org_unit_group_ext_ids.group_by do |group_id|
+        package_groups_by_groupset = package.main_org_unit_group_ext_ids.group_by do |group_id|
           pyramid.org_unit_groupsets.detect do |group_set|
             groupset_match = package.matching_groupset_ext_ids.include?(group_set.ext_id)
             group_in_groupset = group_set.group_ext_ids.include?(group_id)
