@@ -130,7 +130,8 @@ module Orbf
       def validate
         Frequencies.assert_valid(frequency)
         Kinds.assert_valid(kind)
-        raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if [Kinds::SUBCONTRACT, Kinds::ZONE].include?(kind) && groupset_ext_id.nil?
+        raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if (Kinds::SUBCONTRACT == kind) && groupset_ext_id.nil?
+        raise "groupset_ext_id or target_org_unit_group_ext_ids should be provided for zone package" if (Kinds::ZONE == kind) && groupset_ext_id.nil? && target_org_unit_group_ext_ids.none?
         validate_values_references
         validate_states_and_activity_formula_code_uniqness
       end

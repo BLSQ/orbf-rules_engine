@@ -23,12 +23,22 @@ module Orbf
       attr_reader :package, :pyramid, :main_orgunit
 
       def handle_zone
+        if package.target_org_unit_group_ext_ids.any?
+          handle_target_org_units
+        else
         handle_subcontract
+      end
       end
 
       def handle_single
         return [] unless within_package_groups?
         [main_orgunit]
+      end
+
+      def handle_target_org_units
+        org_units_set = pyramid.orgunits_in_groups(package.target_org_unit_group_ext_ids)
+        org_units_set.delete(main_orgunit)
+        org_units_set.to_a.unshift(main_orgunit)
       end
 
       def handle_subcontract
