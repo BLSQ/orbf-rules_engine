@@ -80,7 +80,7 @@ RSpec.describe "Senegal System" do
       code:                   :quantity,
       kind:                   :single,
       frequency:              :monthly,
-      org_unit_group_ext_ids: %w[cs],
+      main_org_unit_group_ext_ids: %w[cs],
       groupset_ext_id:        nil,
       activities:             activities,
       rules:                  [

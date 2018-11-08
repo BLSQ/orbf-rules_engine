@@ -83,7 +83,7 @@ RSpec.describe "Packages cross referencies" do
           code:                   :referenced,
           kind:                   :single,
           frequency:              :quarterly,
-          org_unit_group_ext_ids: ["contracted"],
+          main_org_unit_group_ext_ids: ["contracted"],
           activities:             referenced_activities,
           rules:                  [
             Orbf::RulesEngine::Rule.new(
@@ -111,7 +111,7 @@ RSpec.describe "Packages cross referencies" do
           code:                   :main,
           kind:                   :single,
           frequency:              :quarterly,
-          org_unit_group_ext_ids: ["contracted"],
+          main_org_unit_group_ext_ids: ["contracted"],
           activities:             main_activities,
           rules:                  [
             Orbf::RulesEngine::Rule.new(
@@ -178,7 +178,7 @@ RSpec.describe "Packages cross referencies" do
           code:                   :referenced,
           kind:                   :single,
           frequency:              :monthly,
-          org_unit_group_ext_ids: ["contracted"],
+          main_org_unit_group_ext_ids: ["contracted"],
           activities:             referenced_activities,
           rules:                  [
             Orbf::RulesEngine::Rule.new(
@@ -205,7 +205,7 @@ RSpec.describe "Packages cross referencies" do
           code:                   :main,
           kind:                   :single,
           frequency:              :quarterly,
-          org_unit_group_ext_ids: ["contracted"],
+          main_org_unit_group_ext_ids: ["contracted"],
           activities:             main_activities,
           rules:                  [
             Orbf::RulesEngine::Rule.new(

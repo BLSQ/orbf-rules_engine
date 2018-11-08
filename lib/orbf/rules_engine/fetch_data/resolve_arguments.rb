@@ -41,7 +41,7 @@ module Orbf
       end
 
       def match_group?(package)
-        (package.org_unit_group_ext_ids & main_orgunit.group_ext_ids).any?
+        (package.main_org_unit_group_ext_ids & main_orgunit.group_ext_ids).any?
       end
 
       def decorate_with_facts(orgunits)

@@ -7,14 +7,16 @@ module Orbf
       end
 
       def call
+        results = []
+        orgunit_ext_ids.each_slice(50).each do |orgunit_slice|
         values = dhis2_connection.data_value_sets.list(
-          organisation_unit: orgunit_ext_ids,
+          organisation_unit: orgunit_slice,
           data_sets:         dataset_ext_ids,
           periods:           periods,
           children:          false
         )
-
-        results = values.data_values || []
+        results.push(*(values.data_values || []))
+      end
 
         map_to_raw(results)
       end

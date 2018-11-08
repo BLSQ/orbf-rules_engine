@@ -48,7 +48,8 @@ packages:
       - max_points_values
     decision_tables: []
     package: *2
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - qp3vprL6Riq
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -185,7 +186,8 @@ packages:
       - budget_values
     decision_tables: []
     package: *5
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - qp3vprL6Riq
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -234,7 +236,8 @@ packages:
       - amount_values
     decision_tables: []
     package: *8
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - qp3vprL6Riq
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -936,7 +939,8 @@ packages:
       values_dependencies: []
     decision_tables: []
     package: *11
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - LtOlLRfT3BE
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -1448,7 +1452,8 @@ packages:
           'out:':
           - out:sum_if
     package: *15
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - LtOlLRfT3BE
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -1841,7 +1846,8 @@ packages:
       - monthly_target
     decision_tables: []
     package: *19
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - LtOlLRfT3BE
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2123,7 +2129,8 @@ packages:
       - possible_points
     decision_tables: []
     package: *21
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - LtOlLRfT3BE
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity
@@ -2406,7 +2413,8 @@ packages:
       - actual_weight_values
     decision_tables: []
     package: *24
-  org_unit_group_ext_ids:
+  target_org_unit_group_ext_ids: []
+  main_org_unit_group_ext_ids:
   - LtOlLRfT3BE
   activities:
   - !ruby/object:Orbf::RulesEngine::Activity

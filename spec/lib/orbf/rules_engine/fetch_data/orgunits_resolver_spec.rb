@@ -15,7 +15,7 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
       frequency:                 :monthly,
       activities:                [],
       rules:                     [],
-      org_unit_group_ext_ids:    ["GROUP_X"],
+      main_org_unit_group_ext_ids:    ["GROUP_X"],
       groupset_ext_id:           "GROUPSET_ID",
       matching_groupset_ext_ids: matching_groupset_ext_ids
     )

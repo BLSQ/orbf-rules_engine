@@ -1,0 +1,65 @@
+{
+  "payment_for_dff_act1_population_for_state_id_and_2016q1": "0",
+  "payment_for_dff_act1_population_for_5_and_2016q1": "32",
+  "payment_for_dff_act1_population_for_1_and_2016q1": "33",
+  "payment_for_dff_act1_population_for_2_and_2016q1": "80",
+  "payment_for_dff_act1_payment_for_state_id_and_2016q1": "32000",
+  "payment_for_dff_act1_payment_for_5_and_2016q1": "0",
+  "payment_for_dff_act1_payment_for_1_and_2016q1": "0",
+  "payment_for_dff_act1_payment_for_2_and_2016q1": "0",
+  "payment_for_dff_act1_payment_zone_main_orgunit_for_state_id_and_2016q1":
+    "32000",
+  "payment_for_dff_act1_population_for_state_id_and_2016": "0",
+  "payment_for_dff_act1_population_for_5_and_2016": "32",
+  "payment_for_dff_act1_population_for_1_and_2016": "33",
+  "payment_for_dff_act1_population_for_2_and_2016": "80",
+  "payment_for_dff_act1_payment_for_state_id_and_2016": "0",
+  "payment_for_dff_act1_payment_for_5_and_2016": "0",
+  "payment_for_dff_act1_payment_for_1_and_2016": "0",
+  "payment_for_dff_act1_payment_for_2_and_2016": "0",
+  "payment_for_dff_act1_payment_zone_main_orgunit_for_state_id_and_2016": "0",
+  "payment_for_dff_act1_population_for_state_id_and_2015july": "0",
+  "payment_for_dff_act1_population_for_5_and_2015july": "0",
+  "payment_for_dff_act1_population_for_1_and_2015july": "0",
+  "payment_for_dff_act1_population_for_2_and_2015july": "0",
+  "payment_for_dff_act1_payment_for_state_id_and_2015july": "0",
+  "payment_for_dff_act1_payment_for_5_and_2015july": "0",
+  "payment_for_dff_act1_payment_for_1_and_2015july": "0",
+  "payment_for_dff_act1_payment_for_2_and_2015july": "0",
+  "payment_for_dff_act1_payment_zone_main_orgunit_for_state_id_and_2015july":
+    "0",
+  "payment_for_dff_act1_act_ou_population_for_5_and_2016q1":
+    "payment_for_dff_act1_population_for_5_and_2016q1",
+  "payment_for_dff_act1_act_ou_payment_pbf_for_5_and_2016q1":
+    "payment_for_dff_act1_payment_zone_main_orgunit_for_state_id_and_2016q1",
+  "payment_for_dff_act1_act_ou_population_for_1_and_2016q1":
+    "payment_for_dff_act1_population_for_1_and_2016q1",
+  "payment_for_dff_act1_act_ou_payment_pbf_for_1_and_2016q1":
+    "payment_for_dff_act1_payment_zone_main_orgunit_for_state_id_and_2016q1",
+  "payment_for_dff_act1_act_ou_population_for_2_and_2016q1":
+    "payment_for_dff_act1_population_for_2_and_2016q1",
+  "payment_for_dff_act1_act_ou_payment_pbf_for_2_and_2016q1":
+    "payment_for_dff_act1_payment_zone_main_orgunit_for_state_id_and_2016q1",
+  "payment_for_dff_ou_population_for_5_and_2016q1":
+    "MAX(payment_for_dff_act1_act_ou_population_for_5_and_2016q1)",
+  "payment_for_dff_ou_population_weight_for_5_and_2016q1":
+    "SAFE_DIV(payment_for_dff_ou_population_for_5_and_2016q1,state_population_for_2016q1)",
+  "payment_for_dff_ou_payment_for_5_and_2016q1":
+    "payment_for_dff_ou_population_weight_for_5_and_2016q1 * SAFE_DIV(MAX(payment_for_dff_act1_act_ou_payment_pbf_for_5_and_2016q1),2)",
+  "payment_for_dff_ou_population_for_1_and_2016q1":
+    "MAX(payment_for_dff_act1_act_ou_population_for_1_and_2016q1)",
+  "payment_for_dff_ou_population_weight_for_1_and_2016q1":
+    "SAFE_DIV(payment_for_dff_ou_population_for_1_and_2016q1,state_population_for_2016q1)",
+  "payment_for_dff_ou_payment_for_1_and_2016q1":
+    "payment_for_dff_ou_population_weight_for_1_and_2016q1 * SAFE_DIV(MAX(payment_for_dff_act1_act_ou_payment_pbf_for_1_and_2016q1),2)",
+  "payment_for_dff_ou_population_for_2_and_2016q1":
+    "MAX(payment_for_dff_act1_act_ou_population_for_2_and_2016q1)",
+  "payment_for_dff_ou_population_weight_for_2_and_2016q1":
+    "SAFE_DIV(payment_for_dff_ou_population_for_2_and_2016q1,state_population_for_2016q1)",
+  "payment_for_dff_ou_payment_for_2_and_2016q1":
+    "payment_for_dff_ou_population_weight_for_2_and_2016q1 * SAFE_DIV(MAX(payment_for_dff_act1_act_ou_payment_pbf_for_2_and_2016q1),2)",
+  "state_population_for_2016q1":
+    "SUM(payment_for_dff_ou_population_for_5_and_2016q1,payment_for_dff_ou_population_for_1_and_2016q1,payment_for_dff_ou_population_for_2_and_2016q1)",
+  "state_total_payment_for_2016q1":
+    "SUM(payment_for_dff_ou_payment_for_5_and_2016q1,payment_for_dff_ou_payment_for_1_and_2016q1,payment_for_dff_ou_payment_for_2_and_2016q1)"
+}

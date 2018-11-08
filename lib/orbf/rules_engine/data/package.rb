@@ -27,17 +27,21 @@ module Orbf
       end
 
       attr_reader :activities, :kind, :rules, :frequency, :code,
-                  :org_unit_group_ext_ids, :groupset_ext_id, :dataset_ext_ids,
+                  :main_org_unit_group_ext_ids, :target_org_unit_group_ext_ids,
+                  :groupset_ext_id, :dataset_ext_ids,
                   :matching_groupset_ext_ids
 
       KNOWN_ATTRIBUTES = %i[kind rules code activities frequency
-                            org_unit_group_ext_ids groupset_ext_id dataset_ext_ids
+                            main_org_unit_group_ext_ids
+                            target_org_unit_group_ext_ids
+                            groupset_ext_id dataset_ext_ids
                             matching_groupset_ext_ids].freeze
 
       def initialize(args)
         Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
         @rules = Array(args[:rules])
-        @org_unit_group_ext_ids = Array(args[:org_unit_group_ext_ids])
+        @main_org_unit_group_ext_ids = Array(args[:main_org_unit_group_ext_ids])
+        @target_org_unit_group_ext_ids = Array(args[:target_org_unit_group_ext_ids])
         @activities = Array(args[:activities])
         @kind = args[:kind].to_s if args[:kind]
         @code = args[:code].to_s
@@ -126,7 +130,8 @@ module Orbf
       def validate
         Frequencies.assert_valid(frequency)
         Kinds.assert_valid(kind)
-        raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if [Kinds::SUBCONTRACT, Kinds::ZONE].include?(kind) && groupset_ext_id.nil?
+        raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if (Kinds::SUBCONTRACT == kind) && groupset_ext_id.nil?
+        raise "groupset_ext_id or target_org_unit_group_ext_ids should be provided for zone package" if (Kinds::ZONE == kind) && groupset_ext_id.nil? && target_org_unit_group_ext_ids.none?
         validate_values_references
         validate_states_and_activity_formula_code_uniqness
       end

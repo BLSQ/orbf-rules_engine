@@ -71,7 +71,7 @@ RSpec.describe Orbf::RulesEngine::Datasets do
       kind:                   :single,
       activities:             activities,
       frequency:              :monthly,
-      org_unit_group_ext_ids: %w[hf hosp],
+      main_org_unit_group_ext_ids: %w[hf hosp],
       rules:                  [
         Orbf::RulesEngine::Rule.new(
           kind:     :activity,

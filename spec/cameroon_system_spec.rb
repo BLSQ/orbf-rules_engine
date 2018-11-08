@@ -80,7 +80,7 @@ RSpec.describe "Cameroon System" do
       code:                   :quality,
       kind:                   :single,
       frequency:              :quarterly,
-      org_unit_group_ext_ids: %w[cs],
+      main_org_unit_group_ext_ids: %w[cs],
       groupset_ext_id:        nil,
       activities:             activities,
       rules:                  [
@@ -114,7 +114,7 @@ RSpec.describe "Cameroon System" do
       code:                   :quantity,
       kind:                   :single,
       frequency:              :monthly,
-      org_unit_group_ext_ids: %w[cs],
+      main_org_unit_group_ext_ids: %w[cs],
       groupset_ext_id:        nil,
       activities:             activities,
       rules:                  [
@@ -144,7 +144,7 @@ RSpec.describe "Cameroon System" do
       code:                   :quantity_subcontract,
       kind:                   :subcontract,
       frequency:              :monthly,
-      org_unit_group_ext_ids: ["primary"],
+      main_org_unit_group_ext_ids: ["primary"],
       groupset_ext_id:        "contracts_groupset_ext_id",
       activities:             activities,
       rules:                  [

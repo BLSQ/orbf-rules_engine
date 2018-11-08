@@ -123,7 +123,7 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
       frequency:              :quarterly,
       activities:             activities,
       dataset_ext_ids:        ["data_set_id"],
-      org_unit_group_ext_ids: [group],
+      main_org_unit_group_ext_ids: [group],
       rules:                  [
         Orbf::RulesEngine::Rule.new(
           kind:     :activity,

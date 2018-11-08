@@ -241,7 +241,7 @@ RSpec.describe "System" do
               ]
             )
           ],
-          org_unit_group_ext_ids: ["G_ID_1"]
+          main_org_unit_group_ext_ids: ["G_ID_1"]
         )
       ]
     )

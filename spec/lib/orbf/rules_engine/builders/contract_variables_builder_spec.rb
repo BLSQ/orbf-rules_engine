@@ -69,7 +69,7 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
       Orbf::RulesEngine::Package.new(
         code:                   "quality_eval_subcontract",
         kind:                   :subcontract,
-        org_unit_group_ext_ids: [PRIMARY_GROUP_ID],
+        main_org_unit_group_ext_ids: [PRIMARY_GROUP_ID],
         groupset_ext_id:        "contracts",
         frequency:              "monthly",
         activities:             [activity],
@@ -157,7 +157,7 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
       Orbf::RulesEngine::Package.new(
         code:                   "quality_eval_subcontract",
         kind:                   :subcontract,
-        org_unit_group_ext_ids: [PRIMARY_GROUP_ID],
+        main_org_unit_group_ext_ids: [PRIMARY_GROUP_ID],
         groupset_ext_id:        "contracts",
         frequency:              "monthly",
         activities:             [activity],

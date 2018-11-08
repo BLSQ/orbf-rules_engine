@@ -57,7 +57,7 @@ RSpec.describe "ORBF System" do
       code:                   :quantity,
       kind:                   :single,
       frequency:              :quarterly,
-      org_unit_group_ext_ids: %w[contracgroup1],
+      main_org_unit_group_ext_ids: %w[contracgroup1],
       groupset_ext_id:        nil,
       activities:             activities,
       rules:                  [
