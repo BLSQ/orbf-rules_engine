@@ -65,7 +65,26 @@ RSpec.describe "Nigeria System" do
         path:          "country_id/state_id/3",
         name:          "PCA 1",
         group_ext_ids: %w[dff-cpa]
-      )
+      ),
+      Orbf::RulesEngine::OrgUnit.with(
+        ext_id:        "state2_id",
+        path:          "country_id/state2_id",
+        name:          "State 2",
+        group_ext_ids: %w[states_group_id]
+      ),
+      Orbf::RulesEngine::OrgUnit.with(
+        ext_id:        "22",
+        path:          "country_id/state2_id/22",
+        name:          "State 2 - PMA 2",
+        group_ext_ids: %w[dff-pma]
+      ),
+      Orbf::RulesEngine::OrgUnit.with(
+        ext_id:        "33",
+        path:          "country_id/state2_id/33",
+        name:          "State 2 - PCA 1",
+        group_ext_ids: %w[dff-cpa]
+      ),
+
     ]
   end
 
