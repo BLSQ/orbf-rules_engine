@@ -32,7 +32,6 @@ module Orbf
                 substitued = ActivityFormulaValuesExpander.new(
                   package.code, activity_code, formula, orgunit, period
                 ).expand_values
-
                 substitued = format(substitued, entities_aggregation_values(activity_code))
 
                 array.push(build_variable(orgunit, activity_code, formula, substitued))
@@ -51,6 +50,7 @@ module Orbf
             period:     downcase(period)
           )
         )
+
 
         Orbf::RulesEngine::Variable.new_activity_rule(
           period:                  period,
@@ -117,9 +117,14 @@ module Orbf
           formulas_substitutions(activity_code),
           zone_main_orgunit_substitutions(activity_code),
           decision_table_substitutions(activity_code),
-          orgunit_counts_substitutions(activity_code)
+          orgunit_counts_substitutions(activity_code),
+          dates_substitutions()
         ]
         hashes.each_with_object({}) { |hash, acc| acc.merge!(hash) }
+      end
+
+      def dates_substitutions()
+        @period_facts ||= Orbf::RulesEngine::PeriodFacts.for(period)
       end
 
       def null_substitutions(activity_code)

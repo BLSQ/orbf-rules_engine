@@ -26,8 +26,8 @@ module Orbf
         if package.target_org_unit_group_ext_ids.any?
           handle_target_org_units
         else
-        handle_subcontract
-      end
+          handle_subcontract
+        end
       end
 
       def handle_single

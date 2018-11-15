@@ -286,7 +286,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
             kind:     :activity,
             formulas: [
               Orbf::RulesEngine::Formula.new(
-                "equity_price", "target * achieved_zone_main_orgunit"
+                "equity_price", "if(quarter_of_year == 1, target * achieved_zone_main_orgunit, 0)"
               )
             ]
           )
@@ -299,7 +299,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
         Orbf::RulesEngine::Variable.with(
           key:            "facility_act1_equity_price_for_1_and_2016q1",
           period:         "2016Q1",
-          expression:     "facility_act1_target_for_1_and_2016q1 * facility_act1_achieved_zone_main_orgunit_for_1_and_2016q1",
+          expression:     "if(1 == 1, facility_act1_target_for_1_and_2016q1 * facility_act1_achieved_zone_main_orgunit_for_1_and_2016q1, 0)",
           type:           "activity_rule",
           state:          "equity_price",
           activity_code:  "act1",
