@@ -103,11 +103,11 @@ RSpec.describe "spans" do
       )
 
       expect(span.periods("2016Q1", "#{var_name}_quarterly_values")).to eq(
-        %w[201601 201602 201603]
+        %w[2016Q1]
       )
 
       expect(span.periods("2016Q1", "#{var_name}_yearly_values")).to eq(
-        %w[201601 201602 201603]
+        %w[2016]
       )
     end
   end

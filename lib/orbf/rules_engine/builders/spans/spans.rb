@@ -26,8 +26,8 @@ module Orbf
           nil
         end
 
-        def frequencies(name)
-          FREQUENCIES.each do |frequency_var, frequencies|
+        def frequencies(name, frequencies = FREQUENCIES)
+          frequencies.each do |frequency_var, frequencies|
             suffix_to_check = "#{suffix}#{frequency_var}_values"
             return frequencies if name.end_with?(suffix_to_check)
           end
@@ -73,13 +73,24 @@ module Orbf
       end
 
       class CurrentQuarter < Span
+        QUARTER_FREQUENCIES = {
+          ""           => %w[monthly],
+          "_yearly"    => ["yearly"],
+          "_quarterly" => ["quarterly"],
+          "_monthly"   => ["monthly"]
+        }.freeze
+
         def suffix
           "current_quarter"
         end
 
-        def periods(invoicing_period, _name)
+        def periods(invoicing_period, name)
+
           quarter = PeriodIterator.periods(invoicing_period, "quarterly").first
-          PeriodIterator.periods(quarter, "monthly")
+
+          frequencies(name,QUARTER_FREQUENCIES).each_with_object([]) do |frequency, arr|
+            arr.push(*PeriodIterator.periods(quarter, frequency))
+          end
         end
 
         def supports?(rule_kind)
