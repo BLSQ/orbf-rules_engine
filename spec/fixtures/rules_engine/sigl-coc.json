@@ -1,0 +1,74 @@
+[
+  {
+    "name": "LMIS Category Com Text",
+    "id": "qlN7xLQEJp5",
+    "categoryOptionCombos": [
+      {
+        "name": "Observations",
+        "id": "AKEt2SmXK0Q"
+      }
+    ]
+  },
+  {
+    "name": "LMIS Category Com Number",
+    "id": "draLl5t8Vno",
+    "categoryOptionCombos": [
+      {
+        "name": "MSD",
+        "id": "jpmZl19SSta"
+      }
+    ]
+  },
+  {
+    "name": "LMIS Category Com Integer",
+    "id": "MmBLLlhXeuT",
+    "categoryOptionCombos": [
+      {
+        "name": "Quantité perdue",
+        "id": "pGSfKOKL9s0"
+      }
+    ]
+  },
+  {
+    "name": "LMIS Category Com Zero or Positive Integer",
+    "id": "EXosnAykaQv",
+    "categoryOptionCombos": [
+      {
+        "name": "Stock MAX",
+        "id": "Lpu56KTyGvy"
+      },
+      {
+        "name": "CMM",
+        "id": "t5L9ODSuYOG"
+      },
+      {
+        "name": "Stock début du Mois",
+        "id": "GSCwhT2SCCr"
+      },
+      {
+        "name": "Entrées du Mois",
+        "id": "WZwmzIuRvwV"
+      },
+      {
+        "name": "Nbre de jours de rupture de stock",
+        "id": "XEN3ucCGa07"
+      },
+      {
+        "name": "sortie",
+        "id": "mZLRF4eSPIk"
+      },
+      {
+        "name": "Quantité consommée",
+        "id": "pdKyvaYRqCj"
+      },
+      {
+        "name": "Stock Disponible Utilisable-SDU",
+        "id": "kOWsLrtvrhn"
+      },
+      {
+        "name": "Qté à commander",
+        "id": "ddJmZUacsvQ"
+      }
+    ]
+  }
+]
