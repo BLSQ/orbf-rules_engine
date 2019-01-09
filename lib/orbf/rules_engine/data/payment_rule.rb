@@ -35,6 +35,19 @@ module Orbf
         frequency == Frequencies::MONTHLY
       end
 
+      def to_json(options = nil)
+        to_h.to_json(options)
+      end
+
+      def to_h
+        {
+          code:      @code,
+          frequency: @frequency,
+          packages:  packages.map(&:to_h),
+          rule:      @rule.to_h
+        }
+      end
+
       private
 
       def validate

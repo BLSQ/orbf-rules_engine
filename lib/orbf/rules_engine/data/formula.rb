@@ -43,6 +43,22 @@ module Orbf
         end
       end
 
+      def to_json(options = nil)
+        to_h.to_json(options)
+      end
+
+      def to_h
+        {
+          code:                    code,
+          expression:              expression,
+          comment:                 comment,
+          frequency:               frequency,
+          exportable_formula_code: exportable_formula_code,
+          single_mapping:          single_mapping,
+          activity_mappings:       activity_mappings
+        }
+      end
+
       private
 
       attr_reader :single_mapping, :activity_mappings

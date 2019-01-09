@@ -125,6 +125,25 @@ module Orbf
         activities.detect { |activity| activity.activity_code == activity_code }
       end
 
+      def to_json(options = nil)
+        to_h.to_json(options)
+      end
+
+      def to_h
+        {
+          code:                          code,
+          frequency:                     frequency,
+          kind:                          kind,
+          main_org_unit_group_ext_ids:   main_org_unit_group_ext_ids,
+          target_org_unit_group_ext_ids: target_org_unit_group_ext_ids,
+          groupset_ext_id:               groupset_ext_id,
+          dataset_ext_ids:               dataset_ext_ids,
+          matching_groupset_ext_ids:     matching_groupset_ext_ids,
+          activities:                    activities.map(&:to_h),
+          rules:                         rules.map(&:to_h)
+        }
+      end
+
       private
 
       def validate

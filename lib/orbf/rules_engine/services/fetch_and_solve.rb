@@ -20,6 +20,7 @@ module Orbf
         @dhis2_values = fetch_data(package_arguments)
 
         @solver = new_solver(package_arguments)
+        puts package_arguments.values.to_json
         solver.solve!
 
         @exported_values = RulesEngine::Dhis2ValuesPrinter.new(

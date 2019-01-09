@@ -60,6 +60,18 @@ module Orbf
         @kind == Kinds::ENTITIES_AGGREGATION
       end
 
+      def to_json(options = nil)
+        to_h.to_json(options)
+      end
+
+      def to_h
+        {
+          kind: kind,
+          formulas:formulas.map(&:to_h),           
+          decision_tables: decision_tables.map(&:to_h)
+        }
+      end
+
       private
 
       def validate

@@ -19,6 +19,7 @@ RSpec.describe "Liberia System" do
   it "works" do
     # fetch_and_solve.call
     project
+    #puts JSON.pretty_generate(JSON.parse(project.to_json))
     pyramid
 
     RubyProf.start if ENV["PROF"]

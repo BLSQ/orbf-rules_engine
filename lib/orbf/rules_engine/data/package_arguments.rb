@@ -11,6 +11,19 @@ module Orbf
         @package = package
         freeze
       end
+
+      def to_json(options = nil)
+        to_h.to_json(options)
+      end
+
+      def to_h
+        {
+          periods:          periods,
+          orgunits:         orgunits,
+          datasets_ext_ids: datasets_ext_ids,
+          package_code:     package.code
+        }
+      end
     end
   end
 end
