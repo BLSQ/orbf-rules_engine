@@ -24,7 +24,7 @@ RSpec.describe "Sigl System" do
                            Orbf::RulesEngine::ActivityState.new_indicator(
                              state:   state[:code],
                              ext_id:  "dhis2_#{code}_#{state[:code]}_indicator",
-                             expression: composites[0..1].join("."),
+                             expression: "\#{"+composites[0..1].join(".")+"}",
                              name: activity_state_name
                            )
                          end.compact

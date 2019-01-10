@@ -1,0 +1,119 @@
+groups
+    fosas
+    aires
+    bczs
+
+states :
+    stock_start_bcz
+    stock_end_bcz
+    stock_entry_bcz
+    qty_expired_bcz
+    qty_lost_bcz
+    qty_distributed_bcz
+
+    stock_start_fosa_bcz
+    stock_end_fosa_bcz
+    qty_consumed_fosa_bcz
+
+    stock_start_fosa        Stock deb. Mois
+    stock_entry_fosa        Entrées du Mois
+    stock_end_fosa          SDU ???
+    qty_consumed_fosa       Qté cons.
+    qty_lost_adjust_bcz     Perte/ Ajust
+    days_of_stock_out_fosa   # jrs RS
+
+
+
+    need_1
+    need_2
+    need_3
+
+    population
+
+package 1 : sum of populations
+   type zone
+   main:  bczs
+   secondary: aires
+   monthly
+   activities : pop
+
+package 1 : sum of fosa to bcz level
+   type zone ?
+   main:  bczs
+   secondary: fosas
+   monthly
+   activities: meds
+
+       activity_level
+            last_3_month_qty = sum(
+                            qty_consumed_fosa_month_minus_2,
+                            qty_consumed_fosa_month_minus_1,
+                            qty_consumed_fosa
+                        )
+            cmm = safe_div(last_3_month_qty
+                    ,
+                    (non_null_count(
+                            qty_consumed_fosa_month_minus_2,
+                            qty_consumed_fosa_month_minus_1,
+                            qty_consumed_fosa )
+                     - sum(
+                         days_of_stock_out_fosa_month_minus_2,
+                         days_of_stock_out_fosa_month_minus_1,
+                         days_of_stock_out_fosa )  / 30.5 )
+                    // cmm calculations, fernando has already improved the formula
+
+            need
+        TODO
+            Stock MAX   not yet
+            MSD         not yet
+            Qté à comm. not yet
+
+        fosa_bcz_formula (activity_zone_rules ?)
+            stock_start_fosa_bcz = sum(%{stock_start_fosa_values})   -> de1
+            stock_end_fosa_bcz   = sum(%{stock_end_fosa_values})     -> de2
+            qty_consumed_fosa_bcz = sum(%{qty_consumed_fosa_values}) -> de3
+            cmm
+
+package 2 : calculation at bcz level
+   simple
+   bczs
+   monthly
+   activities: meds
+
+   states :
+      stock_start_fosa_bcz      <- de1
+      stock_end_fosa_bcz        <- de2
+      qty_consumed_fosa_bcz     <- de3
+
+   activity_formulas
+
+      Cohérence du stock BCZ entre un rapport au mois M et au mois M-1
+        diff_stock_bcz  = stock_end_bcz_month_minus_1 - stock_start_bcz
+        diff_stock_percentage_bcz = safe_div(diff_stock_bcz,stock_end_bcz_month_minus_1 ) * 100
+        coherence_stock_previous_end_start_bcz = if ( abs(diff_stock_percentage_bcz) > 5, 0, 1)
+
+      Cohérence du stock FOSA entre un rapport au mois M et au mois M-1
+        diff_stock_fosa_bcz =
+        diff_stock_percentage_fosa_bcz =
+        coherence_stock_previous_end_start_fosa_bcz =
+
+      Le stock d'inventaire correspond-il au stock théorique (BCZ)?
+
+        theoric_stock_bcz = stock_start_bcz + stock_entry_bcz - qty_expired_bcz - qty_lost_bcz - qty_distributed_bcz
+        diff_stock_percentage_bcz = safe_div(theoric_stock_bcz - stock_end_bcz)
+        coherence_stock_inventory_bcz = if (abs(diff_stock_percentage_bcz) > 5, 0,1)
+
+      Le stock d'inventaire correspond-il au stock théorique (FOSA)?
+            Delta between (T+Q-U) and V >5%;0;1)
+
+        theoric_stock_fosa_bcz = stock_start_fosa_bcz - qty_consumed_fosa_bcz
+        diff_stock_percentage_fosa_bcz = safe_div(theoric_stock_fosa_bcz - stock_end_fosa_bcz)
+        coherence_stock_inventory_fosa_bcz = if (abs(diff_stock_percentage_fosa_bcz) > 5, 0,1)
+
+
+      TODO
+        La CMM est elle en ligne avec les autres régions
+            Ecart entre CMM / population et les données moyennes
+        La Qté consommée déclarée correspond au besoin
+            Ecart entre le besoin et la qté" consommée ((Y-U)/Y). Pas d'écart = blanc
+
