@@ -1,63 +1,78 @@
 module Orbf
   module RulesEngine
     class SubstitutionBuilder
+      # This will build up a hash with all substitutions and their
+      # corresponding values It does this by keeping an internal hash
+      # `@result` which gets modified by each method in the `call`
+      # method.
+      #
+      # Calling `call` twice should not make any difference, the
+      # result will be the same but it will have to do the
+      # computations twice
+      #
+      # SubstitutionBuilder.new(package: package,
+      #                         expression: formula.expression,
+      #                         activity_code: activity_code,
+      #                         period: period).call
+      #
       include VariablesBuilderSupport
       EMPTY_SUBSTITUTIONS = {}.freeze
       LEVELS_RANGES = (1..5).freeze
       attr_accessor :package, :expression, :activity_code, :period
+      attr_accessor :result
 
       def initialize(package:, expression:, activity_code:, period:)
         @package = package
         @expression = expression
         @activity_code = activity_code
         @period = period
+        @result = {}
       end
 
       def call
-        hashes = [
-          states_substitutions,
-          null_substitutions,
-          level_substitutions,
-          package_substitutions,
-          formulas_substitutions,
-          zone_main_orgunit_substitutions,
-          decision_table_substitutions,
-          orgunit_counts_substitutions,
-          dates_substitutions
-        ].reject(&:empty?)
-        hashes.each_with_object({}) { |hash, acc| acc.merge!(hash) }
+        states_substitutions
+        null_substitutions
+        level_substitutions
+        package_substitutions
+        formulas_substitutions
+        zone_main_orgunit_substitutions
+        decision_table_substitutions
+        orgunit_counts_substitutions
+        dates_substitutions
+
+        result
       end
 
       def states_substitutions
-        package.activities.each_with_object({}) do |activity, hash|
+        package.activities.each do |activity|
           next if activity_code != activity.activity_code
 
           package.harmonized_activity_states(activity).each do |activity_state|
             next unless used_in_expression?(activity_state.state)
-            hash[activity_state.state] = activity_state_substitution(package.code, activity, activity_state)
+            result[activity_state.state] = activity_state_substitution(package.code, activity, activity_state)
           end
         end
       end
 
       def null_substitutions
         activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
-        package.harmonized_activity_states(activity).each_with_object({}) do |activity_state, hash|
+        package.harmonized_activity_states(activity).each do |activity_state|
           suffixed_state = suffix_is_null(activity_state.state)
           next unless used_in_expression?(activity_state.state)
 
-          hash[suffixed_state] = suffix_activity_pattern(package.code, activity_code, suffixed_state)
+          result[suffixed_state] = suffix_activity_pattern(package.code, activity_code, suffixed_state)
         end
       end
 
       def level_substitutions
         return EMPTY_SUBSTITUTIONS unless expression.include?("_level_")
 
-        package.states.each_with_object({}) do |state, hash|
+        package.states.each do |state|
           LEVELS_RANGES.each do |level_index|
             state_level = state + "_level_#{level_index}"
             next unless used_in_expression?(state_level)
 
-            hash[state_level] = suffix_activity_pattern(
+            result[state_level] = suffix_activity_pattern(
               package.code, activity_code, state_level,
               "orgunit_parent_level#{level_index}_id".to_sym
             )
@@ -66,19 +81,18 @@ module Orbf
       end
 
       def package_substitutions
-        result = package.package_rules.flat_map(&:formulas).each_with_object({}) do |formula, hash|
+        package.package_rules.flat_map(&:formulas).each do |formula|
           next unless used_in_expression?(formula.code)
 
-          hash[formula.code] = suffix_package_pattern(package.code, formula.code)
+          result[formula.code] = suffix_package_pattern(package.code, formula.code)
         end
-        result
       end
 
       def formulas_substitutions
-        package.activity_rules.flat_map(&:formulas).each_with_object({}) do |formula, hash|
+        package.activity_rules.flat_map(&:formulas).each do |formula|
           next unless used_in_expression?(formula.code)
 
-          hash[formula.code] = suffix_activity_pattern(package.code, activity_code, formula.code)
+          result[formula.code] = suffix_activity_pattern(package.code, activity_code, formula.code)
         end
       end
 
@@ -86,13 +100,11 @@ module Orbf
         return EMPTY_SUBSTITUTIONS unless used_in_expression?("_zone_main_orgunit")
 
         activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
-        package.harmonized_activity_states(activity).each_with_object({}) do |activity_state, hash|
-
-
+        package.harmonized_activity_states(activity).each do |activity_state|
           state_level = activity_state.state + "_zone_main_orgunit"
           next unless used_in_expression?(state_level)
 
-          hash[state_level] = suffix_activity_pattern(
+          result[state_level] = suffix_activity_pattern(
             package.code, activity_code, state_level,
             "zone_main_orgunit_id".to_sym
           )
@@ -102,10 +114,10 @@ module Orbf
       def decision_table_substitutions
         package.activity_rules
                .flat_map(&:decision_tables)
-               .each_with_object({}) do |decision_table, hash|
+               .each do |decision_table|
           decision_table.headers(:out).each do |header_out|
             next unless used_in_expression?(header_out)
-            hash[header_out] = suffix_activity_pattern(package.code, activity_code, header_out)
+            result[header_out] = suffix_activity_pattern(package.code, activity_code, header_out)
           end
         end
       end
@@ -114,15 +126,16 @@ module Orbf
         return EMPTY_SUBSTITUTIONS unless package.subcontract?
 
         counts = Orbf::RulesEngine::ContractVariablesBuilder::COUNTS
-        counts.each_with_object({}) do |count, hash|
+        counts.each do |count|
           next unless used_in_expression?(count)
 
-          hash[count] = suffix_activity_pattern(package.code, activity_code, count)
+          result[count] = suffix_activity_pattern(package.code, activity_code, count)
         end
       end
 
       def dates_substitutions
         @period_facts ||= Orbf::RulesEngine::PeriodFacts.for(period)
+        result.merge!(@period_facts)
       end
 
       private
