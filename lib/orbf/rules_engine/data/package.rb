@@ -97,6 +97,10 @@ module Orbf
         @zone_rules ||= rules.select(&:zone_kind?).freeze
       end
 
+      def zone_activity_rules
+        @zone_activity_rules ||= rules.select(&:zone_activity_kind?).freeze
+      end
+
       def activity_rules
         @activity_rules ||= rules.select(&:activity_kind?).freeze
       end

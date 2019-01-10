@@ -10,6 +10,7 @@ module Orbf
         ACTIVITY = "activity"
         PACKAGE = "package"
         ZONE = "zone"
+        ZONE_ACTIVITY = "zone_activity"
         PAYMENT = "payment"
         ENTITIES_AGGREGATION = "entities_aggregation"
 
@@ -17,6 +18,7 @@ module Orbf
           ACTIVITY,
           PACKAGE,
           ZONE,
+          ZONE_ACTIVITY,
           PAYMENT,
           ENTITIES_AGGREGATION
         ].freeze
@@ -50,6 +52,10 @@ module Orbf
 
       def zone_kind?
         @kind == Kinds::ZONE
+      end
+
+      def zone_activity_kind?
+        @kind == Kinds::ZONE_ACTIVITY
       end
 
       def payment_kind?

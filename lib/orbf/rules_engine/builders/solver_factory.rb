@@ -80,7 +80,8 @@ module Orbf
           Orbf::RulesEngine::PackageDecisionVariablesBuilder,
           Orbf::RulesEngine::ActivityFormulaVariablesBuilder,
           Orbf::RulesEngine::PackageVariablesBuilder,
-          Orbf::RulesEngine::ZoneFormulaVariablesBuilder
+          Orbf::RulesEngine::ZoneFormulaVariablesBuilder,
+          Orbf::RulesEngine::ZoneActivityFormulaVariablesBuilder
         ]
       end
     end
