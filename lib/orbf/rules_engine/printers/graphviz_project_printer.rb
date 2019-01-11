@@ -27,7 +27,7 @@ module Orbf
         packages.each do |package|
           diagram = package.rules.flat_map(&:formulas).map do |formula|
             sep = SEPERATORS[formula.rule.kind.to_s]
-            raise "no separators for #{formula.rule.kind} vs #{separators}" unless sep
+            raise "no separators for #{formula.rule.kind} vs #{SEPERATORS}" unless sep
 
             dependencies = CalculatorFactory.dependencies(formula.expression.gsub("%{", "").gsub("_values}", ""))
             dig = dependencies.map do |dependency|
