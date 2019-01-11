@@ -169,7 +169,7 @@ module Orbf
       end
 
       def activity_formula_codes(package)
-        package.activity_rules.flat_map(&:formulas).map(&:code)
+        package.activity_related_rules.flat_map(&:formulas).map(&:code)
       end
 
       def wrap(s, width = 120, extra = "\t")

@@ -50,6 +50,10 @@ module Orbf
         @kind == Kinds::ACTIVITY
       end
 
+      def activity_related_kind?
+        activity_kind? || zone_activity_kind?
+      end
+
       def package_kind?
         @kind == Kinds::PACKAGE
       end

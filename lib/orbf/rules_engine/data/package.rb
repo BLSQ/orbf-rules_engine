@@ -105,6 +105,10 @@ module Orbf
         @activity_rules ||= rules.select(&:activity_kind?).freeze
       end
 
+      def activity_related_rules
+        @activity_related_rules ||= rules.select(&:activity_related_kind?).freeze
+      end
+
       def entities_aggregation_rules
         rules.select(&:entities_aggregation_kind?)
       end
