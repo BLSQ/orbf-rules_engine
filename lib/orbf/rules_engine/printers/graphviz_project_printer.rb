@@ -7,12 +7,14 @@ module Orbf
         "entities_aggregation" => ["[", "]"],
         "activity"             => ["[", "]"],
         "package"              => [">", "]"],
+        "zone_activity"        => ["(", ")"],
         "zone"                 => ["(", ")"]
       }.freeze
       STYLES = {
         "entities_aggregation" => "fill:#d6cbd3",
         "activity"             => "fill:#eca1a6",
         "package"              => "fill:#bdcebe",
+        "zone_activity"        => "fill: brown",
         "zone"                 => "fill:#ada397"
       }.freeze
 

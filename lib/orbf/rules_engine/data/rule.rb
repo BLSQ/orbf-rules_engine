@@ -27,6 +27,10 @@ module Orbf
           return if KINDS.include?(rule_kind)
           raise "Invalid rule kind '#{rule_kind}' only supports #{KINDS}"
         end
+
+        def self.all
+          KINDS
+        end
       end
 
       KNOWN_ATTRIBUTES = %i[kind formulas decision_tables].freeze
