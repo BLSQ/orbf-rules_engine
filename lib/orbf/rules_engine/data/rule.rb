@@ -66,6 +66,10 @@ module Orbf
         @kind == Kinds::ZONE_ACTIVITY
       end
 
+      def zone_related_kind?
+        zone_kind? || zone_activity_kind?
+      end
+
       def payment_kind?
         @kind == Kinds::PAYMENT
       end
