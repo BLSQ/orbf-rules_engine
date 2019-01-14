@@ -4,7 +4,7 @@ module Orbf
   module RulesEngine
     module VariablesBuilderSupport
       def name_constant(activity_code, state, period)
-        "const_#{activity_code}_#{state}_for_#{period.downcase}"
+        "const_#{activity_code}_#{state}_for_#{downcase(period)}"
       end
 
       def suffix_for(package_code, activity_code, orgunit, period)
