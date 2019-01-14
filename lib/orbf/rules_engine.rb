@@ -72,6 +72,7 @@ require_relative "./rules_engine/builders/payment_formula_variables_builder"
 require_relative "./rules_engine/builders/payment_formula_values_expander"
 require_relative "./rules_engine/builders/package_variables_builder"
 require_relative "./rules_engine/builders/zone_formula_variables_builder"
+require_relative "./rules_engine/builders/zone_activity_formula_variables_builder"
 require_relative "./rules_engine/builders/spans/spans"
 
 require_relative "./rules_engine/printers/graphviz_project_printer"

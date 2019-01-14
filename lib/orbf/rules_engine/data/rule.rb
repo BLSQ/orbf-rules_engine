@@ -10,6 +10,7 @@ module Orbf
         ACTIVITY = "activity"
         PACKAGE = "package"
         ZONE = "zone"
+        ZONE_ACTIVITY = "zone_activity"
         PAYMENT = "payment"
         ENTITIES_AGGREGATION = "entities_aggregation"
 
@@ -17,6 +18,7 @@ module Orbf
           ACTIVITY,
           PACKAGE,
           ZONE,
+          ZONE_ACTIVITY,
           PAYMENT,
           ENTITIES_AGGREGATION
         ].freeze
@@ -24,6 +26,10 @@ module Orbf
         def self.assert_valid(rule_kind)
           return if KINDS.include?(rule_kind)
           raise "Invalid rule kind '#{rule_kind}' only supports #{KINDS}"
+        end
+
+        def self.all
+          KINDS
         end
       end
 
@@ -44,12 +50,24 @@ module Orbf
         @kind == Kinds::ACTIVITY
       end
 
+      def activity_related_kind?
+        activity_kind? || zone_activity_kind?
+      end
+
       def package_kind?
         @kind == Kinds::PACKAGE
       end
 
       def zone_kind?
         @kind == Kinds::ZONE
+      end
+
+      def zone_activity_kind?
+        @kind == Kinds::ZONE_ACTIVITY
+      end
+
+      def zone_related_kind?
+        zone_kind? || zone_activity_kind?
       end
 
       def payment_kind?

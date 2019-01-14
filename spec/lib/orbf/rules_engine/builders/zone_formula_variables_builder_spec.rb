@@ -20,9 +20,10 @@ RSpec.describe Orbf::RulesEngine::ZoneFormulaVariablesBuilder do
   let(:package) do
     Orbf::RulesEngine::Package.new(
       code:       :facility,
-      kind:       :single,
+      kind:       :zone,
       frequency:  :monthly,
       activities: [],
+      groupset_ext_id: "123abc",
       rules:      [
         Orbf::RulesEngine::Rule.new(
           kind:     :package,

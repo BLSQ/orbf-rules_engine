@@ -97,8 +97,16 @@ module Orbf
         @zone_rules ||= rules.select(&:zone_kind?).freeze
       end
 
+      def zone_activity_rules
+        @zone_activity_rules ||= rules.select(&:zone_activity_kind?).freeze
+      end
+
       def activity_rules
         @activity_rules ||= rules.select(&:activity_kind?).freeze
+      end
+
+      def activity_related_rules
+        @activity_related_rules ||= rules.select(&:activity_related_kind?).freeze
       end
 
       def entities_aggregation_rules
@@ -134,6 +142,7 @@ module Orbf
         raise "groupset_ext_id or target_org_unit_group_ext_ids should be provided for zone package" if (Kinds::ZONE == kind) && groupset_ext_id.nil? && target_org_unit_group_ext_ids.none?
         validate_values_references
         validate_states_and_activity_formula_code_uniqness
+        validate_zone_rules
       end
 
       def validate_values_references
@@ -151,6 +160,11 @@ module Orbf
         codes = activity_rules.flat_map(&:formulas).map(&:code)
         commons = states & codes
         raise "activity states and activity formulas with same code : #{commons}" if commons.any?
+      end
+
+      def validate_zone_rules
+        zone_related_rules = rules.select(&:zone_related_kind?)
+        raise "Rules are zone related but the package isn't zone related"  if zone_related_rules.any? && !zone?
       end
     end
   end

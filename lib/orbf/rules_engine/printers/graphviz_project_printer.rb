@@ -3,16 +3,18 @@
 module Orbf
   module RulesEngine
     class GraphvizProjectPrinter
-      SEPERATORS = {
+      SEPARATORS = {
         "entities_aggregation" => ["[", "]"],
         "activity"             => ["[", "]"],
         "package"              => [">", "]"],
+        "zone_activity"        => ["(", ")"],
         "zone"                 => ["(", ")"]
       }.freeze
       STYLES = {
         "entities_aggregation" => "fill:#d6cbd3",
         "activity"             => "fill:#eca1a6",
         "package"              => "fill:#bdcebe",
+        "zone_activity"        => "fill: brown",
         "zone"                 => "fill:#ada397"
       }.freeze
 
@@ -26,8 +28,8 @@ module Orbf
         diagrams = []
         packages.each do |package|
           diagram = package.rules.flat_map(&:formulas).map do |formula|
-            sep = SEPERATORS[formula.rule.kind.to_s]
-            raise "no separators for #{formula.rule.kind} vs #{separators}" unless sep
+            sep = SEPARATORS[formula.rule.kind.to_s]
+            raise "no separators for #{formula.rule.kind} vs #{SEPARATORS}" unless sep
 
             dependencies = CalculatorFactory.dependencies(formula.expression.gsub("%{", "").gsub("_values}", ""))
             dig = dependencies.map do |dependency|

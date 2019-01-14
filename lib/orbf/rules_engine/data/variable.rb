@@ -94,6 +94,15 @@ module Orbf
             )
           )
         end
+
+        def new_zone_activity_rule(params)
+          Variable.with(
+            params.merge!(
+              type:         Orbf::RulesEngine::Variable::Types::ZONE_ACTIVITY_RULE,
+              payment_rule: nil
+            )
+          )
+        end
       end
 
       module Types
@@ -106,6 +115,7 @@ module Orbf
         PACKAGE_RULE = "package_rule"
         PAYMENT_RULE = "payment_rule"
         ZONE_RULE = "zone_rule"
+        ZONE_ACTIVITY_RULE = "zone_activity_rule"
         ALIAS = "alias"
         TYPES = [
           ACTIVITY_CONSTANT,
@@ -117,6 +127,7 @@ module Orbf
           PACKAGE_RULE,
           PAYMENT_RULE,
           ZONE_RULE,
+          ZONE_ACTIVITY_RULE,
           ALIAS
         ].freeze
       end
