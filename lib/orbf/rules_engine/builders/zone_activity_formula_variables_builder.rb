@@ -31,15 +31,15 @@ module Orbf
         package.all_activities_codes.each_with_object([]) do |activity_code, array|
           package.zone_activity_rules.each do |rule|
             rule.formulas.each do |formula|
-              values = activity_formula_values(formula, activity_code)
-              direct_variables = all_zone_referenced_formula(formula, activity_code)
-              direct_variables[org_units_key] = org_units_count
+              expansions = activity_formula_expansions(formula, activity_code)
+              substitutions = all_zone_referenced_substitutions(formula, activity_code)
+              substitutions[org_units_key] = org_units_count
 
               # Expand %{vars}
-              expression = formula.expression % values
+              expression = formula.expression % expansions
 
-              # Expand direct_vars
-              expression = Tokenizer.replace_token_from_expression(expression, direct_variables, {})
+              # Substitute direct_vars
+              expression = Tokenizer.replace_token_from_expression(expression, substitutions, {})
 
               array.push(build_variable(activity_code, formula, expression))
             end
@@ -63,10 +63,10 @@ module Orbf
       #       }
       #
       # Returns a hash
-      def activity_formula_values(formula, activity_code)
+      def activity_formula_expansions(formula, activity_code)
         package.activity_rules
           .flat_map(&:formulas)
-          .each_with_object({}) do |activity_formula, hash|
+          .each_with_object({}) do |activity_formula, result|
           key = activity_formula.code + "_values"
           next unless formula.expression.include? key
 
@@ -74,8 +74,7 @@ module Orbf
             r = [package.code, activity_code, activity_formula.code, secondary_orgunit.ext_id, period]
             suffix_for_id_activity(package.code, activity_code, activity_formula.code, secondary_orgunit.ext_id, period)
           end
-          hash[key.to_sym] = keys.join(", ")
-          hash
+          result[key.to_sym] = keys.join(", ")
         end
       end
 
@@ -91,7 +90,7 @@ module Orbf
       #       }
       #
       # Returns a hash
-      def all_zone_referenced_formula(formula, activity_code)
+      def all_zone_referenced_substitutions(formula, activity_code)
         package.zone_activity_rules
           .flat_map(&:formulas)
           .each_with_object({}) do |activity_formula, result|
