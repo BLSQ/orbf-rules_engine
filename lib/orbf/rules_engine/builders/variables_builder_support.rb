@@ -56,6 +56,28 @@ module Orbf
       def suffix_is_null(code)
         "#{code}_is_null"
       end
+
+      def variable_key(package, orgunit, activity_code, formula, period)
+        suffix_for_activity(
+          package.code,
+          activity_code,
+          formula.code,
+          orgunit,
+          period
+        )
+      end
+
+      def exportable_variable_key(package, orgunit, activity_code, formula, period)
+        return unless formula.exportable_formula_code
+
+        suffix_for_activity(
+          package.code,
+          activity_code,
+          formula.exportable_formula_code,
+          orgunit,
+          period
+        )
+      end
     end
   end
 end
