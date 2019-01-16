@@ -48,7 +48,8 @@ module Orbf
                   suffixed_state = package.subcontract? ? suffix_raw(state) : state
                   express = expression.value
                   array.push register_vars(package, activity.activity_code, suffixed_state, express, orgunit_id, period)
-                  if dependencies.include?(suffix_is_null(state))
+
+                  if using_is_null?(dependencies, state)
                     express = expression.is_null ? "1" : "0"
                     array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
                   end
@@ -60,6 +61,13 @@ module Orbf
       end
 
       private
+
+      def using_is_null?(dependencies, state)
+        return true if dependencies.include?(suffix_is_null(state))
+        return dependencies.any? {|s| s.match /#{Regexp.escape(state)}_is_null_.*_values/}
+
+        false
+      end
 
       attr_reader :package, :orgunits, :lookup
 

@@ -114,7 +114,7 @@ module Orbf
       end
 
       def activity_dependencies
-        @activity_dependencies ||= activity_rules.flat_map(&:formulas).flat_map(&:dependencies).to_set
+        @activity_dependencies ||= activity_rules.flat_map(&:formulas).flat_map(&:combined_dependencies).to_set
       end
 
       def single?

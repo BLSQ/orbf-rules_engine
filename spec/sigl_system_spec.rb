@@ -125,6 +125,9 @@ RSpec.describe "SIGL System" do
               ),
               build_activity_formula(
                 "last_6_months_consumption", "AVG(%{consumed_last_6_months_window_values})"
+              ),
+              build_activity_formula(
+                "number_of_months_with_null", "SUM(%{consumed_is_null_last_6_months_window_values})"
               )
             ]
           ),
