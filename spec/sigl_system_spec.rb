@@ -127,7 +127,7 @@ RSpec.describe "SIGL System" do
                 "last_6_months_consumption", "AVG(%{consumed_last_6_months_window_values})"
               ),
               build_activity_formula(
-                "number_of_months_with_null", "SUM(%{consumed_is_null_last_6_months_window_values})"
+                "number_of_months_with_data", "6 - SUM(%{consumed_is_null_last_6_months_window_values})"
               )
             ]
           ),
@@ -190,6 +190,19 @@ RSpec.describe "SIGL System" do
     expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201601"]).to eq(average.call([12,11,10,9,8,7]))
     expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201602"]).to eq(average.call([0,12,11,10,9,8]))
     expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201603"]).to eq(average.call([0,0,12,11,10,9]))
+  end
+
+  it 'can use null combined' do
+    thing = fetch_and_solve(project, pyramid, mock_values)
+    thing.call
+    average = ->(arr) { arr.inject(:+)/arr.size.to_f}
+    problem = thing.solver.build_problem
+    solution = thing.solver.solution
+    non_nil_count = ->(arr) { arr.compact.size }
+
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201601"]).to eq(non_nil_count.call([12,11,10,9,8,7]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201602"]).to eq(non_nil_count.call([nil,12,11,10,9,8]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201603"]).to eq(non_nil_count.call([nil, nil,12,11,10,9]))
   end
 
   it "has a solution" do
