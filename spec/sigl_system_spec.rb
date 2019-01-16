@@ -85,7 +85,7 @@ RSpec.describe "SIGL System" do
   end
 
   let(:de_states) do
-    %w[stock_start stock_end]
+    %w[stock_start stock_end consumed]
   end
 
   let(:activities) do
@@ -111,7 +111,7 @@ RSpec.describe "SIGL System" do
       Orbf::RulesEngine::Package.new(
         code:                   :sigl_zone,
         kind:                   :zone,
-        frequency:              :quarterly,
+        frequency:              :monthly,
         main_org_unit_group_ext_ids: %w[states_group_id],
         target_org_unit_group_ext_ids: %w[pbf-pma],
         groupset_ext_id:        nil,
@@ -122,6 +122,9 @@ RSpec.describe "SIGL System" do
             formulas: [
               build_activity_formula(
                 "balance", "stock_start - stock_end"
+              ),
+              build_activity_formula(
+                "last_6_months_consumption", "AVG(%{consumed_last_6_months_window_values})"
               )
             ]
           ),
@@ -142,13 +145,18 @@ RSpec.describe "SIGL System" do
   end
 
   let(:mock_values) do
-    [
-      { "dataElement" => "dhis2_act1_stock_start", "categoryOptionCombo" => "default", "value" => "10", "period" => "2016Q1", "orgUnit" => "1" },
-      { "dataElement" => "dhis2_act1_stock_start", "categoryOptionCombo" => "default", "value" => "20", "period" => "2016Q1", "orgUnit" => "2" },
-      { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "100", "period" => "2016Q1", "orgUnit" => "1" },
-      { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "200", "period" => "2016Q1", "orgUnit" => "2" },
-      { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "200", "period" => "2016Q1", "orgUnit" => "3" }
+    values = [
+      { "dataElement" => "dhis2_act1_stock_start", "categoryOptionCombo" => "default", "value" => "10", "period" => "201601", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act1_stock_start", "categoryOptionCombo" => "default", "value" => "20", "period" => "201601", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "100", "period" => "201601", "orgUnit" => "1" },
+      { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "200", "period" => "201601", "orgUnit" => "2" },
+      { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "200", "period" => "201601", "orgUnit" => "3" }
     ]
+    (6..12).each do |month|
+      values << { "dataElement" => "dhis2_act1_consumed", "categoryOptionCombo" => "default", "value" => "#{month}", "period" => "2015#{"%02d" % month}", "orgUnit" => "1" }
+      values << { "dataElement" => "dhis2_act2_consumed", "categoryOptionCombo" => "default", "value" => "#{month + 10}", "period" => "2015#{"%02d" % month}", "orgUnit" => "1" }
+    end
+    values
   end
 
   it 'loads pyramid' do
@@ -164,10 +172,21 @@ RSpec.describe "SIGL System" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
     problem = thing.solver.build_problem
-    expect(problem["sigl_zone_act1_total_balance_by_activity_for_state_id_and_2016q1"]).to eq("SUM(sigl_zone_act1_balance_for_1_and_2016q1, sigl_zone_act1_balance_for_2_and_2016q1)")
-    expect(problem["sigl_zone_act2_total_balance_by_activity_for_state_id_and_2016q1"]).to eq("SUM(sigl_zone_act2_balance_for_1_and_2016q1, sigl_zone_act2_balance_for_2_and_2016q1)")
-    expect(problem["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_2016q1"]).to eq("SAFE_DIV(sigl_zone_act1_total_balance_by_activity_for_state_id_and_2016q1,2)")
-    expect(problem["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_2016q1"]).to eq("SAFE_DIV(sigl_zone_act2_total_balance_by_activity_for_state_id_and_2016q1,2)")
+    expect(problem["sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"]).to eq("SUM(sigl_zone_act1_balance_for_1_and_201601, sigl_zone_act1_balance_for_2_and_201601)")
+    expect(problem["sigl_zone_act2_total_balance_by_activity_for_state_id_and_201601"]).to eq("SUM(sigl_zone_act2_balance_for_1_and_201601, sigl_zone_act2_balance_for_2_and_201601)")
+    expect(problem["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq("SAFE_DIV(sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601,2)")
+    expect(problem["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq("SAFE_DIV(sigl_zone_act2_total_balance_by_activity_for_state_id_and_201601,2)")
+  end
+
+  it 'has a result for last_x' do
+    thing = fetch_and_solve(project, pyramid, mock_values)
+    thing.call
+    average = ->(arr) { arr.inject(:+)/arr.size.to_f}
+    problem = thing.solver.build_problem
+    solution = thing.solver.solution
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201601"]).to eq(average.call([12,11,10,9,8,7]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201602"]).to eq(average.call([0,12,11,10,9,8]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201603"]).to eq(average.call([0,0,12,11,10,9]))
   end
 
   it "has a solution" do
@@ -175,17 +194,18 @@ RSpec.describe "SIGL System" do
     thing.call
     problem = thing.solver.build_problem
     solution = thing.solver.solution
-    expect(solution["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_2016q1"]).to eq((10+20)/2.0)
-    expect(solution["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_2016q1"]).to eq((100+200)/2.0)
+    expect(solution["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((10+20)/2.0)
+    expect(solution["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((100+200)/2.0)
 
-    expect(solution["sigl_zone_act1_total_balance_by_activity_for_state_id_and_2016q1"]).to eq(10+20)
-    expect(solution["sigl_zone_act2_total_balance_by_activity_for_state_id_and_2016q1"]).to eq(100+200)
+    expect(solution["sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"]).to eq(10+20)
+    expect(solution["sigl_zone_act2_total_balance_by_activity_for_state_id_and_201601"]).to eq(100+200)
   end
 
   it 'has expected solution' do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
     problem = thing.solver.build_problem
+    fixture_record(thing.solver.solution, :rules_engine, "sigl_solution.json")
     expected = JSON.parse(fixture_content(:rules_engine, "sigl_solution.json"))
     expect(thing.solver.solution).to eq(expected)
   end
@@ -194,6 +214,7 @@ RSpec.describe "SIGL System" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
     problem = thing.solver.build_problem
+    fixture_record(problem, :rules_engine, "sigl_problem.json")
     expected = JSON.parse(fixture_content(:rules_engine, "sigl_problem.json"))
     expect(thing.solver.build_problem).to eq(expected)
   end
@@ -202,12 +223,12 @@ RSpec.describe "SIGL System" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
     solver = thing.solver
-    key = "sigl_zone_act1_total_balance_by_activity_for_state_id_and_2016q1"
+    key = "sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"
     variable = solver.variables.detect { |variable| variable.key == key }
     expected_variable = Orbf::RulesEngine::Variable.new_zone_activity_rule(
-      period:         "2016Q1",
+      period:         "201601",
       key:            key,
-      expression:     "SUM(sigl_zone_act1_balance_for_1_and_2016q1, sigl_zone_act1_balance_for_2_and_2016q1)",
+      expression:     "SUM(sigl_zone_act1_balance_for_1_and_201601, sigl_zone_act1_balance_for_2_and_201601)",
       state:          "total_balance_by_activity",
       activity_code:  "act1",
       orgunit_ext_id: "state_id",
