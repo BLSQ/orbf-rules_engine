@@ -25,8 +25,9 @@ module Orbf
 
       def calculate(indicator)
         parsed_expressions = IndicatorExpressionParser.parse_expression(indicator.formula)
+
         @period_orgunits.map do |period, orgunit|
-          value = indicator_value(period, orgunit, parsed_expressions)
+          value = indicator_value(period, orgunit, parsed_expressions, indicator.formula)
           {
             "dataElement"         => indicator.ext_id,
             "categoryOptionCombo" => "default",
@@ -43,16 +44,29 @@ module Orbf
         values.map { |v| v["value"] }.join(" + ")
       end
 
-      def indicator_value(period, orgunit, parsed_expressions)
-        indicator_values = parsed_expressions.flat_map do |expression_to_sum|
-          @indexed_values.lookup_values(
+      def substitute_values(indicator_values, formula)
+        indicator_values.each do |expression, data_values|
+          expanded_expression = data_values.map { |v| v["value"] }.join(" + ")
+          if expanded_expression.length > 0
+            formula = formula.gsub(expression, expanded_expression)
+          else
+            formula = formula.gsub(expression, "0")
+          end
+        end
+        formula
+      end
+
+      def indicator_value(period, orgunit, parsed_expressions, formula)
+        indicator_values = parsed_expressions.inject({}) do |result, expression|
+          result[expression.expression] = @indexed_values.lookup_values(
             period,
             orgunit,
-            expression_to_sum.data_element,
-            expression_to_sum.category_combo
+            expression.data_element,
+            expression.category_combo
           )
+          result
         end
-        sum_values(indicator_values)
+        substitute_values(indicator_values, formula)
       end
     end
   end

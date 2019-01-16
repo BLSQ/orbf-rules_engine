@@ -14,7 +14,7 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
           state:      :target,
           ext_id:     "dhis2_act1_target",
           name:       "act1_target",
-          expression: '#{dhjgLt7EYmu.se1qWfbtkmx}+#{xtVtnuWBBLB}'
+          expression: '#{dhjgLt7EYmu.se1qWfbtkmx} + #{xtVtnuWBBLB}'
         )
       ]
     end
@@ -65,6 +65,23 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
     it "computer DHIS2 values" do
       dhis2_values = described_class.new(nil, []).to_dhis2_values
       expect(dhis2_values).to match_array([])
+    end
+
+    it "computers indicators without values" do
+      indicators = [Orbf::RulesEngine::ActivityState.new_indicator(
+                      state:      :achieved,
+                      ext_id:     "dhis2_act1_achieved",
+                      name:       "act1_achieved",
+                      expression: '#{dhjgLt7EYmu.se1qWfbtkmx}'
+                    )]
+      raw_values = [
+        { "dataElement" => "xtVtnuWBBLB", "categoryOptionCombo" => "default",
+          "value" => "34", "period" => "2016Q1", "orgUnit" => "1" },
+      ]
+      dhis2_values = described_class.new(indicators, raw_values).to_dhis2_values
+
+      expected = {"dataElement"=>"dhis2_act1_achieved", "categoryOptionCombo"=>"default", "value"=>"0", "period"=>"2016Q1", "orgUnit"=>"1"}
+      expect(dhis2_values).to match_array([expected])
     end
   end
 end

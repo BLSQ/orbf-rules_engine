@@ -24,7 +24,7 @@ module Orbf
 
     class IndicatorExpressionParser
       #  currenty only support sum like  '#{dhjgLt7EYmu.se1qWfbtkmx}+#{xtVtnuWBBLB}'
-      UNSUPPORTED_FEATURES = ["(", ")", "C{", "-", "/", "*"].freeze
+      UNSUPPORTED_FEATURES = ["C{"].freeze
       SUPPORTED_FEATURE = "+"
 
       class << self
@@ -32,9 +32,9 @@ module Orbf
           unsupported = UNSUPPORTED_FEATURES.find { |f| formula.include?(f) }
           raise UnsupportedFormulaException.new(formula, unsupported) if unsupported
 
-          expressions = formula.split(SUPPORTED_FEATURE)
-          expressions.map do |expression|
-            to_indicator_expression(expression)
+          tokens = formula.scan(/\#{([[a-zA-Z0-9.]]+)}/).reject(&:empty?).flatten
+          tokens.map do |token|
+            to_indicator_expression(token)
           end
         end
 
@@ -44,7 +44,7 @@ module Orbf
           data_element_category =  expression.sub('#{', "").sub("}", "")
           data_element, category = data_element_category.split(".").map(&:strip)
           IndicatorExpression.new(
-            expression:     expression.strip,
+            expression:     '#{' + expression.strip + '}',
             data_element:   data_element,
             category_combo: category
           )
