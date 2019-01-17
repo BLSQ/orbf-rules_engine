@@ -33,6 +33,8 @@ module Orbf
           raise UnsupportedFormulaException.new(formula, unsupported) if unsupported
 
           tokens = formula.scan(/\#{([[a-zA-Z0-9.]]+)}/).reject(&:empty?).flatten
+          raise UnsupportedFormulaException.new(formula, "Constants without data_elements") if tokens.empty?
+
           tokens.map do |token|
             to_indicator_expression(token)
           end

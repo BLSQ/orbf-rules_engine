@@ -1,5 +1,7 @@
 # rubocop:disable Lint/InterpolationCheck
 RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
+  let(:indicator_ext_id) { "dhis2_act1_achieved" }
+
   # Helper class, to build up a data_element-hash
   #
   #       Mapper.new("my-element", "some-category-combo", "100").to_h
@@ -118,6 +120,17 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
       expect(dhis2_values).to match_array([])
     end
   end
+  context "no data element reference" do
+    it "handles constants" do
+      expect do
+        expect_evaluation(
+          Mapper.new("de2", nil, "5"),
+          [indicator_with(formula: "10")],
+          Mapper.new(indicator_ext_id, nil, "10")
+        )
+      end.to raise_error(Orbf::RulesEngine::UnsupportedFormulaException)
+    end
+  end
 
   context "Under no values" do
     it "computer DHIS2 values" do
@@ -144,8 +157,6 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
   end
 
   context "when partial values" do
-    let(:indicator_ext_id) { "dhis2_act1_achieved" }
-
     it "computers indicators with partial values : no value for de1.coc1" do
       expect_evaluation(
         Mapper.new("de2", nil, "5"),
