@@ -139,10 +139,10 @@ module Orbf
           unit = time_unit(name)
           if unit == "months"
             unit = "monthly"
-            offset = Integer(offset).months
+            offset = (Integer(offset) - 1).months
           elsif unit == "quarters"
             unit = "quarterly"
-            offset = Integer(offset).months * 3
+            offset = (Integer(offset) - 1).months * 3
           else
             raise "Nope"
           end
@@ -150,7 +150,6 @@ module Orbf
           period_start = PeriodConverter.as_date_range(invoicing_period).first
           previous_range = (period_start - offset)..period_start
           result = PeriodIterator.extract_periods(previous_range, unit)
-          result.pop # Remove current invoicing_period
           result
         end
 

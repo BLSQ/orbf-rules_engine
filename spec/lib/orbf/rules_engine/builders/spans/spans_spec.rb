@@ -1,4 +1,3 @@
-
 RSpec.describe "spans" do
   it "detect matching dependencies" do
     expect_matching_span(
@@ -137,15 +136,15 @@ RSpec.describe "spans" do
   describe Orbf::RulesEngine::Spans::SlidingWindow do
     let(:span) { described_class.new }
 
-    describe '.matching_span' do
-      it 'matches when needed' do
+    describe ".matching_span" do
+      it "matches when needed" do
         expect_matching_span(
           "sample_matching_last_6_months_window_values",
           Orbf::RulesEngine::Spans::SlidingWindow
         )
       end
 
-      it 'does not match when not needed' do
+      it "does not match when not needed" do
         expect(Orbf::RulesEngine::Spans.matching_span("sample_matching_last_but_not_least", "activity")).to_not be_instance_of(described_class)
       end
     end
@@ -158,22 +157,21 @@ RSpec.describe "spans" do
 
     it "give periods" do
       expect(span.periods("201601", "#{name}_last_6_months_window_values")).to eq(
-                                                                                 %w[201507
-                                                                                 201508
-                                                                                 201509
-                                                                                 201510
-                                                                                 201511
-                                                                                 201512
-                                                                                                                                                                  ]
-                                                                               )
-
+        %w[
+          201508
+          201509
+          201510
+          201511
+          201512
+          201601
+        ]
+      )
     end
 
-    it '' do
+    it "" do
       expect(span.periods("2016Q1", "#{name}_last_2_quarters_window_values")).to eq(
-        %w[2015Q3 2015Q4]
+        %w[2015Q4 2016Q1]
       )
-
     end
   end
 end

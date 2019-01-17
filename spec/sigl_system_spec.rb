@@ -76,7 +76,7 @@ RSpec.describe "SIGL System" do
         zone_package
       ],
       payment_rules: [],
-      dhis2_params: {
+      dhis2_params:  {
         url:      "https://admin:district@play.dhis2.org/2.28",
         user:     "admin",
         password: "district"
@@ -108,43 +108,43 @@ RSpec.describe "SIGL System" do
 
   let(:zone_package) do
     org_units_count = Orbf::RulesEngine::ContractVariablesBuilder::ORG_UNITS_COUNT
-      Orbf::RulesEngine::Package.new(
-        code:                   :sigl_zone,
-        kind:                   :zone,
-        frequency:              :monthly,
-        main_org_unit_group_ext_ids: %w[states_group_id],
-        target_org_unit_group_ext_ids: %w[pbf-pma],
-        groupset_ext_id:        nil,
-        activities:             activities,
-        rules:                  [
-          Orbf::RulesEngine::Rule.new(
-            kind:     :activity,
-            formulas: [
-              build_activity_formula(
-                "balance", "stock_start - stock_end"
-              ),
-              build_activity_formula(
-                "last_6_months_consumption", "AVG(%{consumed_last_6_months_window_values})"
-              ),
-              build_activity_formula(
-                "number_of_months_with_data", "6 - SUM(%{consumed_is_null_last_6_months_window_values})"
-              )
-            ]
-          ),
-          Orbf::RulesEngine::Rule.new(
-            kind:     :zone_activity,
-            formulas: [
-              build_formula(
-                "total_balance_by_activity", "SUM(%{balance_values})"
-              ),
-              # Replace with actual count
-              build_formula(
-                "balance_divided_by_org_units_count", "SAFE_DIV(total_balance_by_activity,#{org_units_count})"
-              )
-            ]
-          )
-        ]
-      )
+    Orbf::RulesEngine::Package.new(
+      code:                          :sigl_zone,
+      kind:                          :zone,
+      frequency:                     :monthly,
+      main_org_unit_group_ext_ids:   %w[states_group_id],
+      target_org_unit_group_ext_ids: %w[pbf-pma],
+      groupset_ext_id:               nil,
+      activities:                    activities,
+      rules:                         [
+        Orbf::RulesEngine::Rule.new(
+          kind:     :activity,
+          formulas: [
+            build_activity_formula(
+              "balance", "stock_start - stock_end"
+            ),
+            build_activity_formula(
+              "last_6_months_consumption", "AVG(%{consumed_last_6_months_window_values})"
+            ),
+            build_activity_formula(
+              "number_of_months_with_data", "6 - SUM(%{consumed_is_null_last_6_months_window_values})"
+            )
+          ]
+        ),
+        Orbf::RulesEngine::Rule.new(
+          kind:     :zone_activity,
+          formulas: [
+            build_formula(
+              "total_balance_by_activity", "SUM(%{balance_values})"
+            ),
+            # Replace with actual count
+            build_formula(
+              "balance_divided_by_org_units_count", "SAFE_DIV(total_balance_by_activity,#{org_units_count})"
+            )
+          ]
+        )
+      ]
+    )
   end
 
   let(:mock_values) do
@@ -156,17 +156,17 @@ RSpec.describe "SIGL System" do
       { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "200", "period" => "201601", "orgUnit" => "3" }
     ]
     (6..12).each do |month|
-      values << { "dataElement" => "dhis2_act1_consumed", "categoryOptionCombo" => "default", "value" => "#{month}", "period" => "2015#{"%02d" % month}", "orgUnit" => "1" }
-      values << { "dataElement" => "dhis2_act2_consumed", "categoryOptionCombo" => "default", "value" => "#{month + 10}", "period" => "2015#{"%02d" % month}", "orgUnit" => "1" }
+      values << { "dataElement" => "dhis2_act1_consumed", "categoryOptionCombo" => "default", "value" => month.to_s, "period" => "2015#{format('%02d', month)}", "orgUnit" => "1" }
+      values << { "dataElement" => "dhis2_act2_consumed", "categoryOptionCombo" => "default", "value" => (month + 10).to_s, "period" => "2015#{format('%02d', month)}", "orgUnit" => "1" }
     end
     values
   end
 
-  it 'loads pyramid' do
+  it "loads pyramid" do
     expect(pyramid).to_not be_nil
   end
 
-  it 'load project' do
+  it "load project" do
     expect(project).to_not be_nil
   end
 
@@ -181,52 +181,47 @@ RSpec.describe "SIGL System" do
     expect(problem["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq("SAFE_DIV(sigl_zone_act2_total_balance_by_activity_for_state_id_and_201601,2)")
   end
 
-  it 'has a result for last_x' do
+  it "has a result for last_x" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
-    average = ->(arr) { arr.inject(:+)/arr.size.to_f}
-    problem = thing.solver.build_problem
+    average = ->(arr) { arr.inject(:+) / arr.size.to_f }
     solution = thing.solver.solution
-    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201601"]).to eq(average.call([12,11,10,9,8,7]))
-    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201602"]).to eq(average.call([0,12,11,10,9,8]))
-    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201603"]).to eq(average.call([0,0,12,11,10,9]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201601"]).to eq(average.call([0, 12, 11, 10, 9, 8]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201602"]).to eq(average.call([0, 0, 12, 11, 10, 9]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201603"]).to eq(average.call([0, 0, 0, 12, 11, 10]))
   end
 
-  it 'can use null combined' do
+  it "can use null combined" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
-    average = ->(arr) { arr.inject(:+)/arr.size.to_f}
-    problem = thing.solver.build_problem
     solution = thing.solver.solution
     non_nil_count = ->(arr) { arr.compact.size }
 
-    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201601"]).to eq(non_nil_count.call([12,11,10,9,8,7]))
-    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201602"]).to eq(non_nil_count.call([nil,12,11,10,9,8]))
-    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201603"]).to eq(non_nil_count.call([nil, nil,12,11,10,9]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201601"]).to eq(non_nil_count.call([nil, 12, 11, 10, 9, 8]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201602"]).to eq(non_nil_count.call([nil, nil, 12, 11, 10, 9]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201603"]).to eq(non_nil_count.call([nil, nil, nil, 12, 11, 10]))
   end
 
   it "has a solution" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
-    problem = thing.solver.build_problem
     solution = thing.solver.solution
-    expect(solution["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((10+20)/2.0)
-    expect(solution["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((100+200)/2.0)
+    expect(solution["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((10 + 20) / 2.0)
+    expect(solution["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((100 + 200) / 2.0)
 
-    expect(solution["sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"]).to eq(10+20)
-    expect(solution["sigl_zone_act2_total_balance_by_activity_for_state_id_and_201601"]).to eq(100+200)
+    expect(solution["sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"]).to eq(10 + 20)
+    expect(solution["sigl_zone_act2_total_balance_by_activity_for_state_id_and_201601"]).to eq(100 + 200)
   end
 
-  it 'has expected solution' do
+  it "has expected solution" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
-    problem = thing.solver.build_problem
     fixture_record(thing.solver.solution, :rules_engine, "sigl_solution.json")
     expected = JSON.parse(fixture_content(:rules_engine, "sigl_solution.json"))
     expect(thing.solver.solution).to eq(expected)
   end
 
-  it 'has expected problem' do
+  it "has expected problem" do
     thing = fetch_and_solve(project, pyramid, mock_values)
     thing.call
     problem = thing.solver.build_problem
@@ -240,7 +235,7 @@ RSpec.describe "SIGL System" do
     thing.call
     solver = thing.solver
     key = "sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"
-    variable = solver.variables.detect { |variable| variable.key == key }
+    variable = solver.variables.detect { |var| var.key == key }
     expected_variable = Orbf::RulesEngine::Variable.new_zone_activity_rule(
       period:         "201601",
       key:            key,
@@ -254,5 +249,4 @@ RSpec.describe "SIGL System" do
     )
     expect(Array(variable)).to eq_vars(Array(expected_variable))
   end
-
 end
