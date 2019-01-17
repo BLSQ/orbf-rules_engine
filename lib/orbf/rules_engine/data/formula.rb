@@ -28,6 +28,10 @@ module Orbf
         @values_dependencies ||= Tokenizer.format_keys(@expression).select { |e| e.end_with?("_values") }
       end
 
+      def combined_dependencies
+        dependencies + values_dependencies
+      end
+
       def dhis2_mapping(activity_code = nil)
         return activity_mappings[activity_code] if activity_mappings
         return single_mapping if single_mapping

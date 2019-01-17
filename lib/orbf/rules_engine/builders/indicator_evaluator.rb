@@ -25,8 +25,9 @@ module Orbf
 
       def calculate(indicator)
         parsed_expressions = IndicatorExpressionParser.parse_expression(indicator.formula)
+
         @period_orgunits.map do |period, orgunit|
-          value = indicator_value(period, orgunit, parsed_expressions)
+          value = indicator_value(period, orgunit, parsed_expressions, indicator.formula)
           {
             "dataElement"         => indicator.ext_id,
             "categoryOptionCombo" => "default",
@@ -37,22 +38,49 @@ module Orbf
         end
       end
 
-      def sum_values(values)
-        return "0" if values.empty?
+      # Takes a hash of indicator_values and a formula and will expand
+      # the formula to use the values of the indicator_values
+      #
+      # indicator_values - Hash with as key the data_element.coc and
+      #                    as value the value found in dhis2
+      # formula - A string with the formula
+      #
+      # Returns an expanded formula
+      def substitute_values(indicator_values, formula)
+        # None of the references have any values, return nil
+        return nil if indicator_values.values.flatten.empty?
 
-        values.map { |v| v["value"] }.join(" + ")
+        indicator_values.each do |expression, data_values|
+          # Some values, were found, so if a reference now doesn't
+          # have any value fill it with 0.
+          expanded_values = data_values.map { |v| v["value"] || "0" }
+
+          # If a reference has multiple category combos, expand and
+          # sum them but keep them in brackets to ensure it plays nice
+          # with / and *
+          expanded_expression = if expanded_values.length > 1
+                                  "( %s )" % expanded_values.join(" + ")
+                                else
+                                  expanded_values.join
+                                end
+
+          expanded_expression = "0" if expanded_expression.length == 0
+          formula = formula.gsub(expression, expanded_expression)
+        end
+        formula
       end
 
-      def indicator_value(period, orgunit, parsed_expressions)
-        indicator_values = parsed_expressions.flat_map do |expression_to_sum|
-          @indexed_values.lookup_values(
+      def indicator_value(period, orgunit, parsed_expressions, formula)
+        indicator_values = parsed_expressions.inject({}) do |result, expression|
+          result[expression.expression] = @indexed_values.lookup_values(
             period,
             orgunit,
-            expression_to_sum.data_element,
-            expression_to_sum.category_combo
+            expression.data_element,
+            expression.category_combo
           )
+          result
         end
-        sum_values(indicator_values)
+        substitute_values(indicator_values, formula)
       end
     end
   end

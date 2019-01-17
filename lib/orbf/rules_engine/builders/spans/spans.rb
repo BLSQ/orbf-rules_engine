@@ -114,7 +114,55 @@ module Orbf
         end
       end
 
-      SPANS = [PreviousYearSameQuarter.new, PreviousYear.new, PreviousCycle.new, CurrentQuarter.new].freeze
+      class SlidingWindow < Span
+        REGEX = /_last_(\d+)_(\w+)_window_values/
+
+        def suffix
+          "window"
+        end
+
+        def prefix(name)
+          name.gsub(REGEX, "")
+        end
+
+        # last_6_months => 6
+        def time_offset(name)
+          name.match(REGEX)[1]
+        end
+
+        def time_unit(name)
+          name.match(REGEX)[2]
+        end
+
+        def periods(invoicing_period, name)
+          offset = time_offset(name)
+          unit = time_unit(name)
+          if unit == "months"
+            unit = "monthly"
+            offset = (Integer(offset) - 1).months
+          elsif unit == "quarters"
+            unit = "quarterly"
+            offset = (Integer(offset) - 1).months * 3
+          else
+            raise "Nope"
+          end
+
+          period_start = PeriodConverter.as_date_range(invoicing_period).first
+          previous_range = (period_start - offset)..period_start
+          result = PeriodIterator.extract_periods(previous_range, unit)
+          result
+        end
+
+        def frequencies(name, frequencies = FREQUENCIES)
+          if name =~ REGEX
+            ['something']
+          else
+            []
+          end
+        end
+      end
+
+      SPANS = [PreviousYearSameQuarter.new, PreviousYear.new, PreviousCycle.new, CurrentQuarter.new, SlidingWindow.new].freeze
     end
   end
 end

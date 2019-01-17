@@ -41,6 +41,7 @@ module Orbf
       def convert(period)
         [package].each_with_object([]) do |package, array|
           dependencies = package.activity_dependencies
+          flattened_dependencies = dependencies.to_a.join(",")
           package.activities.each do |activity|
             package.harmonized_activity_states(activity).reject(&:constant?).each do |activity_state|
               SOURCES.each do |source|
@@ -48,7 +49,8 @@ module Orbf
                   suffixed_state = package.subcontract? ? suffix_raw(state) : state
                   express = expression.value
                   array.push register_vars(package, activity.activity_code, suffixed_state, express, orgunit_id, period)
-                  if dependencies.include?(suffix_is_null(state))
+
+                  if using_is_null?(flattened_dependencies, state)
                     express = expression.is_null ? "1" : "0"
                     array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
                   end
@@ -60,6 +62,10 @@ module Orbf
       end
 
       private
+
+      def using_is_null?(flattened_dependencies, state)
+        flattened_dependencies.include?(suffix_is_null(state))
+      end
 
       attr_reader :package, :orgunits, :lookup
 
