@@ -24,7 +24,7 @@ module Orbf
 
     class IndicatorExpressionParser
       #  currenty only support sum like  '#{dhjgLt7EYmu.se1qWfbtkmx}+#{xtVtnuWBBLB}'
-      UNSUPPORTED_FEATURES = ["C{"].freeze
+      UNSUPPORTED_FEATURES = ["C{", "OUG{", "R{"].freeze
       SUPPORTED_FEATURE = "+"
 
       class << self

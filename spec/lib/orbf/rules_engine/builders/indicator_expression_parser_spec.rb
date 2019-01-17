@@ -51,7 +51,10 @@ RSpec.describe Orbf::RulesEngine::IndicatorExpressionParser do
 
   describe 'UNSUPPORTED FEATURES' do
     let(:mapping) {
-      { "C{" => "C{dhjgLt7EYmu.se1qWfbtkmx}" }
+      { "C{" => "C{dhjgLt7EYmu.se1qWfbtkmx}",
+        "OUG{" => "OUG{RXL3lPSK8oG}",
+        "R{" => "R{VTdjfLXXmoi.REPORTING_RATE}"
+      }
     }
 
     Orbf::RulesEngine::IndicatorExpressionParser::UNSUPPORTED_FEATURES.each do |unsupported|
