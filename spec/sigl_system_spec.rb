@@ -14,13 +14,15 @@ def build_activity_mappings(formula_code)
 end
 
 def fetch_and_solve(project, pyramid, mock_values)
-  Orbf::RulesEngine::FetchAndSolve.new(
+  fetched = Orbf::RulesEngine::FetchAndSolve.new(
     project,
     "state_id",
     "2016Q1",
     pyramid:     pyramid,
     mock_values: mock_values
   )
+  fetched.call
+  fetched.solver
 end
 
 RSpec.describe "SIGL System" do
@@ -172,9 +174,8 @@ RSpec.describe "SIGL System" do
 
   it "should build problem based on variables" do
     mock_values = []
-    thing = fetch_and_solve(project, pyramid, mock_values)
-    thing.call
-    problem = thing.solver.build_problem
+    solver = fetch_and_solve(project, pyramid, mock_values)
+    problem = solver.build_problem
     expect(problem["sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"]).to eq("SUM(sigl_zone_act1_balance_for_1_and_201601, sigl_zone_act1_balance_for_2_and_201601)")
     expect(problem["sigl_zone_act2_total_balance_by_activity_for_state_id_and_201601"]).to eq("SUM(sigl_zone_act2_balance_for_1_and_201601, sigl_zone_act2_balance_for_2_and_201601)")
     expect(problem["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq("SAFE_DIV(sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601,2)")
@@ -182,19 +183,17 @@ RSpec.describe "SIGL System" do
   end
 
   it "has a result for last_x" do
-    thing = fetch_and_solve(project, pyramid, mock_values)
-    thing.call
+    solver = fetch_and_solve(project, pyramid, mock_values)
     average = ->(arr) { arr.inject(:+) / arr.size.to_f }
-    solution = thing.solver.solution
+    solution = solver.solution
     expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201601"]).to eq(average.call([0, 12, 11, 10, 9, 8]))
     expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201602"]).to eq(average.call([0, 0, 12, 11, 10, 9]))
     expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201603"]).to eq(average.call([0, 0, 0, 12, 11, 10]))
   end
 
   it "can use null combined" do
-    thing = fetch_and_solve(project, pyramid, mock_values)
-    thing.call
-    solution = thing.solver.solution
+    solver = fetch_and_solve(project, pyramid, mock_values)
+    solution = solver.solution
     non_nil_count = ->(arr) { arr.compact.size }
 
     expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201601"]).to eq(non_nil_count.call([nil, 12, 11, 10, 9, 8]))
@@ -203,9 +202,8 @@ RSpec.describe "SIGL System" do
   end
 
   it "has a solution" do
-    thing = fetch_and_solve(project, pyramid, mock_values)
-    thing.call
-    solution = thing.solver.solution
+    solver = fetch_and_solve(project, pyramid, mock_values)
+    solution = solver.solution
     expect(solution["sigl_zone_act1_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((10 + 20) / 2.0)
     expect(solution["sigl_zone_act2_balance_divided_by_org_units_count_for_state_id_and_201601"]).to eq((100 + 200) / 2.0)
 
@@ -214,26 +212,23 @@ RSpec.describe "SIGL System" do
   end
 
   it "has expected solution" do
-    thing = fetch_and_solve(project, pyramid, mock_values)
-    thing.call
-    fixture_record(thing.solver.solution, :rules_engine, "sigl_solution.json")
+    solver = fetch_and_solve(project, pyramid, mock_values)
+    solution = solver.solution
+    fixture_record(solution, :rules_engine, "sigl_solution.json")
     expected = JSON.parse(fixture_content(:rules_engine, "sigl_solution.json"))
-    expect(thing.solver.solution).to eq(expected)
+    expect(solution).to eq(expected)
   end
 
   it "has expected problem" do
-    thing = fetch_and_solve(project, pyramid, mock_values)
-    thing.call
-    problem = thing.solver.build_problem
+    solver = fetch_and_solve(project, pyramid, mock_values)
+    problem = solver.build_problem
     fixture_record(problem, :rules_engine, "sigl_problem.json")
     expected = JSON.parse(fixture_content(:rules_engine, "sigl_problem.json"))
-    expect(thing.solver.build_problem).to eq(expected)
+    expect(problem).to eq(expected)
   end
 
   it "uses zone activity variable" do
-    thing = fetch_and_solve(project, pyramid, mock_values)
-    thing.call
-    solver = thing.solver
+    solver = fetch_and_solve(project, pyramid, mock_values)
     key = "sigl_zone_act1_total_balance_by_activity_for_state_id_and_201601"
     variable = solver.variables.detect { |var| var.key == key }
     expected_variable = Orbf::RulesEngine::Variable.new_zone_activity_rule(
