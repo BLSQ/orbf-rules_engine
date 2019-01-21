@@ -75,6 +75,18 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
           expect(solution["my_var"]).to be_between(1, 4)
         end
       end
+
+      describe 'array' do
+        it 'allows ARRAY' do
+          solution = calculator.solve("my_var" => "sum(ARRAY(5,15,10))")
+          expect(solution["my_var"]).to eq(5+15+10)
+        end
+
+        it 'allows array' do
+          solution = calculator.solve("my_var" => "sum(array(5,15,10))")
+          expect(solution["my_var"]).to eq(5+15+10)
+        end
+      end
     end
   end
 end

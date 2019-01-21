@@ -26,7 +26,7 @@ module Orbf
       end
 
       SUM = lambda do |*args|
-        args.inject(0.0) { |acc, elem| acc + elem }
+        args.flatten.inject(0.0) { |acc, elem| acc + elem }
       end
 
       AVG = lambda do |*args|
@@ -36,6 +36,8 @@ module Orbf
       BETWEEN = ->(lower, score, greater) { lower <= score && score <= greater }
 
       RANDBETWEEN = ->(a, b) { rand(a..b) }
+
+      ARRAY = ->(*args) { args.flatten }
 
       def self.build(options = { nested_data_support: false, case_sensitive: true })
         Dentaku::Calculator.new(options).tap do |calculator|
@@ -47,6 +49,7 @@ module Orbf
           calculator.add_function(:safe_div, :numeric, SAFE_DIV)
           calculator.add_function(:access, :numeric, ACCESS)
           calculator.add_function(:randbetween, :numeric, RANDBETWEEN)
+          calculator.add_function(:array, :array, ARRAY)
         end
       end
     end
