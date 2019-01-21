@@ -76,6 +76,27 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         end
       end
 
+      describe 'eval_array' do
+        it 'solves' do
+          solution = calculator.solve("my_var" => "sum(eval_array('a', ARRAY(1,3,4), 'b', ARRAY(2,4,5), 'b - a'))")
+          expect(solution["my_var"]).to eq(1+1+1)
+        end
+
+        describe 'raises on invalid input' do
+          it 'not same length arrays' do
+            expect{
+              calculator.solve!("my_var" => "sum(eval_array('a', ARRAY(), 'b', ARRAY(1), 'b - a'))")
+            }.to raise_error(StandardError)
+          end
+
+          it 'missing keys for meta formula' do
+            expect{
+              calculator.solve!("my_var" => "eval_array('a', ARRAY(1,2), 'b', ARRAY(1,2), 'some - var')")
+            }.to raise_error(StandardError)
+          end
+        end
+      end
+
       describe 'array' do
         it 'allows ARRAY' do
           solution = calculator.solve("my_var" => "sum(ARRAY(5,15,10))")
