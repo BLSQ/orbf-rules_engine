@@ -59,26 +59,25 @@ module Orbf
           # sum them but keep them in brackets to ensure it plays nice
           # with / and *
           expanded_expression = if expanded_values.length > 1
-                                  "( %s )" % expanded_values.join(" + ")
+                                  format("( %s )", expanded_values.join(" + "))
                                 else
-                                  expanded_values.join
+                                  expanded_values.map { |v| " #{v} " }.join
                                 end
 
-          expanded_expression = "0" if expanded_expression.length == 0
+          expanded_expression = "0" if expanded_expression.empty?
           formula = formula.gsub(expression, expanded_expression)
         end
         formula
       end
 
       def indicator_value(period, orgunit, parsed_expressions, formula)
-        indicator_values = parsed_expressions.inject({}) do |result, expression|
+        indicator_values = parsed_expressions.each_with_object({}) do |expression, result|
           result[expression.expression] = @indexed_values.lookup_values(
             period,
             orgunit,
             expression.data_element,
             expression.category_combo
           )
-          result
         end
         substitute_values(indicator_values, formula)
       end
