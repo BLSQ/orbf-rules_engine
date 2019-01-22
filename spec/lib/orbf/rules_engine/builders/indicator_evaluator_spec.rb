@@ -54,11 +54,18 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
   #
   # `data` and `expected` will be expanded to a hash similar do the
   # dhis2 hashes for data_elements
-  def expect_evaluation(data, indicators, expected)
+  def expect_evaluation(data, indicators, expected, solutions = nil)
     raw_values = [data].flatten.map(&:to_h)
     expected_values = [expected].flatten.map(&:to_h)
     dhis2_values = described_class.new(indicators, raw_values).to_dhis2_values
     expect(dhis2_values).to match_array(expected_values)
+    if solutions
+      dhis2_values.each_with_index do |dhis2_value, index|
+        calc = Orbf::RulesEngine::CalculatorFactory.build(3)
+        got = calc.solve({"final_value" => dhis2_value["value"]})
+        expect(got["final_value"]).to eq(solutions[index])
+      end
+    end
   end
 
   context "Valid indicator expression" do
@@ -95,13 +102,13 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
     let(:expected_dhis2_values) do
       [
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
-           "value" => "33", "period" => "2016Q1", "orgUnit" => "1" },
+           "value" => " 33 ", "period" => "2016Q1", "orgUnit" => "1" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => "33 + 34", "period" => "2016Q1", "orgUnit" => "1" },
+          "value" => " 33  +  34 ", "period" => "2016Q1", "orgUnit" => "1" },
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
-           "value" => "3", "period" => "2016Q1", "orgUnit" => "2" },
+           "value" => " 3 ", "period" => "2016Q1", "orgUnit" => "2" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => "3 + 24", "period" => "2016Q1", "orgUnit" => "2" }
+          "value" => " 3  +  24 ", "period" => "2016Q1", "orgUnit" => "2" }
       ]
     end
 
@@ -118,6 +125,15 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
     it "return empty values from empty DHIS2 values" do
       dhis2_values = described_class.new(indicators, []).to_dhis2_values
       expect(dhis2_values).to match_array([])
+    end
+
+    it "handle negative values" do
+      expect_evaluation(
+        Mapper.new("de2", nil, "-5"),
+        [indicator_with(formula: '#{de1.coc1}+#{de2}')],
+        Mapper.new(indicator_ext_id, nil, "0+ -5 "),
+        [-5]
+      )
     end
   end
   context "no data element reference" do
@@ -161,7 +177,16 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
       expect_evaluation(
         Mapper.new("de2", nil, "5"),
         [indicator_with(formula: '#{de1.coc1} + #{de2}')],
-        Mapper.new(indicator_ext_id, nil, "0 + 5")
+        Mapper.new(indicator_ext_id, nil, "0 +  5 ")
+      )
+    end
+
+    it "computers indicators with partial values : no value for de1.coc1" do
+      expect_evaluation(
+        Mapper.new("de2", nil, "5"),
+        [indicator_with(formula: '#{de1.coc1} + #{de2}')],
+        Mapper.new(indicator_ext_id, nil, "0 +  5 "),
+        [5]
       )
     end
 
@@ -185,7 +210,7 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
       expect_evaluation(
         Mapper.new("de1", "coc1", "34"),
         [indicator_with(formula: '#{de1.coc1} + #{de2}')],
-        Mapper.new(indicator_ext_id, "default", "34 + 0")
+        Mapper.new(indicator_ext_id, "default", " 34  + 0")
       )
     end
 
@@ -193,7 +218,7 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
       expect_evaluation(
         [Mapper.new("de1", "coc1", "34"), Mapper.new("de2", "coc2", "15")],
         [indicator_with(formula: '#{de1.coc1} + #{de2} - #{de1.coc1} - #{de2}')],
-        Mapper.new(indicator_ext_id, "default", "34 + 15 - 34 - 15")
+        Mapper.new(indicator_ext_id, "default", " 34  +  15  -  34  -  15 ")
       )
     end
 
