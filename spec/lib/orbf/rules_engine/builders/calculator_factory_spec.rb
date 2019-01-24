@@ -78,21 +78,34 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
 
       describe 'eval_array' do
         it 'solves' do
-          solution = calculator.solve("my_var" => "sum(eval_array('a', ARRAY(1,3,4), 'b', ARRAY(2,4,5), 'b - a'))")
-          expect(solution["my_var"]).to eq(1+1+1)
+          solution = calculator.solve("my_var" => "sum(eval_array('a', ARRAY(1.5,-3,4), 'b', ARRAY(2,-4,5.2), 'b - a'))")
+          expected_result = ((2 - 1.5) + (-4 - -3) + (5.2 - 4))
+          expect(solution["my_var"]).to be_within(0.000001).of(expected_result)
         end
 
         describe 'raises on invalid input' do
           it 'not same length arrays' do
+            expected_error_class = Hesabu::Error
+            expected_error_match = /Error for evalArray-function/
+            if version < 3
+              expected_error_class = Dentaku::ArgumentError
+              expected_error_match = /EVAL_ARRAY()/
+            end
             expect{
               calculator.solve!("my_var" => "sum(eval_array('a', ARRAY(), 'b', ARRAY(1), 'b - a'))")
-            }.to raise_error(StandardError)
+            }.to raise_error(expected_error_class, expected_error_match)
           end
 
           it 'missing keys for meta formula' do
+            expected_error_class = Hesabu::Error
+            expected_error_match = /Error for evalArray-function, Inner eval/
+            if version < 3
+              expected_error_class = Dentaku::UnboundVariableError
+              expected_error_match = /no value provided for variables/
+            end
             expect{
               calculator.solve!("my_var" => "eval_array('a', ARRAY(1,2), 'b', ARRAY(1,2), 'some - var')")
-            }.to raise_error(StandardError)
+            }.to raise_error(expected_error_class, expected_error_match)
           end
         end
       end

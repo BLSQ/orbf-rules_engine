@@ -41,8 +41,10 @@ module Orbf
 
       EVAL_ARRAY = ->(key1, array1, key2, array2, meta_formula) {
         if array1.length != array2.length
-          raise Dentaku::ArgumentError.send(:new, "Expected '#{key1}' and '#{key2}' to have same size of values")
-
+          raise Dentaku::ArgumentError.for(
+                  :incompatible_type,
+                  function_name: 'EVAL_ARRAY()'
+                ), "EVAL_ARRAY() requires '#{key1}' and '#{key2}' to have same size of values"
         end
         calc = Dentaku::Calculator.new
         r = array1.zip(array2).map do |(e1, e2)|
