@@ -108,6 +108,37 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
           expect(solution["my_var"]).to eq(5+15+10)
         end
       end
+
+      describe 'array as variable' do
+        {
+          "sum" => ["sum(arr)", 9.0],
+          "max" => ["max(arr)", 5.0],
+          "min" => ["min(arr)", -3],
+          "avg" => ["avg(arr)", 1.8],
+          "access" => ["access(arr,1)", 2.0],
+        }.each do |function_name, (formula, expected)|
+          it "supports #{function_name}" do
+            solution = calculator.solve("arr" => "array(1,2,-3,4,5)", "my_var" => formula)
+            expect(solution["my_var"]).to eq(expected)
+          end
+        end
+
+        it "supports nesting the arrays" do
+          solution = calculator.solve(
+            "arr" => "array(1,2,-3,4,5)",
+            "evaled_arr" => "eval_array('a', arr, 'b', arr, 'a - b')",
+            "result" => "sum(evaled_arr)"
+          )
+          expect(solution["result"]).to eq(0.0)
+        end
+
+        it "'exports' the array" do
+          solution = calculator.solve(
+            "arr" => "array(1,2,-3,4,5)",
+          )
+          expect(solution["arr"]).to eq([1,2,-3,4,5])
+        end
+      end
     end
   end
 end

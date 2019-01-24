@@ -20,6 +20,7 @@ module Orbf
       end
 
       ACCESS = lambda do |*args|
+        args = args.flatten
         array = args[0..-2]
         index = args[-1]
         array[index]
@@ -30,7 +31,8 @@ module Orbf
       end
 
       AVG = lambda do |*args|
-        args.inject(0.0) { |acc, elem| acc + elem } / args.size
+        args = args.flatten
+        args.flatten.inject(0.0) { |acc, elem| acc + elem } / args.size
       end
 
       BETWEEN = ->(lower, score, greater) { lower <= score && score <= greater }
