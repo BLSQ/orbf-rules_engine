@@ -86,10 +86,10 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         describe 'raises on invalid input' do
           it 'not same length arrays' do
             expected_error_class = Hesabu::Error
-            expected_error_match = /Error for evalArray-function/
+            expected_error_match = "In equation my_var Error for evalArray-function, Expected 'a' and 'b' to have same size of values (0 and 1) my_var := sum(eval_array('a', ARRAY(), 'b', ARRAY(1), 'b - a'))"
             if version < 3
               expected_error_class = Dentaku::ArgumentError
-              expected_error_match = /EVAL_ARRAY()/
+              expected_error_match = "EVAL_ARRAY() requires 'a' and 'b' in (b - a) to have same size of values"
             end
             expect{
               calculator.solve!("my_var" => "sum(eval_array('a', ARRAY(), 'b', ARRAY(1), 'b - a'))")
@@ -98,10 +98,10 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
 
           it 'missing keys for meta formula' do
             expected_error_class = Hesabu::Error
-            expected_error_match = /Error for evalArray-function, Inner eval/
+            expected_error_match = "In equation my_var Error for EVAL_ARRAY()-function, No parameter 'some' found.. We only know 'a' and 'b' my_var := eval_array('a', ARRAY(1,2), 'b', ARRAY(1,2), 'some - var')"
             if version < 3
-              expected_error_class = Dentaku::UnboundVariableError
-              expected_error_match = /no value provided for variables/
+              expected_error_class = Dentaku::ArgumentError
+              expected_error_match = "EVAL_ARRAY() some - var uses: 'some', 'var'. We only know: 'a', 'b'"
             end
             expect{
               calculator.solve!("my_var" => "eval_array('a', ARRAY(1,2), 'b', ARRAY(1,2), 'some - var')")

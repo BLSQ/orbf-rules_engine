@@ -44,13 +44,24 @@ module Orbf
           raise Dentaku::ArgumentError.for(
                   :incompatible_type,
                   function_name: 'EVAL_ARRAY()'
-                ), "EVAL_ARRAY() requires '#{key1}' and '#{key2}' to have same size of values"
+                ), "EVAL_ARRAY() requires '#{key1}' and '#{key2}' in (#{meta_formula}) to have same size of values"
         end
         calc = Dentaku::Calculator.new
-        r = array1.zip(array2).map do |(e1, e2)|
-          calc.evaluate!(meta_formula, {key1 => e1, key2 => e2})
+        begin
+          result = array1.zip(array2).map do |(e1, e2)|
+            calc.evaluate!(meta_formula, {key1 => e1, key2 => e2})
+          end
+        rescue Dentaku::UnboundVariableError => e
+          bound = quote_keys([key1, key2])
+          unbound = quote_keys(e.unbound_variables)
+
+          raise Dentaku::ArgumentError.for(
+                  :invalid_value,
+                  function_name: 'EVAL_ARRAY()'
+                ), "EVAL_ARRAY() #{meta_formula} uses: #{unbound}. We only know: #{bound}"
         end
-        r
+
+        result
       }
 
       ARRAY = ->(*args) { args.flatten }
@@ -68,6 +79,11 @@ module Orbf
           calculator.add_function(:eval_array, :array, EVAL_ARRAY)
           calculator.add_function(:array, :array, ARRAY)
         end
+      end
+
+      # quote_keys(['a', 'b']) => "'a', 'b'"
+      def self.quote_keys(keys)
+        keys.map {|key| "'#{key}'"}.join(", ")
       end
     end
 
