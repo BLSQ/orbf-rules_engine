@@ -85,7 +85,7 @@ RSpec.describe Orbf::RulesEngine::Solver do
         )
         expect { solver.solve! }.to raise_error(
           Hesabu::Error,
-          "In equation key2 No parameter 'key_missing' found. key2 := key_missing"
+          /key_missing was never defined/
         )
       end
     end
