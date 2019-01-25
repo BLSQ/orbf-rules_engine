@@ -10,3 +10,21 @@
 # rspec failure tracking
 .rspec_status
 .byebug_history
+
+# https://yehudakatz.com/2010/12/16/clarifying-the-roles-of-the-gemspec-and-gemfile/
+# Yehuda says we should not put the Gemfile.lock in version control
+# when developing gems:
+#
+# This is also why we recommend that people do not check in their
+# Gemfile.lock files in gem development. That file is emitted by
+# bundler, and guarantees that all gems, including dependencies of
+# dependencies, remain the same.
+
+# However, when doing gem development, you want to know immediately
+# when some change in the overall ecosystem breaks your setup. While
+# you may want to insist on using a particular gem from its git
+# location, you do not want to hardcode your development to a very
+# specific set of gems, only to find out later that a gem released
+# after you ran bundle install, but compatible with your version
+# range, doesn't work with your code.
+Gemfile.lock
