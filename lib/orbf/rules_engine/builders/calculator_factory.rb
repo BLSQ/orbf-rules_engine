@@ -20,22 +20,51 @@ module Orbf
       end
 
       ACCESS = lambda do |*args|
+        args = args.flatten
         array = args[0..-2]
         index = args[-1]
         array[index]
       end
 
       SUM = lambda do |*args|
-        args.inject(0.0) { |acc, elem| acc + elem }
+        args.flatten.inject(0.0) { |acc, elem| acc + elem }
       end
 
       AVG = lambda do |*args|
-        args.inject(0.0) { |acc, elem| acc + elem } / args.size
+        args = args.flatten
+        args.flatten.inject(0.0) { |acc, elem| acc + elem } / args.size
       end
 
       BETWEEN = ->(lower, score, greater) { lower <= score && score <= greater }
 
       RANDBETWEEN = ->(a, b) { rand(a..b) }
+
+      EVAL_ARRAY = ->(key1, array1, key2, array2, meta_formula) {
+        if array1.length != array2.length
+          raise Dentaku::ArgumentError.for(
+                  :incompatible_type,
+                  function_name: 'EVAL_ARRAY()'
+                ), "EVAL_ARRAY() requires '#{key1}' and '#{key2}' in (#{meta_formula}) to have same size of values"
+        end
+        calc = Dentaku::Calculator.new
+        begin
+          result = array1.zip(array2).map do |(e1, e2)|
+            calc.evaluate!(meta_formula, {key1 => e1, key2 => e2})
+          end
+        rescue Dentaku::UnboundVariableError => e
+          bound = quote_keys([key1, key2])
+          unbound = quote_keys(e.unbound_variables)
+
+          raise Dentaku::ArgumentError.for(
+                  :invalid_value,
+                  function_name: 'EVAL_ARRAY()'
+                ), "EVAL_ARRAY() #{meta_formula} uses: #{unbound}. We only know: #{bound}"
+        end
+
+        result
+      }
+
+      ARRAY = ->(*args) { args.flatten }
 
       def self.build(options = { nested_data_support: false, case_sensitive: true })
         Dentaku::Calculator.new(options).tap do |calculator|
@@ -47,7 +76,14 @@ module Orbf
           calculator.add_function(:safe_div, :numeric, SAFE_DIV)
           calculator.add_function(:access, :numeric, ACCESS)
           calculator.add_function(:randbetween, :numeric, RANDBETWEEN)
+          calculator.add_function(:eval_array, :array, EVAL_ARRAY)
+          calculator.add_function(:array, :array, ARRAY)
         end
+      end
+
+      # quote_keys(['a', 'b']) => "'a', 'b'"
+      def self.quote_keys(keys)
+        keys.map {|key| "'#{key}'"}.join(", ")
       end
     end
 
@@ -65,6 +101,10 @@ module Orbf
             values_hash.each do |k, v|
               solver.add(k, v.to_s)
             end
+          end
+
+          def solve!(values_hash)
+            solve(values_hash)
           end
 
           def solve(values_hash)
