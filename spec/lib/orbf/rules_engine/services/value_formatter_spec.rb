@@ -29,4 +29,14 @@ RSpec.describe Orbf::RulesEngine::ValueFormatter do
   it "keeps false as false" do
     expect(described_class.format(false)).to eq false
   end
+
+  it "keeps arrays as arrays" do
+    expect(described_class.format([])).to eq []
+  end
+
+  describe '.d_to_s' do
+    it 'can handle arrays' do
+      expect(described_class.d_to_s([1,2,3])).to eq "[1, 2, 3]"
+    end
+  end
 end
