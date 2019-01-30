@@ -22,6 +22,7 @@ module Orbf
       end
 
       def self.d_to_s(decimal, number_of_decimal = 2)
+        return '' if decimal.nil?
         return decimal.to_s if boolean?(decimal)
         return decimal.to_s if array?(decimal)
         return decimal.to_i.to_s if number_of_decimal > 2 && decimal.to_i == decimal.to_f
