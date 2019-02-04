@@ -63,27 +63,20 @@ module Orbf
       end
 
       def level_pattern_values(orgunit)
-        hash = {}
-        orgunit.parent_ext_ids.each_with_index do |ext_id, index|
-          hash["orgunit_parent_level#{index + 1}_id".to_sym] = ext_id
-        end
-        hash[:zone_main_orgunit_id] = @all_orgunits.first.ext_id
-        hash
-      end
+        @lpv ||={}
+        return @lpv[orgunit] if @lpv[orgunit]
 
-      def zone_main_orgunit_substitutions(activity_code)
-        activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
-        package.harmonized_activity_states(activity).each_with_object({}) do |activity_state, hash|
-          state_level = activity_state.state + "_zone_main_orgunit"
-          hash[state_level] = suffix_activity_pattern(
-            package.code, activity_code, state_level,
-            "zone_main_orgunit_id".to_sym
-          )
+        @lpv[orgunit] = {}
+        orgunit.parent_ext_ids.each_with_index do |ext_id, index|
+          @lpv[orgunit]["orgunit_parent_level#{index + 1}_id".to_sym] = ext_id
         end
+        @lpv[orgunit][:zone_main_orgunit_id] = @all_orgunits.first.ext_id
+        @lpv[orgunit]
       end
 
       def substitutions(formula, activity_code)
-        SubstitutionBuilder.new(package: package, expression: formula.expression, activity_code: activity_code, period: period).call
+        @cache ||= SubstitutionBuilder.setup_cache(period)
+        SubstitutionBuilder.new(package: package, expression: formula.expression, activity_code: activity_code, period: period, cache: @cache).call
       end
 
       def entities_aggregation_values(activity_code)

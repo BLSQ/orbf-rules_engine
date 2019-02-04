@@ -1,6 +1,30 @@
 module Orbf
   module RulesEngine
     class SubstitutionBuilder
+      class Cache
+        def initialize(period)
+          @period = period
+          @data = {}
+        end
+
+        def fetch(cache_key, key, &block)
+          @data[:cache_key] ||= {}
+
+          if (value = @data[:cache_key][key])
+            value
+          else
+            @data[:cache_key][key] = block.call
+          end
+        end
+
+        def period_facts
+          return @data[:period_facts] if @data[:period_facts]
+
+          @data[:period_facts] = Orbf::RulesEngine::PeriodFacts.for(@period)
+          @data[:period_facts]
+        end
+      end
+
       # This will build up a hash with all substitutions and their
       # corresponding values It does this by keeping an internal hash
       # `@result` which gets modified by each method in the `call`
@@ -19,14 +43,19 @@ module Orbf
       EMPTY_SUBSTITUTIONS = {}.freeze
       LEVELS_RANGES = (1..5).freeze
       attr_accessor :package, :expression, :activity_code, :period
-      attr_accessor :result
+      attr_accessor :result, :cache
 
-      def initialize(package:, expression:, activity_code:, period:)
+      def initialize(package:, expression:, activity_code:, period:, cache: Cache.new)
         @package = package
         @expression = expression
         @activity_code = activity_code
         @period = period
         @result = {}
+        @cache = cache
+      end
+
+      def self.setup_cache(period)
+        Cache.new(period)
       end
 
       def call
@@ -134,8 +163,7 @@ module Orbf
       end
 
       def dates_substitutions
-        @period_facts ||= Orbf::RulesEngine::PeriodFacts.for(period)
-        result.merge!(@period_facts)
+        result.merge! cache.period_facts
       end
 
       private
