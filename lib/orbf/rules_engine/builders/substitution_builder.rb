@@ -86,8 +86,8 @@ module Orbf
       def null_substitutions
         activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
         package.harmonized_activity_states(activity).each do |activity_state|
-          suffixed_state = suffix_is_null(activity_state.state)
           next unless used_in_expression?(activity_state.state)
+          suffixed_state = suffix_is_null(activity_state.state)
 
           result[suffixed_state] = suffix_activity_pattern(package.code, activity_code, suffixed_state)
         end
