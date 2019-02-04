@@ -99,18 +99,6 @@ module Orbf
         end
         vals.empty? ? "0" : vals.join(", ")
       end
-
-      def activity_state_substitution(package_code, activity, activity_state)
-        if activity_state.data_element?
-          suffix_activity_pattern(package_code, activity.activity_code, activity_state.state)
-        elsif activity_state.constant?
-          name_constant(activity.activity_code, activity_state.state, period)
-        elsif activity_state.indicator?
-          suffix_activity_pattern(package_code, activity.activity_code, activity_state.state)
-        else
-          raise "Unsupported activity state"
-        end
-      end
     end
   end
 end
