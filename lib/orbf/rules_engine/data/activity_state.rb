@@ -72,6 +72,14 @@ module Orbf
 
       attr_reader :state
 
+      def cache_key
+        if constant?
+          name
+        else
+          ext_id
+        end
+      end
+
       def constant?
         kind == Kinds::KIND_CONSTANT
       end
