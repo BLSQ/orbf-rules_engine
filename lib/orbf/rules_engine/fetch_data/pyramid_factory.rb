@@ -2,6 +2,14 @@ module Orbf
   module RulesEngine
     class PyramidFactory
       class << self
+        def from_snapshot(org_units:, org_unit_groups:, org_unit_groupsets:)
+          Orbf::RulesEngine::Pyramid.new(
+            org_units:          org_units.map { |ou| to_org_unit(ou["table"]) },
+            org_unit_groups:    org_unit_groups.map { |group| to_org_unit_group(group["table"]) },
+            org_unit_groupsets: org_unit_groupsets.map { |gs| to_org_unit_group_set(gs["table"]) }
+          )
+        end
+
         def from_dhis2(org_units:, org_unit_groups:, org_unit_groupsets:)
           Orbf::RulesEngine::Pyramid.new(
             org_units:          org_units.map { |ou| to_org_unit(ou) },
