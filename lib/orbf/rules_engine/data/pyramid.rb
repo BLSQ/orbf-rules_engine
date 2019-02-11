@@ -32,8 +32,12 @@ module Orbf
         org_unit_groups_by_id.fetch_values(*ext_ids)
       end
 
+      def belong_to_group(org_unit, group_id)
+        orgunits_in_groups(group_id).include?(org_unit)
+      end
+
       def orgunits_in_groups(group_ext_ids)
-        group_ext_ids.each_with_object(Set.new) do |ext_id, set|
+        Array(group_ext_ids).each_with_object(Set.new) do |ext_id, set|
           set.merge(org_units_by_group_id[ext_id])
         end
       end
