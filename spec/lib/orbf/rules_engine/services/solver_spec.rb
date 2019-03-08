@@ -39,6 +39,16 @@ RSpec.describe Orbf::RulesEngine::Solver do
         )
         expect { solver.solve! }.to raise_error(Dentaku::UnboundVariableError)
       end
+
+      it "can handle large number of variables" do
+        expect {
+          solver.register_variables(
+            [
+              build_variable("nil_key", nil)
+            ] * 131072
+          )
+        }.to_not raise_error
+      end
     end
   end
 
@@ -87,6 +97,16 @@ RSpec.describe Orbf::RulesEngine::Solver do
           Hesabu::Error,
           "In equation key2 No parameter 'key_missing' found. key2 := key_missing"
         )
+      end
+
+      it "can handle large number of variables" do
+        expect {
+          solver.register_variables(
+            [
+              build_variable("nil_key", nil)
+            ] * 131072
+          )
+        }.to_not raise_error
       end
     end
   end
