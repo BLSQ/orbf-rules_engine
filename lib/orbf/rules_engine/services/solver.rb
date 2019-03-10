@@ -14,7 +14,7 @@ module Orbf
       end
 
       def register_variables(vars)
-        @variables.push(*vars)
+        @variables.concat(vars)
       end
 
       def build_problem
