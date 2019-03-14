@@ -26,12 +26,13 @@ module Orbf
         if package.target_org_unit_group_ext_ids.any?
           handle_target_org_units
         else
-          handle_subcontract
+          handle_subcontract(include_main_orgunit: package.include_main_orgunit?)
         end
       end
 
       def handle_single
         return [] unless within_package_groups?
+
         [main_orgunit]
       end
 
@@ -42,12 +43,22 @@ module Orbf
         org_units_set.to_a.unshift(main_orgunit)
       end
 
-      def handle_subcontract
+      def handle_subcontract(include_main_orgunit: false)
         return [] unless within_package_groups?
+
         common_groups_with_group_set = main_orgunit.group_ext_ids & groupset.group_ext_ids
         org_units_set = pyramid.orgunits_in_groups(common_groups_with_group_set)
-        org_units_set.delete(main_orgunit)
-        org_units_set.to_a.unshift(main_orgunit)
+        org_units_set_size = org_units_set.size
+        org_units_set.delete(main_orgunit) unless include_main_orgunit
+        orgunits = org_units_set.to_a.unshift(main_orgunit)
+
+        if include_main_orgunit && org_units_set_size == 0
+          # make sure if main orgunit is alone, they appear twice,
+          # once as main and once as target
+          orgunits = orgunits.push(main_orgunit)
+        end
+
+        orgunits
       end
 
       def groupset

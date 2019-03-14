@@ -1,4 +1,3 @@
-
 RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
   def action(main_orgunit)
     described_class.new(package, pyramid, main_orgunit).call.to_a
@@ -10,14 +9,14 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
 
   let(:package) do
     Orbf::RulesEngine::Package.new(
-      code:                      :quantity,
-      kind:                      package_kind,
-      frequency:                 :monthly,
-      activities:                [],
-      rules:                     [],
-      main_org_unit_group_ext_ids:    ["GROUP_X"],
-      groupset_ext_id:           "GROUPSET_ID",
-      matching_groupset_ext_ids: matching_groupset_ext_ids
+      code:                        :quantity,
+      kind:                        package_kind,
+      frequency:                   :monthly,
+      activities:                  [],
+      rules:                       [],
+      main_org_unit_group_ext_ids: ["GROUP_X"],
+      groupset_ext_id:             "GROUPSET_ID",
+      matching_groupset_ext_ids:   matching_groupset_ext_ids
     )
   end
 
@@ -149,6 +148,36 @@ RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
     it "returns main org unit + ous in intersection of its group_ext_ids and the one in the groupset" do
       expect(action(orgunitx)).to eq [orgunitx]
       expect(action(orgunit4)).to eq [orgunit4, orgunit1]
+    end
+  end
+
+  context "zone/burundi type" do
+    let(:package_kind) { :zone }
+
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:                        :quantity,
+        kind:                        package_kind,
+        frequency:                   :monthly,
+        activities:                  [],
+        rules:                       [],
+        main_org_unit_group_ext_ids: ["GROUP_X"],
+        groupset_ext_id:             "GROUPSET_ID",
+        matching_groupset_ext_ids:   matching_groupset_ext_ids,
+        include_main_orgunit:        true
+      )
+    end
+
+    it "doesnt return anything if main orgunit not in package's org_unit_group_ext_ids" do
+      expect(action(orgunit3)).to eq []
+    end
+
+    it "returns main org unit + ous in intersection of its group_ext_ids and the one in the groupset" do
+      expect(action(orgunitx)).to eq [orgunitx, orgunitx]
+    end
+
+    it "returns main org unit + ous in intersection of its group_ext_ids and the one in the groupset" do
+      expect(action(orgunit4)).to eq [orgunit4, orgunit1, orgunit4]
     end
   end
 end
