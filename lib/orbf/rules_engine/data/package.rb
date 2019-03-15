@@ -10,6 +10,7 @@ module Orbf
 
         def self.assert_valid(package_frequency)
           return if FREQUENCIES.include?(package_frequency)
+
           raise "Invalid package frequency '#{package_frequency}' only supports #{FREQUENCIES}"
         end
       end
@@ -22,6 +23,7 @@ module Orbf
 
         def self.assert_valid(package_kind)
           return if KINDS.include?(package_kind)
+
           raise "Invalid package kind '#{rule_kind}' only supports #{KINDS}"
         end
       end
@@ -29,13 +31,13 @@ module Orbf
       attr_reader :activities, :kind, :rules, :frequency, :code,
                   :main_org_unit_group_ext_ids, :target_org_unit_group_ext_ids,
                   :groupset_ext_id, :dataset_ext_ids,
-                  :matching_groupset_ext_ids
+                  :matching_groupset_ext_ids, :include_main_orgunit
 
       KNOWN_ATTRIBUTES = %i[kind rules code activities frequency
                             main_org_unit_group_ext_ids
                             target_org_unit_group_ext_ids
                             groupset_ext_id dataset_ext_ids
-                            matching_groupset_ext_ids].freeze
+                            matching_groupset_ext_ids include_main_orgunit].freeze
 
       def initialize(args)
         Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
@@ -52,6 +54,7 @@ module Orbf
         @groupset_ext_id = args[:groupset_ext_id]
         @matching_groupset_ext_ids = Array(args[:matching_groupset_ext_ids])
         @dataset_ext_ids = args[:dataset_ext_ids]
+        @include_main_orgunit = args[:include_main_orgunit]
         validate
       end
 
@@ -133,6 +136,10 @@ module Orbf
         activities.detect { |activity| activity.activity_code == activity_code }
       end
 
+      def include_main_orgunit?
+        include_main_orgunit
+      end
+
       private
 
       def validate
@@ -140,6 +147,7 @@ module Orbf
         Kinds.assert_valid(kind)
         raise "groupset_ext_id #{groupset_ext_id} for #{kind} not provided" if (Kinds::SUBCONTRACT == kind) && groupset_ext_id.nil?
         raise "groupset_ext_id or target_org_unit_group_ext_ids should be provided for zone package" if (Kinds::ZONE == kind) && groupset_ext_id.nil? && target_org_unit_group_ext_ids.none?
+
         validate_values_references
         validate_states_and_activity_formula_code_uniqness
         validate_zone_rules
@@ -150,6 +158,7 @@ module Orbf
         package_rules.flat_map(&:formulas).each do |formula|
           formula.values_dependencies.each do |dependency|
             next if allowed_codes.include?(dependency)
+
             raise "#{formula.code}, #{formula.expression} cant reference unknown dependency values #{dependency} #{allowed_codes.to_a.join(',')}"
           end
         end
@@ -164,7 +173,7 @@ module Orbf
 
       def validate_zone_rules
         zone_related_rules = rules.select(&:zone_related_kind?)
-        raise "Rules are zone related but the package isn't zone related"  if zone_related_rules.any? && !zone?
+        raise "Rules are zone related but the package isn't zone related" if zone_related_rules.any? && !zone?
       end
     end
   end
