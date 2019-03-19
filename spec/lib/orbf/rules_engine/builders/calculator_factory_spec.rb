@@ -22,7 +22,7 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
       end
 
 
-      describe "support stdev function" do
+      describe "support stdevp function" do
         it "solve " do
           solution = calculator.solve("mystdevp" => "STDEVP(1,3,9)")
           expect(solution["mystdevp"].to_f).to eq(3.39934634239519)
@@ -77,7 +77,7 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         end
       end
 
-      describe "support abs function" do
+      describe "support sqrt function" do
         it "solve" do
           solution = calculator.solve("my_var" => "sqrt(4.0)")
           expect(solution["my_var"]).to eq(2.0)
