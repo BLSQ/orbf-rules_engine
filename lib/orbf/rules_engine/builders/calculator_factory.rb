@@ -84,8 +84,8 @@ module Orbf
           calculator.add_function(:randbetween, :numeric, RANDBETWEEN)
           calculator.add_function(:eval_array, :array, EVAL_ARRAY)
           calculator.add_function(:array, :array, ARRAY)
-          calculator.add_function(:stdevp, :number, STDEVP)
-          calculator.add_function(:sqrt, :number, SQRT)
+          calculator.add_function(:stdevp, :numeric, STDEVP)
+          calculator.add_function(:sqrt, :numeric, SQRT)
         end
       end
 

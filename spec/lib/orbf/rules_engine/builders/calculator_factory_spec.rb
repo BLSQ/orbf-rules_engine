@@ -29,6 +29,13 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         end
       end
 
+      describe "support stdevp function" do
+        it "solve " do
+          solution = calculator.solve("mystdevp" => "round(12 + STDEVP(1,3,9) + sqrt(4) , 2)")
+          expect(solution["mystdevp"].to_f).to eq(17.4)
+        end
+      end
+
       describe "support score table function" do
         [
           [9, 1],
