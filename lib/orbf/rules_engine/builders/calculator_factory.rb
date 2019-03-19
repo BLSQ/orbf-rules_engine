@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "hesabu"
+require "descriptive_statistics/safe"
+
 module Orbf
   module RulesEngine
 
@@ -66,6 +68,10 @@ module Orbf
 
       ARRAY = ->(*args) { args.flatten }
 
+      SQRT = ->(*args) { Math.sqrt(args[0]) }
+
+      STDEVP = ->(*args) { DescriptiveStatistics.standard_deviation(args)}
+
       def self.build(options = { nested_data_support: false, case_sensitive: true })
         Dentaku::Calculator.new(options).tap do |calculator|
           calculator.add_function(:between, :logical, BETWEEN)
@@ -78,6 +84,8 @@ module Orbf
           calculator.add_function(:randbetween, :numeric, RANDBETWEEN)
           calculator.add_function(:eval_array, :array, EVAL_ARRAY)
           calculator.add_function(:array, :array, ARRAY)
+          calculator.add_function(:stdevp, :number, STDEVP)
+          calculator.add_function(:sqrt, :number, SQRT)
         end
       end
 
