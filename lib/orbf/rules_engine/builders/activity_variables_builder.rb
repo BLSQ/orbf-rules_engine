@@ -99,8 +99,10 @@ module Orbf
           ]
           codes.each do |code|
             next unless dependencies.include?(code)
+
             keys = if code.end_with?("_quarterly")
-                     [[hash[:id], PeriodIterator.periods(period, "quarterly").first, activity_state.ext_id]]
+                     quarter = PeriodIterator.periods(period, "quarterly").first
+                     [[hash[:id], quarter, activity_state.ext_id]]
                    else
                      build_keys_with_yearly([hash[:id], period, activity_state.ext_id])
                    end
