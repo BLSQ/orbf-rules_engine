@@ -99,8 +99,8 @@ module Orbf
         package.states.each do |state|
           LEVELS_RANGES.each do |level_index|
             state_levels = [
-              state + "_level_#{level_index}",
-              state + "_level_#{level_index}_quarterly"
+              "#{state}_level_#{level_index}",
+              "#{state}_level_#{level_index}_quarterly"
             ]
             state_levels.each do |state_level|
               next unless used_in_expression?(state_level)
