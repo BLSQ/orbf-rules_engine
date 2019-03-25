@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "./substitution_builder"
 module Orbf
   module RulesEngine
     class ActivityFormulaVariablesBuilder
