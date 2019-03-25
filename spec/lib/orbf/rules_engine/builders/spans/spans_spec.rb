@@ -184,5 +184,17 @@ RSpec.describe "spans" do
         )
       end
     end
+
+    it "should fail fast on invalid modifier" do
+      expect { span.periods("2016Q1", "#{name}_last_3_months_unknown_window_values") }.to(
+        raise_error("Sorry unsupported modifier mode : sample_matching_last_3_months_unknown_window_values")
+      )
+    end
+
+    it "should fail fast on invalid period unit" do
+      expect { span.periods("2016Q1", "#{name}_last_3_weeks_exclusive_window_values") }.to(
+        raise_error("Sorry 'weeks' is not supported only months and quarters in sample_matching_last_3_weeks_exclusive_window_values")
+      )
+    end
   end
 end

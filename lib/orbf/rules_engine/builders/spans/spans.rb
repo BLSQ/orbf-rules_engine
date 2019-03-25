@@ -129,7 +129,7 @@ module Orbf
           elsif modifier.nil?
             0
           else
-            raise "not supported exclusive mode : #{name}"
+            raise "Sorry unsupported modifier mode : #{name}"
           end
         end
 
@@ -149,7 +149,7 @@ module Orbf
             offset = (Integer(offset) - 1).months * 3
             offset_end = exclusive_offset.months * 3
           else
-            raise "Nope '#{unit}' not supported only months and quarters in #{name}"
+            raise "Sorry '#{unit}' is not supported only months and quarters in #{name}"
           end
 
           period_start = PeriodConverter.as_date_range(invoicing_period).first
