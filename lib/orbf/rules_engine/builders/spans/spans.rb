@@ -123,10 +123,10 @@ module Orbf
           name.gsub(REGEX, "")
         end
 
-        def exlusive_offset_for(exclusive, name)
-          if exclusive == "exclusive"
+        def exclusive_offset_for(modifier, name)
+          if modifier == "exclusive"
             1
-          elsif exclusive.nil?
+          elsif modifier.nil?
             0
           else
             raise "not supported exclusive mode : #{name}"
@@ -138,16 +138,16 @@ module Orbf
 
           offset = matches[1]
           unit = matches[2]
-          exlusive_offset = exlusive_offset_for(matches[3], name)
+          exclusive_offset = exclusive_offset_for(matches[3], name)
 
           if unit == "months"
             unit = "monthly"
             offset = (Integer(offset) - 1).months
-            offset_end = exlusive_offset.months
+            offset_end = exclusive_offset.months
           elsif unit == "quarters"
             unit = "quarterly"
             offset = (Integer(offset) - 1).months * 3
-            offset_end = exlusive_offset.months * 3
+            offset_end = exclusive_offset.months * 3
           else
             raise "Nope '#{unit}' not supported only months and quarters in #{name}"
           end
