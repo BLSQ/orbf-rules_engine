@@ -45,6 +45,8 @@ module Orbf
         end
       end
 
+      # to avoid tokenizing over and over,
+      # we tokenize once and reuse the token array to instantiate the expression
       def instantiate_formula(formula, activity, orgunit)
         @tokens[formula] ||= Orbf::RulesEngine::Tokenizer.tokenize(formula.expression)
         subs = {}
@@ -89,25 +91,24 @@ module Orbf
         )
       end
 
+      ### Aggregation SumIf related expansions
+
       def expand_aggregation_values(instantiated_formula, activity)
-        values_expansions = entities_aggregation_values(activity)
-        values_expansions.each do |k, v|
+        entities_aggregation_values(activity).each do |k, v|
+          # gsub! is safe as the expression has already been instantiated
+          # and produced a new string instance
           instantiated_formula.gsub!("%{#{k}}", v)
         end
-
-        instantiated_formula
       end
 
       def entities_aggregation_values(activity)
-        sub = package.entities_aggregation_rules.each_with_object({}) do |aggregation_rules, hash|
+        package.entities_aggregation_rules.each_with_object({}) do |aggregation_rules, hash|
           aggregation_rules.formulas.each do |formula|
             selected_org_units = SumIf.org_units(@all_orgunits, package, activity)
             key = formula.code + "_values"
             hash[key.to_sym] = to_values_list(formula, activity, selected_org_units)
           end
         end
-
-        sub
       end
 
       def to_values_list(formula, activity, selected_org_units)
