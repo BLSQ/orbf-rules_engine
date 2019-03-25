@@ -168,9 +168,32 @@ RSpec.describe "spans" do
       )
     end
 
-    it "" do
-      expect(span.periods("2016Q1", "#{name}_last_2_quarters_window_values")).to eq(
-        %w[2015Q4 2016Q1]
+    [
+      ["last_2_quarters", %w[2015Q4 2016Q1]],
+      ["last_2_quarters_exclusive", %w[2015Q3 2015Q4]],
+      ["last_1_quarters", %w[2016Q1]],
+      ["last_1_quarters_exclusive", %w[2015Q4]],
+      ["last_3_quarters_exclusive", %w[2015Q2 2015Q3 2015Q4]],
+      ["last_3_months", %w[201511 201512 201601]],
+      ["last_2_months_exclusive", %w[201511 201512]]
+    ].each do |suffix, expected|
+
+      it "#{suffix}_window_values for 2016Q1 should return #{expected}" do
+        expect(span.periods("2016Q1", "#{name}_#{suffix}_window_values")).to eq(
+          expected
+        )
+      end
+    end
+
+    it "should fail fast on invalid modifier" do
+      expect { span.periods("2016Q1", "#{name}_last_3_months_unknown_window_values") }.to(
+        raise_error("Sorry unsupported modifier mode : sample_matching_last_3_months_unknown_window_values")
+      )
+    end
+
+    it "should fail fast on invalid period unit" do
+      expect { span.periods("2016Q1", "#{name}_last_3_weeks_exclusive_window_values") }.to(
+        raise_error("Sorry 'weeks' is not supported only months and quarters in sample_matching_last_3_weeks_exclusive_window_values")
       )
     end
   end
