@@ -41,8 +41,11 @@ module Orbf
                     level = dependency[-1].to_i
                     parent_id = orgunit.parent_ext_ids[level - 1]
                     subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
+                  elsif dependency.end_with?("_level_1_quarterly") || dependency.end_with?("_level_2_quarterly") || dependency.end_with?("_level_3_quarterly") || dependency.end_with?("_level_4_quarterly") || dependency.end_with?("_level_5_quarterly")
+                    level = dependency[-10].to_i
+                    parent_id = orgunit.parent_ext_ids[level - 1]
+                    subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
                   elsif dependency.end_with?("_zone_main_orgunit")
-                    #state = dependency.slice(0, dependency.length - 18)
                     parent_id = @all_orgunits.first.ext_id
                     subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
                   elsif package_rule_codes.include?(dependency)
@@ -53,7 +56,7 @@ module Orbf
                 end
                 instantiated_formula = @tokens[formula].map {|token| subs[token] || token }.join()
                 instantiated_formula = expand_aggregation_values(instantiated_formula, activity)
-                instantiated_formula = Orbf::RulesEngine::ActivityFormulaValuesExpanderNew.new(
+                instantiated_formula = Orbf::RulesEngine::ActivityFormulaValuesExpander.new(
                   package.code, activity_code,
                   instantiated_formula,
                   formula.values_dependencies,
@@ -113,61 +116,6 @@ module Orbf
   end
 end
 
-# frozen_string_literal: true
 
-module Orbf
-  module RulesEngine
-    class ActivityFormulaValuesExpanderNew
-      include VariablesBuilderSupport
 
-      def initialize(package_code, activity_code, expression, values_dependencies, rule_kind, orgunit, period)
-        @package_code = package_code
-        @activity_code = activity_code
-        @expression = expression
-        @rule_kind = rule_kind
-        @values_dependencies = values_dependencies
-        @orgunit = orgunit
-        @period = period
-      end
 
-      # turn %{..._values} in to their :
-      #    activity_code_code_for_orgunit_id_and_period_1,
-      #    activity_code_code_for_orgunit_id_and_period_2
-      # in the expression formula for a given orgunit, period and activity code
-      def expand_values
-        expanded_string = expression
-        spans_subsitutions.each do |k, v|
-          expanded_string.gsub!("%{#{k}}", v)
-        end
-        expanded_string
-      end
-
-      private
-
-      attr_reader :package_code, :activity_code, :rule_kind, :expression, :orgunit, :period, :values_dependencies
-
-      # return hash with values to susbstitute in the formula
-      #   key is dependency symbol and values is the joined values
-      #       activity_code_code_for_orgunit_id_and_period_1,
-      #       activity_code_code_for_orgunit_id_and_period_2
-      def spans_subsitutions
-        values_dependencies.each_with_object({}) do |dependency, hash|
-          span = Orbf::RulesEngine::Spans.matching_span(dependency, rule_kind)
-          next unless span
-          next if hash[dependency.to_sym]
-
-          hash[dependency.to_sym] = to_values_list(span, dependency)
-        end
-      end
-
-      def to_values_list(span, dependency)
-        periods = span.periods(period, dependency)
-        code = span.prefix(dependency)
-        val = periods.map do |period|
-          suffix_for_id_activity(package_code, activity_code, code, orgunit.ext_id, period)
-        end
-        val.join(",")
-      end
-    end
-  end
-end
