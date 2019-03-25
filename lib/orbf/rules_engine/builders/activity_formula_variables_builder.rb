@@ -43,11 +43,12 @@ module Orbf
                     subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
                   elsif dependency.end_with?("_zone_main_orgunit")
                     #state = dependency.slice(0, dependency.length - 18)
-                    subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, @orgunits.first.ext_id, period)
+                    parent_id = @all_orgunits.first.ext_id
+                    subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
                   elsif package_rule_codes.include?(dependency)
                     subs[dependency]=suffix_for_package(package.code, dependency, orgunit, period)
                   else
-                      subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, orgunit.ext_id, period)
+                    subs[dependency]=suffix_for_id_activity(package.code, activity.activity_code, dependency, orgunit.ext_id, period)
                   end
                 end
                 instantiated_formula = @tokens[formula].map {|token| subs[token] || token }.join()
