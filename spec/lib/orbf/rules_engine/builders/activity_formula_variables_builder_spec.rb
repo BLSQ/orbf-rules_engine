@@ -57,7 +57,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
           formulas: [
             Orbf::RulesEngine::Formula.new(
               "percent_achieved",
-              "active * safe_div(achieved,sum(%{achieved_previous_year_same_quarter_monthly_values})"
+              "active * safe_div(achieved,sum(%{achieved_previous_year_same_quarter_monthly_values}))"
             ),
             Orbf::RulesEngine::Formula.new(
               "allowed",
@@ -78,7 +78,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
       Orbf::RulesEngine::Variable.with(
         key:            "#{package.code}_act1_percent_achieved_for_1_and_2016q1",
         period:         "2016Q1",
-        expression:     "#{package.code}_act1_active_for_1_and_2016q1 * safe_div(#{package.code}_act1_achieved_for_1_and_2016q1,sum(#{package.code}_act1_achieved_for_1_and_201501,#{package.code}_act1_achieved_for_1_and_201502,#{package.code}_act1_achieved_for_1_and_201503)",
+        expression:     "#{package.code}_act1_active_for_1_and_2016q1 * safe_div(#{package.code}_act1_achieved_for_1_and_2016q1,sum(#{package.code}_act1_achieved_for_1_and_201501,#{package.code}_act1_achieved_for_1_and_201502,#{package.code}_act1_achieved_for_1_and_201503))",
         type:           "activity_rule",
         state:          "percent_achieved",
         activity_code:  "act1",
