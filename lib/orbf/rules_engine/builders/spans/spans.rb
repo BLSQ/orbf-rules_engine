@@ -85,10 +85,9 @@ module Orbf
         end
 
         def periods(invoicing_period, name)
-
           quarter = PeriodIterator.periods(invoicing_period, "quarterly").first
 
-          frequencies(name,QUARTER_FREQUENCIES).each_with_object([]) do |frequency, arr|
+          frequencies(name, QUARTER_FREQUENCIES).each_with_object([]) do |frequency, arr|
             arr.push(*PeriodIterator.periods(quarter, frequency))
           end
         end
@@ -115,8 +114,7 @@ module Orbf
       end
 
       class SlidingWindow < Span
-        REGEX = /_last_(\d+)_(\w+)_window_values/
-
+        REGEX = /_last_(\d+)_([a-z]+)_?([a-z]+)?_window_values/.freeze
         def suffix
           "window"
         end
@@ -125,37 +123,44 @@ module Orbf
           name.gsub(REGEX, "")
         end
 
-        # last_6_months => 6
-        def time_offset(name)
-          name.match(REGEX)[1]
-        end
-
-        def time_unit(name)
-          name.match(REGEX)[2]
+        def exclusive_offset_for(modifier, name)
+          if modifier == "exclusive"
+            1
+          elsif modifier.nil?
+            0
+          else
+            raise "Sorry unsupported modifier mode : #{name}"
+          end
         end
 
         def periods(invoicing_period, name)
-          offset = time_offset(name)
-          unit = time_unit(name)
+          matches = name.match(REGEX)
+
+          offset = matches[1]
+          unit = matches[2]
+          exclusive_offset = exclusive_offset_for(matches[3], name)
+
           if unit == "months"
             unit = "monthly"
             offset = (Integer(offset) - 1).months
+            offset_end = exclusive_offset.months
           elsif unit == "quarters"
             unit = "quarterly"
             offset = (Integer(offset) - 1).months * 3
+            offset_end = exclusive_offset.months * 3
           else
-            raise "Nope"
+            raise "Sorry '#{unit}' is not supported only months and quarters in #{name}"
           end
 
           period_start = PeriodConverter.as_date_range(invoicing_period).first
-          previous_range = (period_start - offset)..period_start
+          previous_range = (period_start - offset - offset_end)..(period_start - offset_end)
           result = PeriodIterator.extract_periods(previous_range, unit)
           result
         end
 
-        def frequencies(name, frequencies = FREQUENCIES)
+        def frequencies(name, _frequencies = FREQUENCIES)
           if name =~ REGEX
-            ['something']
+            ["something"]
           else
             []
           end
