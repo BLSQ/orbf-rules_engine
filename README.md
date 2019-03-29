@@ -40,6 +40,7 @@ verify no degradation in performance or allocation
 
 ```
 PROF=true bundle exec rspec ./spec/lib_spec.rb
+ALLOC=true bundle exec rspec ./spec/lib_spec.rb
 ```
 
 ## Contributing
