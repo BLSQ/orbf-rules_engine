@@ -24,11 +24,17 @@ RSpec.describe "Liberia System" do
     RubyProf.start if ENV["PROF"]
     require "objspace"
 
-    # stats = AllocationStats.trace do
+
+    stats = AllocationStats.new if ENV["ALLOC"]
+    stats.trace if ENV["ALLOC"]
+
     fetch_and_solve.call
     Orbf::RulesEngine::InvoicePrinter.new(fetch_and_solve.solver.variables, fetch_and_solve.solver.solution).print
-    # end
-    # puts stats.allocations(alias_paths: true).group_by(:sourcefile, :sourceline, :class).sort_by_count.to_text
+
+    stats.stop if ENV["ALLOC"]
+    if ENV["ALLOC"]
+      puts stats.allocations(alias_paths: true).group_by(:sourcefile, :sourceline, :class).at_least(100).sort_by_count.to_text
+    end
     result = RubyProf.stop if ENV["PROF"]
 
     if ENV["PROF"]
