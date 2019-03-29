@@ -13,6 +13,7 @@ module Orbf
         @tokens = {}
         @period_facts = Orbf::RulesEngine::PeriodFacts.for(period)
         @package_rule_codes = package.package_rules.flat_map(&:formulas).map(&:code).to_set
+        @activity_rule_codes = package.activity_rules.flat_map(&:formulas).map(&:code).to_set
       end
 
       def to_variables
@@ -66,7 +67,7 @@ module Orbf
           elsif dependency.end_with?("_zone_main_orgunit")
             parent_id = @all_orgunits.first.ext_id
             subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
-          elsif @package_rule_codes.include?(dependency)
+          elsif @package_rule_codes.include?(dependency) && !@activity_rule_codes.include?(dependency)
             subs[dependency] = suffix_for_package(package.code, dependency, orgunit, period)
           else
             subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, orgunit.ext_id, period)
