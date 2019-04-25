@@ -160,10 +160,14 @@ module Orbf
 
       def dhis2_in_data_element
         return nil if type != Types::ACTIVITY
+
         activity = package.activity(activity_code)
         return nil unless activity
+
+        # this is to minimize allocations
+        special_state = state.end_with?("_zone_main_orgunit", "_raw")
         activity_state = activity.activity_states.detect do |as|
-          as.state == state || as.state + "_zone_main_orgunit" == state || as.state + "_raw" == state
+          as.state == state || (special_state && (as.state + "_zone_main_orgunit" == state || as.state + "_raw" == state))
         end
 
         activity_state&.ext_id
@@ -177,6 +181,7 @@ module Orbf
         return solution[key] unless exportable_variable_key
         return nil if solution[exportable_variable_key] == false
         return nil if solution[exportable_variable_key] == 0
+
         solution[key]
       end
 

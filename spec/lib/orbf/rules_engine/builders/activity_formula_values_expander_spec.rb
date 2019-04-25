@@ -25,7 +25,9 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaValuesExpander do
       substitued = described_class.new(
         "package_code_tst",
         "activity_code_tst",
-        formula_without_values_pattern,
+        formula_without_values_pattern.expression,
+        formula_without_values_pattern.values_dependencies,
+        formula_without_values_pattern.rule.kind,
         orgunit,
         period
       ).expand_values
@@ -46,7 +48,9 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaValuesExpander do
       substitued = described_class.new(
         "package_code_tst",
         "activity_code_tst",
-        formula_with_values_pattern,
+        formula_with_values_pattern.expression,
+        formula_with_values_pattern.values_dependencies,
+        formula_with_values_pattern.rule.kind,
         orgunit,
         period
       ).expand_values
