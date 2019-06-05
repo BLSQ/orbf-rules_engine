@@ -27,9 +27,13 @@ module Orbf
       #    expression : SUM(quantity_amount_for_1_and_201601,quantity_amount_for_1_and_201602,quantity_amount_for_1_and_201603)
       def temp_variable_quarterly_sum
         return [] if payment_rule.monthly?
+        formula_dependencies = payment_rule.rule.formulas.flat_map(&:dependencies).to_set
+
         orgunits.each_with_object([]) do |orgunit, array|
           payment_rule.packages.select(&:monthly?).each do |package|
             package.package_rules.flat_map(&:formulas).each do |formula|
+              next unless formula_dependencies.include?(formula.code)
+
               var_dependencies = []
               PeriodIterator.each_periods(@invoice_period, package.frequency) do |period|
                 var_dependencies.push suffix_for_package(package.code, formula.code, orgunit, period)
