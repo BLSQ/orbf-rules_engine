@@ -45,7 +45,21 @@ RSpec.describe "Liberia System" do
       printer.print(STDOUT, {})
     end
 
-    expect(fetch_and_solve.solver.solution.size).to eq(32_149)
+    expect(fetch_and_solve.solver.solution.size).to eq(32_109)
+
+    fixture_record(fetch_and_solve.exported_values, :rules_engine, "lib_exported_values.json")
+
+    # Only here to help with comparing
+    index_by_unique = ->(json) {
+      arr = JSON.parse(json)
+      arr.index_by do |h|
+        [h["period"], h["orgUnit"], h["dataElement"]]
+      end
+    }
+    expected = index_by_unique.call(fixture_content(:rules_engine, "lib_exported_values.json"))
+    new_values = index_by_unique.call(fetch_and_solve.exported_values.to_json)
+
+    expect(new_values).to eq(expected)
     expect(fetch_and_solve.exported_values.size).to eq(4202)
   end
 end

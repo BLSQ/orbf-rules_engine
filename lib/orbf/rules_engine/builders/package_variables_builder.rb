@@ -30,7 +30,7 @@ module Orbf
             )
             array.push Orbf::RulesEngine::Variable.new_package_rule(
               period:                  period,
-              key:                     suffix_for(package.code, formula.code, orgunit, period),
+              key:                     suffix_for_package(package.code, formula.code, orgunit, period),
               expression:              format(substitued, activity_substitutions(orgunit)),
               state:                   formula.code,
               orgunit_ext_id:          orgunit.ext_id,
