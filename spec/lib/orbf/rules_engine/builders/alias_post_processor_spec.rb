@@ -71,7 +71,8 @@ RSpec.describe "Packages cross referencies" do
             Orbf::RulesEngine::ActivityState.new_data_element(
               state:  :score,
               ext_id: REFERENCED_DATA_ELEMENT_EXT_ID,
-              name:   "referenced_de_shared"
+              name:   "referenced_de_shared",
+              origin: "dataValueSets"
             )
           ]
         )

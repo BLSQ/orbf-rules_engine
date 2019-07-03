@@ -27,7 +27,7 @@ RSpec.describe Orbf::RulesEngine::FetchData do
   end
 
   let(:package) do
-    double(:package)
+    double(:package, activities: [])
   end
 
   let(:package_arguments) do

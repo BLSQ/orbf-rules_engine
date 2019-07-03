@@ -1,4 +1,3 @@
-
 RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
   let(:orgunit) do
     Orbf::RulesEngine::OrgUnit.with(
@@ -17,7 +16,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         Orbf::RulesEngine::ActivityState.new_data_element(
           state:  :achieved,
           ext_id: "dhis2_act1_achieved",
-          name:   "act1_achieved"
+          name:   "act1_achieved",
+          origin: "dataValueSets"
         )
       ]
     )

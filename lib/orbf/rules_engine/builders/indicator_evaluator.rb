@@ -6,7 +6,7 @@ module Orbf
       include VariablesBuilderSupport
 
       def initialize(indicators, dhis2_values)
-        @indicators = Array(indicators).uniq
+        @indicators = Array(indicators).uniq.select(&:origin_data_value_sets?)
         @indexed_values = Dhis2IndexedValues.new(dhis2_values)
         @period_orgunits = dhis2_values.map do |value|
           [value["period"], value["org_unit"] || value["orgUnit"]]

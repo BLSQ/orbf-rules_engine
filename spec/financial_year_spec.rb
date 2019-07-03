@@ -47,7 +47,8 @@ RSpec.describe "ORBF System" do
       activity_states: [Orbf::RulesEngine::ActivityState.new_data_element(
         state:  :budget,
         ext_id: "dhis2_#{activity_code}_budget",
-        name:   "#{activity_code}_budget"
+        name:   "#{activity_code}_budget",
+        origin: "dataValueSets"
       )]
     )]
   end

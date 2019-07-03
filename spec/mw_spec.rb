@@ -87,7 +87,8 @@ RSpec.describe "Malawi System" do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  "validated",
             name:   "dhmt_1_price",
-            ext_id: "ext_validated_dhmt_1"
+            ext_id: "ext_validated_dhmt_1",
+            origin: "dataValueSets"
           )
         ]
       ),
@@ -108,7 +109,8 @@ RSpec.describe "Malawi System" do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  "validated",
             name:   "dhmt_2_price",
-            ext_id: "ext_validated_dhmt_2"
+            ext_id: "ext_validated_dhmt_2",
+            origin: "dataValueSets"
           )
         ]
       )
