@@ -21,15 +21,19 @@ module Orbf
           end
         end
 
-        raw_results = map_to_raw(results)
+        data_values_results = map_to_raw(results)
 
         analytics_activity_states = package_arguments.flat_map do |pa|
           pa.package.activities.flat_map(&:activity_states).select(&:origin_analytics?)
         end
 
-        return raw_results if analytics_activity_states.none?
+        return data_values_results if analytics_activity_states.none?
 
-        # TODO handle too long urls ?
+        # TODO: SMS ask piet ;)
+        #    - handle too long urls ?
+        #    - what to do it data is coming from data values sets too ?
+        #       - drop the one from analytics, need to find "duplicates" ?
+
         without_parents_ext_ids = package_arguments.flat_map(&:orgunits).flat_map(&:to_a).map(&:ext_id).uniq.join(";")
         without_yearly_periods = package_arguments.map(&:periods).map { |p| p[0..-3] }.uniq.flatten.join(";")
         analytics_values = { "rows" => [] }
@@ -37,12 +41,19 @@ module Orbf
         analytics_values = dhis2_connection.analytics.list(
           periods:            without_yearly_periods,
           organisation_units: without_parents_ext_ids,
-          data_elements:      analytics_activity_states.map(&:ext_id).join(";")
+          data_elements:      analytics_activity_states.map(&:ext_id).join(";").gsub("inlined-", "")
         )
 
-        raw_analytics_values = analytics_values["rows"].map do |v|
+        # ugly hack for dataelement.category_combo_combo
+        mappings = analytics_activity_states.each_with_object({}) do |activity_state, acc|
+          next unless activity_state.ext_id.start_with?("inlined-")
+
+          acc[activity_state.ext_id.gsub("inlined-", "")] = activity_state.ext_id
+        end
+
+        analytics_results = analytics_values["rows"].map do |v|
           {
-            "dataElement"          => v[0],
+            "dataElement"          => mappings[v[0]] || v[0],
             "period"               => v[2],
             "orgUnit"              => v[1],
             "categoryOptionCombo"  => "default",
@@ -51,7 +62,7 @@ module Orbf
           }
         end
 
-        raw_results + raw_analytics_values.uniq
+        data_values_results + analytics_results
       end
 
       private
