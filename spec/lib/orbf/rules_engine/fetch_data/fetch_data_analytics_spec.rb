@@ -50,8 +50,13 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
             name:       "act1_achieved",
             origin:     "analytics",
             expression: "whocares"
+          ), Orbf::RulesEngine::ActivityState.new_indicator(
+            state:      :perceived,
+            ext_id:     "inlined-dhis2_de_1.coc_1",
+            name:       "act1_perceived",
+            origin:     "analytics",
+            expression: "whocares too"
           )
-
         ]
       )
     ]
@@ -80,19 +85,25 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
 
   let(:fetch_data) { described_class.new(dhis2_connection, package_arguments) }
 
-  it "combines all arguments and fetch data in one call" do
+  before do
+    # force webmock to capture everything not only the first "dimension" query params
     WebMock::Config.instance.query_values_notation = :flat_array
+  end
 
-    request = stub_request(:get, "https://play.dhis2.org/2.28/api/analytics?dimension=dx:dhis2_de_1%3Bdhis2_indic_1&dimension=ou:1%3B2&dimension=pe:201601")
+  after do
+    WebMock::Config.instance.query_values_notation = nil
+  end
+
+  it "combines all arguments and fetch data in one call" do
+    request = stub_request(:get, "https://play.dhis2.org/2.28/api/analytics?dimension=dx:dhis2_de_1%3Bdhis2_indic_1%3Bdhis2_de_1.coc_1&dimension=ou:1%3B2&dimension=pe:201601")
               .to_return(status: 200, body: JSON.pretty_generate(
                 "rows" => [
-                  ["dhis2_de_1", orgunit_1.ext_id, "2016Q1", "1.4"]
+                  ["dhis2_de_1", orgunit_1.ext_id, "201601", "1.4"],
+                  ["dhis2_de_1.coc_1", orgunit_1.ext_id, "201601", "3.2"]
                 ]
               ), headers: {})
 
     values = fetch_data.call
-
-    WebMock::Config.instance.query_values_notation = nil
 
     expect(request).to have_been_made.once
 
@@ -100,7 +111,13 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
                             "categoryOptionCombo"  => "default",
                             "dataElement"          => "dhis2_de_1",
                             "orgUnit"              => "1",
-                            "period"               => "2016Q1",
-                            "value"                => "1.4" }])
+                            "period"               => "201601",
+                            "value"                => "1.4" },
+                          { "attributeOptionCombo" => "default",
+                            "categoryOptionCombo"  => "default",
+                            "dataElement"          => "inlined-dhis2_de_1.coc_1",
+                            "orgUnit"              => "1",
+                            "period"               => "201601",
+                            "value"                => "3.2" }])
   end
 end
