@@ -44,6 +44,11 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
             ext_id: "dhis2_de_1",
             name:   "act1_achieved",
             origin: "analytics"
+          ), Orbf::RulesEngine::ActivityState.new_data_element(
+            state:  :duplicated_de,
+            ext_id: "dhis2_de_1",
+            name:   "act1_duplicated_de",
+            origin: "analytics"
           ), Orbf::RulesEngine::ActivityState.new_indicator(
             state:      :achieved,
             ext_id:     "dhis2_indic_1",
