@@ -125,6 +125,7 @@ RSpec.describe Orbf::RulesEngine::FetchData do
           "attributeOptionCombo" => "HllvX50cXC0",
           "value"                => "I'm ok",
           "storedBy"             => "dd",
+          "origin"               =>"dataValueSets",
           "created"              => "2018-04-18T14:33:50.000+0000",
           "lastUpdated"          => "2018-04-30T10:26:24.371+0000",
           "followUp"             => false }

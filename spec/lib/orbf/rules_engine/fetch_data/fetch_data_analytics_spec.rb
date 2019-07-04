@@ -117,12 +117,14 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
                             "dataElement"          => "dhis2_de_1",
                             "orgUnit"              => "1",
                             "period"               => "201601",
-                            "value"                => "1.4" },
+                            "value"                => "1.4",
+                            "origin"               => "analytics" },
                           { "attributeOptionCombo" => "default",
                             "categoryOptionCombo"  => "default",
                             "dataElement"          => "inlined-dhis2_de_1.coc_1",
                             "orgUnit"              => "1",
                             "period"               => "201601",
-                            "value"                => "3.2" }])
+                            "value"                => "3.2",
+                            "origin"               => "analytics" }])
   end
 end

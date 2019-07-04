@@ -33,7 +33,8 @@ module Orbf
             "orgUnit"              => v[1],
             "categoryOptionCombo"  => "default",
             "attributeOptionCombo" => "default",
-            "value"                => v[3]
+            "value"                => v[3],
+            "origin"               => "analytics"
           }
         end
       end

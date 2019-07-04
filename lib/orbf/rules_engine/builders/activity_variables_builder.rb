@@ -86,7 +86,7 @@ module Orbf
 
       def de_values(activity_state, period, _dependencies)
         orgunits.each do |orgunit|
-          current_value = lookup_value(build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id]))
+          current_value = lookup_value(build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id]), activity_state)
           yield(orgunit.ext_id, activity_state.state, current_value)
         end
       end
@@ -106,7 +106,7 @@ module Orbf
                    else
                      build_keys_with_yearly([hash[:id], period, activity_state.ext_id])
                    end
-            hash_value = lookup_value(keys)
+            hash_value = lookup_value(keys, activity_state)
             yield(hash[:id], code, hash_value)
           end
         end
@@ -118,7 +118,7 @@ module Orbf
 
         main_orgunit_ext_id = orgunits.first.ext_id
         key = [main_orgunit_ext_id, period, activity_state.ext_id]
-        hash_value = lookup_value(build_keys_with_yearly(key))
+        hash_value = lookup_value(build_keys_with_yearly(key), activity_state)
         yield(main_orgunit_ext_id, code, hash_value)
       end
 
@@ -133,7 +133,7 @@ module Orbf
         end.uniq
       end
 
-      def lookup_value(keys)
+      def lookup_value(keys, activity_state)
         keys.each do |key|
           vals = if key.first.is_a?(Array)
                    v = key.map { |k| lookup[k] }.compact
@@ -153,7 +153,13 @@ module Orbf
             return ValueLookup.new(value: looked_vals.first, is_null: false)
           end
 
-          return ValueLookup.new(value: looked_vals.join(" + "), is_null: false)
+          looked_vals = if activity_state.origin_data_value_sets?
+                          vals.reject { |val| val["origin"] == "analytics" || val["value"].nil? }
+                        else
+                          vals.reject { |val| val["origin"] != "analytics" || val["value"].nil? }
+                        end
+
+          return ValueLookup.new(value: looked_vals.map { |val| val["value"] }.join(" + "), is_null: false)
         end
         ValueLookup.new(value: "0", is_null: true)
       end

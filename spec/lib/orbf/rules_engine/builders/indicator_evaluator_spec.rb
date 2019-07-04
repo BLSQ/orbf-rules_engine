@@ -32,6 +32,7 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
         "categoryOptionCombo" => @coc,
         "value"               => @value,
         "period"              => "2016Q1",
+        "origin"=>"IndicatorEvaluator",
         "orgUnit"             => "1" }
     end
   end
@@ -105,13 +106,13 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
     let(:expected_dhis2_values) do
       [
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
-           "value" => " 33 ", "period" => "2016Q1", "orgUnit" => "1" },
+           "value" => " 33 ", "period" => "2016Q1", "orgUnit" => "1", "origin"=>"IndicatorEvaluator" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => " 33  +  34 ", "period" => "2016Q1", "orgUnit" => "1" },
+          "value" => " 33  +  34 ", "period" => "2016Q1", "orgUnit" => "1", "origin"=>"IndicatorEvaluator" },
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
-           "value" => " 3 ", "period" => "2016Q1", "orgUnit" => "2" },
+           "value" => " 3 ", "period" => "2016Q1", "orgUnit" => "2", "origin"=>"IndicatorEvaluator" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => " 3  +  24 ", "period" => "2016Q1", "orgUnit" => "2" }
+          "value" => " 3  +  24 ", "period" => "2016Q1", "orgUnit" => "2", "origin"=>"IndicatorEvaluator" }
       ]
     end
 

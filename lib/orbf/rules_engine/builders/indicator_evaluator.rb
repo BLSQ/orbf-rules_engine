@@ -33,7 +33,8 @@ module Orbf
             "categoryOptionCombo" => "default",
             "value"               => value,
             "period"              => period,
-            "orgUnit"             => orgunit
+            "orgUnit"             => orgunit,
+            "origin"              => "IndicatorEvaluator"
           }
         end
       end
