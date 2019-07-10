@@ -6,9 +6,6 @@ module Orbf
         @dhis2_connection = dhis2_connection
       end
 
-      # TODO SMS ask piet ;)
-      #    - what to do it data is coming from data values sets to
-      #       - drop the one from analytics, need to find "duplicates" ?
       def call
         data_value_sets_values + analytics_values
       end
