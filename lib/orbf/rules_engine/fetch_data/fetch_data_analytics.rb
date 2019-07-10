@@ -11,12 +11,12 @@ module Orbf
       def call
         return [] if analytics_activity_states.none?
 
-        analytics_values = dhis2_connection.analytics.list(
+        analytics_response = dhis2_connection.analytics.list(
           periods:            without_yearly_periods,
           organisation_units: orgunit_ext_ids,
           data_elements:      data_elements
         )
-        map_to_data_values(analytics_values)
+        map_to_data_values(analytics_response)
       end
 
       private
@@ -25,8 +25,8 @@ module Orbf
 
       attr_reader :dhis2_connection, :package_arguments
 
-      def map_to_data_values(analytics_values)
-        analytics_values["rows"].map do |v|
+      def map_to_data_values(analytics_response)
+        analytics_response["rows"].map do |v|
           {
             "dataElement"          => data_element_mappings[v[0]] || v[0],
             "period"               => v[2],
