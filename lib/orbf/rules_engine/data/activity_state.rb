@@ -90,7 +90,11 @@ module Orbf
         after_init
       end
 
-      attr_reader :state, :ext_id, :name, :kind, :formula, :origin
+      attr_reader :state, :ext_id, :name, :kind, :formula
+
+      def origin
+        @origin || "dataValueSets"
+      end
 
       def constant?
         kind == Kinds::KIND_CONSTANT
