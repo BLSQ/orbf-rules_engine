@@ -97,7 +97,8 @@ RSpec.describe "SIGL System" do
         Orbf::RulesEngine::ActivityState.new_data_element(
           state:  state,
           ext_id: "dhis2_#{activity_code}_#{state}",
-          name:   "#{activity_code}_#{state}"
+          name:   "#{activity_code}_#{state}",
+          origin: "dataValueSets"
         )
       end
       Orbf::RulesEngine::Activity.with(

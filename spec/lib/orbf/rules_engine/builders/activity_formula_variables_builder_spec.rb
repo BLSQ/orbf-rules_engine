@@ -1,4 +1,3 @@
-
 RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
   def action
     described_class.new(
@@ -17,17 +16,20 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :active,
             ext_id: "dhis2_act1_active",
-            name:   "act1_active"
+            name:   "act1_active",
+            origin: "dataValueSets"
           ),
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :achieved,
             ext_id: "dhis2_act1_achieved",
-            name:   "act1_achieved"
+            name:   "act1_achieved",
+            origin: "dataValueSets"
           ),
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :target,
             ext_id: "dhis2_act1_target",
-            name:   "act1_target"
+            name:   "act1_target",
+            origin: "dataValueSets"
           )
         ]
       )
@@ -117,12 +119,14 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
             Orbf::RulesEngine::ActivityState.new_data_element(
               state:  :achieved,
               ext_id: "dhis2_act1_achieved",
-              name:   "act1_achieved"
+              name:   "act1_achieved",
+              origin: "dataValueSets"
             ),
             Orbf::RulesEngine::ActivityState.new_data_element(
-              state:   :price,
+              state:  :price,
               ext_id: "dhis2_act1_price",
-              name:    "act1_price",
+              name:   "act1_price",
+              origin: "dataValueSets"
             )
           ]
         )
@@ -197,7 +201,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
             Orbf::RulesEngine::ActivityState.new_data_element(
               state:  :achieved,
               ext_id: "dhis2_act1_achieved",
-              name:   "act1_achieved"
+              name:   "act1_achieved",
+              origin: "dataValueSets"
             ),
             Orbf::RulesEngine::ActivityState.new_constant(
               state:   :price,
@@ -256,7 +261,6 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     end
   end
 
-
   describe "Spans substitutions" do
     let(:activities) do
       [
@@ -267,7 +271,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
             Orbf::RulesEngine::ActivityState.new_data_element(
               state:  :achieved,
               ext_id: "dhis2_act1_achieved",
-              name:   "act1_achieved"
+              name:   "act1_achieved",
+              origin: "dataValueSets"
             ),
             Orbf::RulesEngine::ActivityState.new_constant(
               state:   :price,
@@ -347,7 +352,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
             Orbf::RulesEngine::ActivityState.new_data_element(
               state:  :achieved,
               ext_id: "dhis2_act1_achieved",
-              name:   "act1_achieved"
+              name:   "act1_achieved",
+              origin: "dataValueSets"
             ),
             Orbf::RulesEngine::ActivityState.new_constant(
               state:   :price,

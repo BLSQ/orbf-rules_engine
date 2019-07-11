@@ -86,7 +86,8 @@ module Orbf
           ActivityState.new_data_element(
             state:  state,
             name:   activity.activity_code + "-" + state,
-            ext_id: "fakeone"
+            ext_id: "fakeone",
+            origin: "dataValueSets"
           )
         end
         existing_activity_states.concat(missing_activity_states)

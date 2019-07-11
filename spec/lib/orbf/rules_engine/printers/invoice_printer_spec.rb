@@ -16,7 +16,8 @@ RSpec.describe Orbf::RulesEngine::InvoicePrinter do
         Orbf::RulesEngine::ActivityState.new_data_element(
           state:  :achieved,
           ext_id: "dhis2_act1_achieved",
-          name:   "act1_achieved"
+          name:   "act1_achieved",
+          origin: "dataValueSets"
         )
       ]
     )

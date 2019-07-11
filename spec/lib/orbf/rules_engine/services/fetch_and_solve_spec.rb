@@ -12,7 +12,8 @@ RSpec.describe Orbf::RulesEngine::FetchAndSolve do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :active,
             name:   "act1_active",
-            ext_id: "dhis2activedataelementid"
+            ext_id: "dhis2activedataelementid",
+            origin: "dataValueSets"
           )
         ]
       )

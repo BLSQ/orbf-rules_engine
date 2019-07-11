@@ -20,12 +20,14 @@ RSpec.describe Orbf::RulesEngine::PackageVariablesBuilder do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :achieved,
             ext_id: "dhis2_act1_achieved",
-            name:   "act1_achieved"
+            name:   "act1_achieved",
+            origin: "dataValueSets"
           ),
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :target,
             ext_id: "dhis2_act1_target",
-            name:   "act1_target"
+            name:   "act1_target",
+            origin: "dataValueSets"
           )
         ]
       ),
@@ -36,7 +38,8 @@ RSpec.describe Orbf::RulesEngine::PackageVariablesBuilder do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :achieved,
             ext_id: "dhis2_act2_achieved",
-            name:   "act2_achieved"
+            name:   "act2_achieved",
+            origin: "dataValueSets"
           )
         ]
       )

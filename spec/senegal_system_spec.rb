@@ -57,7 +57,8 @@ RSpec.describe "Senegal System" do
         Orbf::RulesEngine::ActivityState.new_data_element(
           state:  state,
           ext_id: "dhis2_#{activity_code}_#{state}",
-          name:   "#{activity_code}_#{state}"
+          name:   "#{activity_code}_#{state}",
+          origin: "dataValueSets"
         )
       end
       activity_states.push(

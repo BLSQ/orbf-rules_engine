@@ -32,6 +32,7 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
         "categoryOptionCombo" => @coc,
         "value"               => @value,
         "period"              => "2016Q1",
+        "origin"=>"IndicatorEvaluator",
         "orgUnit"             => "1" }
     end
   end
@@ -42,7 +43,8 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
       state:      state,
       ext_id:     ext_id,
       name:       "name_#{ext_id}",
-      expression: formula
+      expression: formula,
+      origin:     "dataValueSets"
     )
   end
 
@@ -62,7 +64,7 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
     if solutions
       dhis2_values.each_with_index do |dhis2_value, index|
         calc = Orbf::RulesEngine::CalculatorFactory.build(3)
-        got = calc.solve({"final_value" => dhis2_value["value"]})
+        got = calc.solve("final_value" => dhis2_value["value"])
         expect(got["final_value"]).to eq(solutions[index])
       end
     end
@@ -75,13 +77,15 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
           state:      :achieved,
           ext_id:     "dhis2_act1_achieved",
           name:       "act1_achieved",
-          expression: '#{dhjgLt7EYmu.se1qWfbtkmx}'
+          expression: '#{dhjgLt7EYmu.se1qWfbtkmx}',
+          origin:     "dataValueSets"
         ),
         Orbf::RulesEngine::ActivityState.new_indicator(
           state:      :target,
           ext_id:     "dhis2_act1_target",
           name:       "act1_target",
-          expression: '#{dhjgLt7EYmu.se1qWfbtkmx} + #{xtVtnuWBBLB}'
+          expression: '#{dhjgLt7EYmu.se1qWfbtkmx} + #{xtVtnuWBBLB}',
+          origin:     "dataValueSets"
         )
       ]
     end
@@ -102,13 +106,13 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
     let(:expected_dhis2_values) do
       [
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
-           "value" => " 33 ", "period" => "2016Q1", "orgUnit" => "1" },
+           "value" => " 33 ", "period" => "2016Q1", "orgUnit" => "1", "origin"=>"IndicatorEvaluator" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => " 33  +  34 ", "period" => "2016Q1", "orgUnit" => "1" },
+          "value" => " 33  +  34 ", "period" => "2016Q1", "orgUnit" => "1", "origin"=>"IndicatorEvaluator" },
         { "dataElement" => "dhis2_act1_achieved", "categoryOptionCombo" => "default",
-           "value" => " 3 ", "period" => "2016Q1", "orgUnit" => "2" },
+           "value" => " 3 ", "period" => "2016Q1", "orgUnit" => "2", "origin"=>"IndicatorEvaluator" },
         { "dataElement" => "dhis2_act1_target",   "categoryOptionCombo" => "default",
-          "value" => " 3  +  24 ", "period" => "2016Q1", "orgUnit" => "2" }
+          "value" => " 3  +  24 ", "period" => "2016Q1", "orgUnit" => "2", "origin"=>"IndicatorEvaluator" }
       ]
     end
 
@@ -162,7 +166,8 @@ RSpec.describe Orbf::RulesEngine::IndicatorEvaluator do
         state:      :achieved,
         ext_id:     "dhis2_act1_achieved",
         name:       "act1_achieved",
-        expression: '#{dhjgLt7EYmu.se1qWfbtkmx}'
+        expression: '#{dhjgLt7EYmu.se1qWfbtkmx}',
+        origin: "dataValueSets"
       )]
       expect_evaluation(
         Mapper.new("not-used-in-expression", "default", "34"),

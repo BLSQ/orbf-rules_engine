@@ -8,7 +8,8 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :active,
             ext_id: "dhis2_act1_active",
-            name:   "act1_active"
+            name:   "act1_active",
+            origin: "dataValueSets"
           )
         ]
       ),
@@ -19,7 +20,8 @@ RSpec.describe Orbf::RulesEngine::DecisionVariablesBuilder do
           Orbf::RulesEngine::ActivityState.new_data_element(
             state:  :active,
             ext_id: "dhis2_act2_active",
-            name:   "act2_active"
+            name:   "act2_active",
+            origin: "dataValueSets"
           )
         ]
       )
