@@ -17,17 +17,17 @@ module Orbf
           KINDS_WITH_FORMULA_SET.include?(kind)
         end
 
-        def self.assert_valid_kind(activity_state_kind)
+        def self.assert_valid_kind(activity_state_kind, instance)
           return if KINDS_SET.include?(activity_state_kind)
 
-          raise "Invalid activity state kind '#{activity_state_kind}' only supports #{KINDS}"
+          raise "Invalid activity state kind '#{activity_state_kind}' only supports #{KINDS} : #{instance.debug_info}"
         end
 
-        def self.assert_valid_kind_and_formula(kind, formula)
-          assert_valid_kind(kind)
+        def self.assert_valid_kind_and_formula(kind, formula, instance)
+          assert_valid_kind(kind, instance)
           return unless Kinds.formula_required?(kind) && formula.nil?
 
-          raise "formula required for #{kind}"
+          raise "formula required for #{kind} : #{instance.debug_info}"
         end
       end
 
@@ -39,10 +39,10 @@ module Orbf
           ORIGIN_ANALYTICS
         ].freeze
 
-        def self.assert_valid_origin(activity_state_origin)
+        def self.assert_valid_origin(activity_state_origin, instance)
           return if ORIGINS.include?(activity_state_origin)
 
-          raise "Invalid activity state origin '#{activity_state_kind}' only supports #{ORIGINS}"
+          raise "Invalid activity state origin '#{activity_state_kind}' only supports #{ORIGINS}: #{instance.debug_info}"
         end
       end
 
@@ -116,12 +116,16 @@ module Orbf
         origin == Origins::ORIGIN_DATAVALUESETS
       end
 
+      def debug_info
+        "state:'#{state}' ext_id:'#{ext_id}' name:'#{name}' kind:'#{kind}' formula:'#{formula}' origin:'#{origin}'"
+      end
+
       def after_init
-        raise "State is mandatory" unless @state
+        raise "State is mandatory #{debug_info}" unless @state
 
         @state = state.to_s
-        Kinds.assert_valid_kind_and_formula(kind, formula)
-        Origins.assert_valid_origin(origin)
+        Kinds.assert_valid_kind_and_formula(kind, formula,self )
+        Origins.assert_valid_origin(origin, self)
       end
     end
   end
