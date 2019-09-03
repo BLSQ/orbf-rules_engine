@@ -14,6 +14,7 @@ module Orbf
       end
 
       def register_variables(vars)
+        return if vars.nil? || vars.empty?
         @variables.concat(vars)
       end
 

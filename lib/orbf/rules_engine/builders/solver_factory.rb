@@ -9,7 +9,7 @@ module Orbf
         @invoice_period = invoice_period
         @package_vars = package_vars
         @package_arguments = package_arguments
-        raise PACKAGE_TYPE_ERROR unless package_arguments.is_a?(Hash)
+        raise PACKAGE_TYPE_ERROR unless package_arguments.is_a?(Hash)        
         @package_builders = package_builders || default_package_builders
       end
 
@@ -79,6 +79,7 @@ module Orbf
           Orbf::RulesEngine::DecisionVariablesBuilder,
           Orbf::RulesEngine::PackageDecisionVariablesBuilder,
           Orbf::RulesEngine::ActivityFormulaVariablesBuilder,
+          Orbf::RulesEngine::ActivityFormulaComboVariablesBuilder,
           Orbf::RulesEngine::PackageVariablesBuilder,
           Orbf::RulesEngine::ZoneFormulaVariablesBuilder,
           Orbf::RulesEngine::ZoneActivityFormulaVariablesBuilder

@@ -1,7 +1,7 @@
 module Orbf
   module RulesEngine
     class ActivityState < Orbf::RulesEngine::ValueObject
-      attributes :state, :ext_id, :name, :kind, :formula, :origin
+      attributes :state, :ext_id, :name, :kind, :formula, :origin, :category_combo_ext_id
 
       module Kinds
         KIND_CONSTANT = "constant".freeze
@@ -57,14 +57,15 @@ module Orbf
         )
       end
 
-      def self.new_data_element(state:, name:, ext_id:, origin:)
+      def self.new_data_element(state:, name:, ext_id:, origin:, category_combo_ext_id: nil)
         with(
-          state:   state,
-          name:    name,
-          ext_id:  ext_id,
-          kind:    Kinds::KIND_DATA_ELEMENT,
-          origin:  origin,
-          formula: nil
+          state:          state,
+          name:           name,
+          ext_id:         ext_id,
+          kind:           Kinds::KIND_DATA_ELEMENT,
+          origin:         origin,
+          formula:        nil,
+          category_combo_ext_id: category_combo_ext_id
         )
       end
 
@@ -79,18 +80,19 @@ module Orbf
         )
       end
 
-      def initialize(state: nil, ext_id: nil, name: nil, kind: nil, formula: nil, origin: nil)
+      def initialize(state: nil, ext_id: nil, name: nil, kind: nil, formula: nil, origin: nil, category_combo_ext_id: nil)
         @state = state
         @ext_id = ext_id
         @name = name
         @kind = kind
         @formula = formula
         @origin =  origin
+        @category_combo_ext_id = category_combo_ext_id
 
         after_init
       end
 
-      attr_reader :state, :ext_id, :name, :kind, :formula
+      attr_reader :state, :ext_id, :name, :kind, :formula, :category_combo_ext_id 
 
       def origin
         @origin || "dataValueSets"

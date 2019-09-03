@@ -49,7 +49,7 @@ module Orbf
                   suffixed_state = package.subcontract? ? suffix_raw(state) : state
                   express = expression.value
                   array.push register_vars(package, activity.activity_code, suffixed_state, express, orgunit_id, period)
-
+                  
                   if using_is_null?(flattened_dependencies, state)
                     express = expression.is_null ? "1" : "0"
                     array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
