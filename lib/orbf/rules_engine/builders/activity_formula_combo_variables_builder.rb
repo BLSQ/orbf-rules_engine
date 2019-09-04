@@ -76,7 +76,7 @@ module Orbf
           elsif activity_state&.data_element? && activity_state.category_combo_ext_id != package.loop_over_combo[:id]
             subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, orgunit.ext_id, period)
           else
-            subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code + "_" + category_option_combo[:id], dependency, orgunit.ext_id, period)
+            subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code + "_" + (category_option_combo[:id] || category_option_combo["id"]), dependency, orgunit.ext_id, period)
           end
         end
         @tokens[formula].map { |token| subs[token] || token }.join
@@ -85,7 +85,7 @@ module Orbf
       def build_variable(orgunit, activity_code, formula, substitued, category_option_combo)
         Orbf::RulesEngine::Variable.new_activity_rule(
           period:                       period,
-          key:                          variable_key(package, orgunit, activity_code + "_" + category_option_combo[:id], formula, period),
+          key:                          variable_key(package, orgunit, activity_code + "_" + (category_option_combo[:id] || category_option_combo["id"]), formula, period),
           expression:                   substitued,
           state:                        formula.code,
           type:                         Orbf::RulesEngine::Variable::Types::ACTIVITY_RULE,

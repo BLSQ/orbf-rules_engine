@@ -43,10 +43,11 @@ module Orbf
             activity = package.activities.detect { |candidate| candidate.activity_code == activity_code }
             activity.activity_states.each do |activity_state|
               package.loop_over_combo[:category_option_combos].each do |category_option_combo|
-                value = @lookup[[orgunit.ext_id, period, activity_state.ext_id, category_option_combo[:id]]]
+                category_option_combo_id = category_option_combo["id"] || category_option_combo[:id]
+                value = @lookup[[orgunit.ext_id, period, activity_state.ext_id, category_option_combo_id]]
                 value = (value.first[:value] || value.first["value"]) if value && value.first
 
-                key = suffix_for_id_activity(package.code, activity_code + "_" + category_option_combo[:id], activity_state.state, orgunit.ext_id, period)
+                key = suffix_for_id_activity(package.code, activity_code + "_" + category_option_combo_id, activity_state.state, orgunit.ext_id, period)
                 array.push(
                   Orbf::RulesEngine::Variable.new_activity(
                     period:         period,
@@ -60,7 +61,7 @@ module Orbf
                   )
                 )
 
-                key = suffix_for_id_activity(package.code, activity_code + "_" + category_option_combo[:id], activity_state.state + "_is_null", orgunit.ext_id, period)
+                key = suffix_for_id_activity(package.code, activity_code + "_" + category_option_combo_id, activity_state.state + "_is_null", orgunit.ext_id, period)
                 array.push(
                   Orbf::RulesEngine::Variable.new_activity(
                     period:         period,
