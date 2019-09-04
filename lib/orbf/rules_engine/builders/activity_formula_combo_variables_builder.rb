@@ -94,7 +94,7 @@ module Orbf
           formula:                      formula,
           package:                      package,
           exportable_variable_key:      exportable_variable_key(package, orgunit, activity_code, formula, period),
-          category_option_combo_ext_id: category_option_combo[:id]
+          category_option_combo_ext_id: category_option_combo[:id] || category_option_combo["id"]
         )
       end
     end
