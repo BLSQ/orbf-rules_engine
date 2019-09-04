@@ -66,7 +66,7 @@ module Orbf
                     period:         period,
                     key:            key,
                     expression:     value ? "0" : "1",
-                    state:          activity_state.state,
+                    state:          activity_state.state+"_is_null",
                     activity_code:  activity_code,
                     orgunit_ext_id: orgunit.ext_id,
                     formula:        nil,

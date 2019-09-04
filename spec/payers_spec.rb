@@ -152,7 +152,6 @@ RSpec.describe "Payers" do
 
     puts JSON.pretty_generate(solved.exported_values)
     expect(solved.solver.solution["facility_spread_01_dhis2_payer_1_percentage_calculated_for_orgunit_id_and_2016q1"]).to be_within(0.001).of(0.020)
-
   end
 
   def build_activity_formula(code, expression, comment = nil)
