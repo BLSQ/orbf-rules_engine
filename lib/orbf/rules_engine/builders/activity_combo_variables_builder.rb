@@ -44,7 +44,7 @@ module Orbf
             activity.activity_states.each do |activity_state|
               package.loop_over_combo[:category_option_combos].each do |category_option_combo|
                 value = @lookup[[orgunit.ext_id, period, activity_state.ext_id, category_option_combo[:id]]]
-                value = value.first[:value] if value && value.first
+                value = (value.first[:value] || value.first["value"]) if value && value.first
 
                 key = suffix_for_id_activity(package.code, activity_code + "_" + category_option_combo[:id], activity_state.state, orgunit.ext_id, period)
                 array.push(

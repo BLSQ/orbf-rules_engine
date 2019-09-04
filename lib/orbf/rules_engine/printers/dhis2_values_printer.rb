@@ -40,6 +40,7 @@ module Orbf
           [value[:dataElement],
            value[:orgUnit],
            value[:period],
+           value[:categoryOptionCombo],
            value[:value]]
         end
       end

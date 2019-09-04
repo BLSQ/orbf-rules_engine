@@ -34,7 +34,6 @@ module Orbf
               package.activity_rules.each do |rule|
                 rule.formulas.each do |formula|
                   instantiated_formula = instantiate_formula(formula, activity, orgunit, category_option_combo)
-                  expand_aggregation_values(instantiated_formula, activity)
                   Orbf::RulesEngine::ActivityFormulaValuesExpander.new(
                     package.code, activity_code,
                     instantiated_formula,
@@ -97,33 +96,6 @@ module Orbf
           exportable_variable_key:      exportable_variable_key(package, orgunit, activity_code, formula, period),
           category_option_combo_ext_id: category_option_combo[:id]
         )
-      end
-
-      ### Aggregation SumIf related expansions
-
-      def expand_aggregation_values(instantiated_formula, activity)
-        entities_aggregation_values(activity).each do |k, v|
-          # gsub! is safe as the expression has already been instantiated
-          # and produced a new string instance
-          instantiated_formula.gsub!("%{#{k}}", v)
-        end
-      end
-
-      def entities_aggregation_values(activity)
-        package.entities_aggregation_rules.each_with_object({}) do |aggregation_rules, hash|
-          aggregation_rules.formulas.each do |formula|
-            selected_org_units = SumIf.org_units(@all_orgunits, package, activity)
-            key = formula.code + "_values"
-            hash[key.to_sym] = to_values_list(formula, activity, selected_org_units)
-          end
-        end
-      end
-
-      def to_values_list(formula, activity, selected_org_units)
-        vals = selected_org_units.map do |orgunit|
-          suffix_for_id_activity(package.code, activity.activity_code, suffix_raw(formula.code), orgunit.ext_id, period)
-        end
-        vals.empty? ? "0" : vals.join(", ")
       end
     end
   end

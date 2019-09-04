@@ -34,9 +34,9 @@ RSpec.describe "Payers" do
           frequency:                   :quarterly,
           main_org_unit_group_ext_ids: ["G_ID_1"],
           activities:                  activities,
-          loop_over_combo:             { # TODO move to a value object ? Orbf::RulesEngine::CategoryCombo
+          loop_over_combo:             { # TODO: move to a value object ? Orbf::RulesEngine::CategoryCombo
             id:                     "dhis2_payers",
-            category_option_combos: [ # TODO move to a value object ? Orbf::RulesEngine::CategoryOptionCombo
+            category_option_combos: [ # TODO: move to a value object ? Orbf::RulesEngine::CategoryOptionCombo
               {
                 id: "dhis2_payer_1"
               },
@@ -102,33 +102,39 @@ RSpec.describe "Payers" do
   let(:dhis2_values) do
     [
       {
-        "dataElement":         "dhis2_spread_percentage",
-        "categoryOptionCombo": "dhis2_payer_1",
-        "value":               10,
-        "period":              period,
-        "orgUnit":             orgunit_id
+        "dataElement"         => "dhis2_to_pay",
+        "categoryOptionCombo" => "default",
+        "value"               => 10_000,
+        "period"              => period,
+        "orgUnit"             => orgunit_id
       },
       {
-        "dataElement":         "dhis2_spread_percentage",
-        "categoryOptionCombo": "dhis2_payer_2",
-        "value":               60,
-        "period":              period,
-        "orgUnit":             orgunit_id
+        "dataElement"         => "dhis2_spread_percentage",
+        "categoryOptionCombo" => "dhis2_payer_1",
+        "value"               => 10,
+        "period"              => period,
+        "orgUnit"             => orgunit_id
+      },
+      {
+        "dataElement"         => "dhis2_spread_percentage",
+        "categoryOptionCombo" => "dhis2_payer_2",
+        "value"               => 60,
+        "period"              => period,
+        "orgUnit"             => orgunit_id
       }, {
-        "dataElement":         "dhis2_spread_percentage",
-        "categoryOptionCombo": "dhis2_payer_3",
-        "value":               30,
-        "period":              period,
-        "orgUnit":             orgunit_id
+        "dataElement"         => "dhis2_spread_percentage",
+        "categoryOptionCombo" => "dhis2_payer_3",
+        "value"               => 30,
+        "period"              => period,
+        "orgUnit"             => orgunit_id
       }
     ]
   end
 
-  let(:solver) { build_solver(orgunits_full, dhis2_values) }
-
   it "builds problem per category option combo" do
-    puts JSON.pretty_generate(solver.build_problem)
-    problem = solver.build_problem
+    solved = build_and_solve(orgunits_full, dhis2_values)
+    problem = solved.solver.build_problem
+    puts JSON.pretty_generate(problem)
 
     expect(problem["facility_spread_01_dhis2_payer_1_exportable_for_orgunit_id_and_2016q1"]).to eq(
       "facility_spread_01_dhis2_payer_1_percentage_is_null_for_orgunit_id_and_2016q1 == 0"
@@ -142,11 +148,11 @@ RSpec.describe "Payers" do
   end
 
   it "should solve equations" do
-    solver.solve!
+    solved = build_and_solve(orgunits_full, dhis2_values)
 
-    expect(solver.solution["facility_spread_01_dhis2_payer_1_percentage_calculated_for_orgunit_id_and_2016q1"]).to be_within(0.001).of(0.020)
+    puts JSON.pretty_generate(solved.exported_values)
+    expect(solved.solver.solution["facility_spread_01_dhis2_payer_1_percentage_calculated_for_orgunit_id_and_2016q1"]).to be_within(0.001).of(0.020)
 
-    Orbf::RulesEngine::InvoiceCliPrinter.new(solver.variables, solver.solution).print
   end
 
   def build_activity_formula(code, expression, comment = nil)
@@ -159,26 +165,21 @@ RSpec.describe "Payers" do
     end
   end
 
-  def build_solver(orgs, dhis2_values)
+  def build_and_solve(orgs, dhis2_values)
     pyramid = Orbf::RulesEngine::Pyramid.new(
       org_units:          orgs,
       org_unit_groups:    org_unit_groups,
       org_unit_groupsets: []
     )
-    package_arguments = Orbf::RulesEngine::ResolveArguments.new(
-      project:          project,
-      pyramid:          pyramid,
-      orgunit_ext_id:   orgs[0].ext_id,
-      invoicing_period: "2016Q1"
-    ).call
 
-    package_vars = Orbf::RulesEngine::ActivityVariablesBuilder.to_variables(package_arguments, dhis2_values)
-    package_vars.push(*Orbf::RulesEngine::ActivityComboVariablesBuilder.to_variables(package_arguments, dhis2_values))
-    Orbf::RulesEngine::SolverFactory.new(
-      project,
-      package_arguments,
-      package_vars,
-      period
-    ).new_solver
+    fetch_and_solve = Orbf::RulesEngine::FetchAndSolve.new(
+      project, orgs[0].ext_id, period,
+      pyramid:     pyramid,
+      mock_values: dhis2_values
+    )
+
+    fetch_and_solve.call
+
+    fetch_and_solve
   end
 end
