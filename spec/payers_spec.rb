@@ -134,24 +134,52 @@ RSpec.describe "Payers" do
   it "builds problem per category option combo" do
     solved = build_and_solve(orgunits_full, dhis2_values)
     problem = solved.solver.build_problem
-    puts JSON.pretty_generate(problem)
 
-    expect(problem["facility_spread_01_dhis2_payer_1_exportable_for_orgunit_id_and_2016q1"]).to eq(
-      "facility_spread_01_dhis2_payer_1_percentage_is_null_for_orgunit_id_and_2016q1 == 0"
-    )
-    expect(problem["facility_spread_01_dhis2_payer_1_percentage_calculated_for_orgunit_id_and_2016q1"]).to eq(
-      "(facility_spread_01_dhis2_payer_1_percentage_for_orgunit_id_and_2016q1/100) * 0.20"
-    )
-    expect(problem["facility_spread_01_dhis2_payer_1_payer_payment_for_orgunit_id_and_2016q1"]).to eq(
-      "facility_spread_01_to_pay_for_orgunit_id_and_2016q1 * facility_spread_01_dhis2_payer_1_percentage_calculated_for_orgunit_id_and_2016q1"
-    )
+    %w[dhis2_payer_1 dhis2_payer_2 dhis2_payer_3].each do |coc|
+      expect(problem["facility_spread_01_#{coc}_exportable_for_orgunit_id_and_2016q1"]).to eq(
+        "facility_spread_01_#{coc}_percentage_is_null_for_orgunit_id_and_2016q1 == 0"
+      )
+      expect(problem["facility_spread_01_#{coc}_percentage_calculated_for_orgunit_id_and_2016q1"]).to eq(
+        "(facility_spread_01_#{coc}_percentage_for_orgunit_id_and_2016q1/100) * 0.20"
+      )
+      expect(problem["facility_spread_01_#{coc}_payer_payment_for_orgunit_id_and_2016q1"]).to eq(
+        "facility_spread_01_to_pay_for_orgunit_id_and_2016q1 * facility_spread_01_#{coc}_percentage_calculated_for_orgunit_id_and_2016q1"
+      )
+    end
   end
 
   it "should solve equations" do
     solved = build_and_solve(orgunits_full, dhis2_values)
 
-    puts JSON.pretty_generate(solved.exported_values)
     expect(solved.solver.solution["facility_spread_01_dhis2_payer_1_percentage_calculated_for_orgunit_id_and_2016q1"]).to be_within(0.001).of(0.020)
+
+    expect(solved.exported_values).to include(
+      categoryOptionCombo: "dhis2_payer_1",
+      comment:             "facility_spread_01_dhis2_payer_1_payer_payment_for_orgunit_id_and_2016q1",
+      dataElement:         "dhis2_dataelement_id_payer_payment spread_01",
+      orgUnit:             "orgunit_id",
+      period:              "2016Q1",
+      value:               200.00000000000003
+    )
+
+    expect(solved.exported_values).to include(
+      categoryOptionCombo: "dhis2_payer_2",
+      comment:             "facility_spread_01_dhis2_payer_2_payer_payment_for_orgunit_id_and_2016q1",
+      dataElement:         "dhis2_dataelement_id_payer_payment spread_01",
+      orgUnit:             "orgunit_id",
+      period:              "2016Q1",
+      value:               1200
+    )
+
+    expect(solved.exported_values).to include(
+      categoryOptionCombo: "dhis2_payer_3",
+      comment:             "facility_spread_01_dhis2_payer_3_payer_payment_for_orgunit_id_and_2016q1",
+      dataElement:         "dhis2_dataelement_id_payer_payment spread_01",
+      orgUnit:             "orgunit_id",
+      period:              "2016Q1",
+      value:               600
+    )
+
   end
 
   def build_activity_formula(code, expression, comment = nil)
