@@ -13,7 +13,7 @@ module Orbf
       def print
         invoices = variables.select(&:orgunit_ext_id)
                             .select(&:package)
-                            .group_by { |v| [v.package, v.orgunit_ext_id, v.period] }
+                            .group_by { |v| [v.package, v.orgunit_ext_id, v.period, v.category_option_combo_ext_id] }
                             .map do |package_orgunit_period, vars|
           package, orgunit, period = package_orgunit_period
 

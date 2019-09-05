@@ -31,13 +31,13 @@ module Orbf
       attr_reader :activities, :kind, :rules, :frequency, :code,
                   :main_org_unit_group_ext_ids, :target_org_unit_group_ext_ids,
                   :groupset_ext_id, :dataset_ext_ids,
-                  :matching_groupset_ext_ids, :include_main_orgunit
+                  :matching_groupset_ext_ids, :include_main_orgunit, :loop_over_combo
 
       KNOWN_ATTRIBUTES = %i[kind rules code activities frequency
                             main_org_unit_group_ext_ids
                             target_org_unit_group_ext_ids
                             groupset_ext_id dataset_ext_ids
-                            matching_groupset_ext_ids include_main_orgunit].freeze
+                            matching_groupset_ext_ids include_main_orgunit loop_over_combo].freeze
 
       def initialize(args)
         Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
@@ -47,6 +47,7 @@ module Orbf
         @activities = Array(args[:activities])
         @kind = args[:kind].to_s if args[:kind]
         @code = args[:code].to_s
+        @loop_over_combo = args[:loop_over_combo]
         @rules.each do |rule|
           rule.package = self
         end

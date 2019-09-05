@@ -17,6 +17,7 @@ module Orbf
       end
 
       def to_variables
+        return [] if package.loop_over_combo
         activity_formula_variables
       end
 

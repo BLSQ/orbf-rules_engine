@@ -132,14 +132,18 @@ module Orbf
         ].freeze
       end
 
-      ATTRIBUTES = %i[key period expression type state activity_code orgunit_ext_id formula package payment_rule exportable_variable_key].freeze
+      ATTRIBUTES = %i[key period expression type state activity_code 
+        orgunit_ext_id formula package payment_rule exportable_variable_key
+        category_option_combo_ext_id
+      ].freeze
+
       attributes(*ATTRIBUTES)
       attr_reader(*ATTRIBUTES)
       attr_reader :dhis2_period
 
       def initialize(key: nil, period: nil, expression: nil, type: nil, state: nil,
                      activity_code: nil, orgunit_ext_id: nil, formula: nil, package: nil, payment_rule: nil,
-                     exportable_variable_key: nil)
+                     exportable_variable_key: nil, category_option_combo_ext_id: nil)
         @key = key
         @period = period
         @expression = expression
@@ -151,6 +155,7 @@ module Orbf
         @package = package
         @payment_rule = payment_rule
         @exportable_variable_key = exportable_variable_key
+        @category_option_combo_ext_id = category_option_combo_ext_id
         after_init
       end
 
