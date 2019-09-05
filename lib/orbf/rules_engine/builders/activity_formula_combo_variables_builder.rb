@@ -60,17 +60,6 @@ module Orbf
             subs[dependency] = @period_facts[dependency]
           elsif activity_state&.constant?
             subs[dependency] = name_constant(activity.activity_code, activity_state.state, period)
-          elsif dependency.end_with?("_level_1", "_level_2", "_level_3", "_level_4", "_level_5")
-            level = dependency[-1].to_i
-            parent_id = orgunit.parent_ext_ids[level - 1]
-            subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
-          elsif dependency.end_with?("_level_1_quarterly", "_level_2_quarterly", "_level_3_quarterly", "_level_4_quarterly", "_level_5_quarterly")
-            level = dependency[-11].to_i
-            parent_id = orgunit.parent_ext_ids[level - 1]
-            subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
-          elsif dependency.end_with?("_zone_main_orgunit")
-            parent_id = @all_orgunits.first.ext_id
-            subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
           elsif @package_rule_codes.include?(dependency) && !@activity_rule_codes.include?(dependency)
             subs[dependency] = suffix_for_package(package.code, dependency, orgunit, period)
           elsif activity_state&.data_element? && activity_state.category_combo_ext_id != package.loop_over_combo[:id]
