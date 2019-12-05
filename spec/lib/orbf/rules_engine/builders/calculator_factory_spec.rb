@@ -1,10 +1,7 @@
-
 RSpec.describe Orbf::RulesEngine::CalculatorFactory do
   [2, 3].each do |version|
     describe "engine version #{version}" do
       let(:calculator) { described_class.build(version) }
-
-
 
       describe "support sum function" do
         it "solve " do
@@ -13,14 +10,12 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         end
       end
 
-
       describe "support avg function" do
         it "solve " do
           solution = calculator.solve("myavg" => "AVG(1,3,9)")
           expect(solution["myavg"].to_f).to eq(4.333333333333333)
         end
       end
-
 
       describe "support stdevp function" do
         it "solve " do
@@ -65,6 +60,25 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         end
       end
 
+      describe "support floor function" do
+        [
+          [33.3333333, nil, 33.0],
+          [-33.3333333, nil, -34.0],
+          [33.3333333, 10.0, 30.0],
+          [-33.3333333, 10.0, -40.0]
+        ].each do |example|
+          it "solve #{example}" do
+            equation = if example[1].nil?
+                         "floor(#{example[0]})"
+                       else
+                         "floor(#{example[0]}, #{example[1]})"
+                       end
+            solution = calculator.solve("my_arr" => equation)
+            expect(solution["my_arr"]).to eq(example[2])
+          end
+        end
+      end
+
       describe "support save_div function" do
         it "solve" do
           solution = calculator.solve("my_arr" => "safe_div(3,6)")
@@ -74,7 +88,6 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
           solution = calculator.solve("my_arr" => "safe_div(3,0)")
           expect(solution["my_arr"]).to eq(0)
         end
-
       end
 
       describe "support abs function" do
@@ -98,59 +111,59 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         end
       end
 
-      describe 'eval_array' do
-        it 'solves' do
+      describe "eval_array" do
+        it "solves" do
           solution = calculator.solve("my_var" => "sum(eval_array('a', ARRAY(1.5,-3,4), 'b', ARRAY(2,-4,5.2), 'b - a'))")
           expected_result = ((2 - 1.5) + (-4 - -3) + (5.2 - 4))
           expect(solution["my_var"]).to be_within(0.000001).of(expected_result)
         end
 
-        describe 'raises on invalid input' do
-          it 'not same length arrays' do
+        describe "raises on invalid input" do
+          it "not same length arrays" do
             expected_error_class = Hesabu::Error
             expected_error_match = "In equation my_var Error for evalArray-function, Expected 'a' and 'b' to have same size of values (0 and 1) my_var := sum(eval_array('a', ARRAY(), 'b', ARRAY(1), 'b - a'))"
             if version < 3
               expected_error_class = Dentaku::ArgumentError
               expected_error_match = "EVAL_ARRAY() requires 'a' and 'b' in (b - a) to have same size of values"
             end
-            expect{
+            expect do
               calculator.solve!("my_var" => "sum(eval_array('a', ARRAY(), 'b', ARRAY(1), 'b - a'))")
-            }.to raise_error(expected_error_class, expected_error_match)
+            end.to raise_error(expected_error_class, expected_error_match)
           end
 
-          it 'missing keys for meta formula' do
+          it "missing keys for meta formula" do
             expected_error_class = Hesabu::Error
             expected_error_match = "In equation my_var Error for EVAL_ARRAY()-function, No parameter 'some' found.. We only know 'a' and 'b' my_var := eval_array('a', ARRAY(1,2), 'b', ARRAY(1,2), 'some - var')"
             if version < 3
               expected_error_class = Dentaku::ArgumentError
               expected_error_match = "EVAL_ARRAY() some - var uses: 'some', 'var'. We only know: 'a', 'b'"
             end
-            expect{
+            expect do
               calculator.solve!("my_var" => "eval_array('a', ARRAY(1,2), 'b', ARRAY(1,2), 'some - var')")
-            }.to raise_error(expected_error_class, expected_error_match)
+            end.to raise_error(expected_error_class, expected_error_match)
           end
         end
       end
 
-      describe 'array' do
-        it 'allows ARRAY' do
+      describe "array" do
+        it "allows ARRAY" do
           solution = calculator.solve("my_var" => "sum(ARRAY(5,15,10))")
-          expect(solution["my_var"]).to eq(5+15+10)
+          expect(solution["my_var"]).to eq(5 + 15 + 10)
         end
 
-        it 'allows array' do
+        it "allows array" do
           solution = calculator.solve("my_var" => "sum(array(5,15,10))")
-          expect(solution["my_var"]).to eq(5+15+10)
+          expect(solution["my_var"]).to eq(5 + 15 + 10)
         end
       end
 
-      describe 'array as variable' do
+      describe "array as variable" do
         {
-          "sum" => ["sum(arr)", 9.0],
-          "max" => ["max(arr)", 5.0],
-          "min" => ["min(arr)", -3],
-          "avg" => ["avg(arr)", 1.8],
-          "access" => ["access(arr,1)", 2.0],
+          "sum"    => ["sum(arr)", 9.0],
+          "max"    => ["max(arr)", 5.0],
+          "min"    => ["min(arr)", -3],
+          "avg"    => ["avg(arr)", 1.8],
+          "access" => ["access(arr,1)", 2.0]
         }.each do |function_name, (formula, expected)|
           it "supports #{function_name}" do
             solution = calculator.solve("arr" => "array(1,2,-3,4,5)", "my_var" => formula)
@@ -160,18 +173,18 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
 
         it "supports nesting the arrays" do
           solution = calculator.solve(
-            "arr" => "array(1,2,-3,4,5)",
+            "arr"        => "array(1,2,-3,4,5)",
             "evaled_arr" => "eval_array('a', arr, 'b', arr, 'a - b')",
-            "result" => "sum(evaled_arr)"
+            "result"     => "sum(evaled_arr)"
           )
           expect(solution["result"]).to eq(0.0)
         end
 
         it "'exports' the array" do
           solution = calculator.solve(
-            "arr" => "array(1,2,-3,4,5)",
+            "arr" => "array(1,2,-3,4,5)"
           )
-          expect(solution["arr"]).to eq([1,2,-3,4,5])
+          expect(solution["arr"]).to eq([1, 2, -3, 4, 5])
         end
       end
     end
