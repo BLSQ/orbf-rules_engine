@@ -5,7 +5,6 @@ require "descriptive_statistics/safe"
 
 module Orbf
   module RulesEngine
-
     class LegacyCalculatorFactory
       SCORE_TABLE = lambda do |*args|
         target = args.shift
@@ -41,26 +40,26 @@ module Orbf
 
       RANDBETWEEN = ->(a, b) { rand(a..b) }
 
-      EVAL_ARRAY = ->(key1, array1, key2, array2, meta_formula) {
+      EVAL_ARRAY = lambda { |key1, array1, key2, array2, meta_formula|
         if array1.length != array2.length
           raise Dentaku::ArgumentError.for(
-                  :incompatible_type,
-                  function_name: 'EVAL_ARRAY()'
-                ), "EVAL_ARRAY() requires '#{key1}' and '#{key2}' in (#{meta_formula}) to have same size of values"
+            :incompatible_type,
+            function_name: "EVAL_ARRAY()"
+          ), "EVAL_ARRAY() requires '#{key1}' and '#{key2}' in (#{meta_formula}) to have same size of values"
         end
         calc = Dentaku::Calculator.new
         begin
           result = array1.zip(array2).map do |(e1, e2)|
-            calc.evaluate!(meta_formula, {key1 => e1, key2 => e2})
+            calc.evaluate!(meta_formula, key1 => e1, key2 => e2)
           end
         rescue Dentaku::UnboundVariableError => e
           bound = quote_keys([key1, key2])
           unbound = quote_keys(e.unbound_variables)
 
           raise Dentaku::ArgumentError.for(
-                  :invalid_value,
-                  function_name: 'EVAL_ARRAY()'
-                ), "EVAL_ARRAY() #{meta_formula} uses: #{unbound}. We only know: #{bound}"
+            :invalid_value,
+            function_name: "EVAL_ARRAY()"
+          ), "EVAL_ARRAY() #{meta_formula} uses: #{unbound}. We only know: #{bound}"
         end
 
         result
@@ -70,7 +69,19 @@ module Orbf
 
       SQRT = ->(*args) { Math.sqrt(args[0]) }
 
-      STDEVP = ->(*args) { DescriptiveStatistics.standard_deviation(args)}
+      STDEVP = ->(*args) { DescriptiveStatistics.standard_deviation(args) }
+
+      TRUNC = ->(*args) { args[0].truncate(args.length == 2 ? args[1] : 1.0) }
+
+      CEILING = lambda { |*args|
+        multiple = args.length == 2 ? args[1] : 1.0
+        ((args[0] / multiple).ceil * multiple)
+      }
+
+      FLOOR = lambda { |*args|
+        multiple = args.length == 2 ? args[1] : 1.0
+        ((args[0] / multiple).floor * multiple)
+      }
 
       def self.build(options = { nested_data_support: false, case_sensitive: true })
         Dentaku::Calculator.new(options).tap do |calculator|
@@ -86,15 +97,17 @@ module Orbf
           calculator.add_function(:array, :array, ARRAY)
           calculator.add_function(:stdevp, :numeric, STDEVP)
           calculator.add_function(:sqrt, :numeric, SQRT)
+          calculator.add_function(:trunc, :numeric, TRUNC)
+          calculator.add_function(:ceiling, :numeric, CEILING)
+          calculator.add_function(:floor, :numeric, FLOOR)
         end
       end
 
       # quote_keys(['a', 'b']) => "'a', 'b'"
       def self.quote_keys(keys)
-        keys.map {|key| "'#{key}'"}.join(", ")
+        keys.map { |key| "'#{key}'" }.join(", ")
       end
     end
-
 
     class CalculatorFactory
       module Hesabu
@@ -125,19 +138,16 @@ module Orbf
       end
 
       def self.build(engine_version, options = { nested_data_support: false, case_sensitive: true })
-        if engine_version < 3
-          return LegacyCalculatorFactory.build(options)
-        end
+        return LegacyCalculatorFactory.build(options) if engine_version < 3
+
         Orbf::RulesEngine::CalculatorFactory::Hesabu::Calculator.new
       end
 
       def self.dependencies(expression)
-        if expression.is_a?(Numeric)
-          return []
-        end
-        LegacyCalculatorFactory.build().dependencies(expression)
-      end
+        return [] if expression.is_a?(Numeric)
 
+        LegacyCalculatorFactory.build.dependencies(expression)
+      end
     end
   end
 end
