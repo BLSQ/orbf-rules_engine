@@ -18,6 +18,14 @@ RSpec.describe "Liberia System" do
   end
   it "works" do
     # fetch_and_solve.call
+
+    project.packages.each do |package|
+      package.project = project
+    end
+    project.payment_rules.each do |package|
+      package.project = project
+    end
+
     project
     pyramid
 

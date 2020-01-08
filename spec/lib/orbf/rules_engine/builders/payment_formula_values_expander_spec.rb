@@ -1,6 +1,9 @@
 
 RSpec.describe Orbf::RulesEngine::PaymentFormulaValuesExpander do
   describe "references to cycle quarter values" do
+
+    let(:project) { Orbf::RulesEngine::Project.new({}) }
+
     let(:orgunits) do
       [
         Orbf::RulesEngine::OrgUnit.with(
@@ -14,6 +17,7 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaValuesExpander do
 
     let(:payment_rule) do
       Orbf::RulesEngine::PaymentRule.new(
+        project:   project,
         code:      "pbf_payment",
         frequency: :monthly,
         packages:  [
@@ -35,22 +39,22 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaValuesExpander do
     end
 
     it "expands nothing" do
-      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.first, orgunit: orgunits.first, period: "201601").expand_values
+      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.first, orgunit: orgunits.first, period: "201601", calendar: payment_rule.calendar).expand_values
       expect(result).to eq("quality_bonus + quantity_amount")
     end
 
     it "expands %{..._previous_values} in variables for month 1" do
-      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.last, orgunit: orgunits.first, period: "201601").expand_values
+      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.last, orgunit: orgunits.first, period: "201601", calendar: payment_rule.calendar).expand_values
       expect(result).to eq("SUM(0, rbf_amount)")
     end
 
     it "expands %{..._previous_values} in variables for month 2" do
-      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.last, orgunit: orgunits.first, period: "201602").expand_values
+      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.last, orgunit: orgunits.first, period: "201602", calendar: payment_rule.calendar).expand_values
       expect(result).to eq("SUM(#{payment_rule.code}_rbf_amount_for_1_and_201601, rbf_amount)")
     end
 
     it "expands %{..._previous_values} in variables for month 3" do
-      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.last, orgunit: orgunits.first, period: "201603").expand_values
+      result = described_class.new(payment_rule_code: payment_rule.code, formula: payment_rule.rule.formulas.last, orgunit: orgunits.first, period: "201603", calendar: payment_rule.calendar).expand_values
       expect(result).to eq("SUM(#{payment_rule.code}_rbf_amount_for_1_and_201601, #{payment_rule.code}_rbf_amount_for_1_and_201602, rbf_amount)")
     end
   end

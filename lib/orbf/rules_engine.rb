@@ -18,6 +18,7 @@ require_relative "./rules_engine/services/solver_error_handler"
 require_relative "./rules_engine/services/solver"
 require_relative "./rules_engine/services/value_formatter"
 require_relative "./rules_engine/services/codifier"
+require_relative "./rules_engine/services/gregorian_calendar"
 
 require_relative "./rules_engine/data/activity"
 require_relative "./rules_engine/data/activity_state"

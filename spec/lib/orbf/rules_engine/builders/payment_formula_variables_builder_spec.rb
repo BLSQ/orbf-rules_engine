@@ -11,8 +11,13 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
     ]
   end
 
+  let(:project) do
+    Orbf::RulesEngine::Project.new({})
+  end
+
   let(:quantity_package) do
     Orbf::RulesEngine::Package.new(
+      project:    project,
       code:       :quantity,
       kind:       :single,
       frequency:  :monthly,
@@ -32,6 +37,7 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
 
   let(:quality_package) do
     Orbf::RulesEngine::Package.new(
+      project:    project,
       code:       :quality,
       kind:       :single,
       frequency:  :quarterly,
@@ -51,6 +57,7 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
 
   let(:payment_rule) do
     Orbf::RulesEngine::PaymentRule.new(
+      project:   project,
       frequency: :quarterly,
       code:      "fosa_payment",
       packages:  [
@@ -298,6 +305,7 @@ RSpec.describe Orbf::RulesEngine::PaymentFormulaVariablesBuilder do
   describe "references to cycle quarter values" do
     let(:payment_rule) do
       Orbf::RulesEngine::PaymentRule.new(
+        project:   project,
         code:      "fosa_payment",
         frequency: :monthly,
         packages:  [

@@ -1,7 +1,11 @@
 
 RSpec.describe Orbf::RulesEngine::PeriodsResolver do
+
+  let(:project) { Orbf::RulesEngine::Project.new({}) }
+
   let(:quantity_package) do
     Orbf::RulesEngine::Package.new(
+      project:    project,
       code:       :quantity,
       kind:       :single,
       frequency:  :monthly,
@@ -25,6 +29,7 @@ RSpec.describe Orbf::RulesEngine::PeriodsResolver do
 
   let(:quality_package) do
     Orbf::RulesEngine::Package.new(
+      project:    project,
       code:       :quality,
       kind:       :single,
       frequency:  :quarterly,

@@ -19,9 +19,9 @@ module Orbf
       attr_reader :package, :invoice_period
 
       def from_package_frequency(package, invoice_period)
-        PeriodIterator.periods(invoice_period, package.frequency) +
-          PeriodIterator.periods(invoice_period, "yearly") +
-          PeriodIterator.periods(invoice_period, "financial_july")
+        package.calendar.periods(invoice_period, package.frequency) +
+          package.calendar.periods(invoice_period, "yearly") +
+          package.calendar.periods(invoice_period, "financial_july")
       end
 
       def from_values_span(package, invoice_period)
@@ -29,7 +29,7 @@ module Orbf
           formula.values_dependencies.each do |dependency|
             span = Orbf::RulesEngine::Spans.matching_span(dependency, formula.rule.kind)
             next unless span
-            set.merge(span.periods(invoice_period, dependency))
+            set.merge(span.periods(invoice_period, dependency, package.calendar))
           end
         end
       end

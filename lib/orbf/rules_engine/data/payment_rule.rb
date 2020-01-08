@@ -14,7 +14,7 @@ module Orbf
         end
       end
 
-      KNOWN_ATTRIBUTES = %i[packages rule frequency code].freeze
+      KNOWN_ATTRIBUTES = %i[packages rule frequency code project].freeze
 
       attr_reader(*KNOWN_ATTRIBUTES)
 
@@ -24,7 +24,16 @@ module Orbf
         @rule = args[:rule]
         @frequency = args[:frequency].to_s
         @code = args[:code].to_s
+        @project = args[:project]
         validate
+      end
+
+      def project=(proj)
+        @project = proj
+      end
+
+      def calendar
+        @project.calendar
       end
 
       def frequency=(f)

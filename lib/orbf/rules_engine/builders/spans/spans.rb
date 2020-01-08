@@ -44,10 +44,10 @@ module Orbf
           "previous_year"
         end
 
-        def periods(invoicing_period, name)
+        def periods(invoicing_period, name, calendar)
           target_year = previous_year(invoicing_period)
           frequencies(name).each_with_object([]) do |frequency, arr|
-            arr.push(*PeriodIterator.periods(target_year, frequency))
+            arr.push(*calendar.periods(target_year, frequency))
           end
         end
 
@@ -62,12 +62,12 @@ module Orbf
           "previous_year_same_quarter"
         end
 
-        def periods(invoicing_period, name)
+        def periods(invoicing_period, name, calendar)
           target_year = previous_year(invoicing_period)
           same_quarter = invoicing_period[-2..-1]
           period = "#{target_year}#{same_quarter}"
           frequencies(name).each_with_object([]) do |frequency, arr|
-            arr.push(*PeriodIterator.periods(period, frequency))
+            arr.push(*calendar.periods(period, frequency))
           end
         end
       end
@@ -84,11 +84,11 @@ module Orbf
           "current_quarter"
         end
 
-        def periods(invoicing_period, name)
-          quarter = PeriodIterator.periods(invoicing_period, "quarterly").first
+        def periods(invoicing_period, name, calendar)
+          quarter = calendar.periods(invoicing_period, "quarterly").first
 
           frequencies(name, QUARTER_FREQUENCIES).each_with_object([]) do |frequency, arr|
-            arr.push(*PeriodIterator.periods(quarter, frequency))
+            arr.push(*calendar.periods(quarter, frequency))
           end
         end
 
@@ -102,10 +102,10 @@ module Orbf
           "previous"
         end
 
-        def periods(invoicing_period, _name)
-          quarter = PeriodIterator.periods(invoicing_period, "quarterly").first
-          PeriodIterator.periods(quarter, "monthly")
-                        .select { |period| period < invoicing_period }
+        def periods(invoicing_period, _name, calendar)
+          quarter = calendar.periods(invoicing_period, "quarterly").first
+          calendar.periods(quarter, "monthly")
+                  .select { |period| period < invoicing_period }
         end
 
         def supports?(rule_kind)
@@ -133,7 +133,7 @@ module Orbf
           end
         end
 
-        def periods(invoicing_period, name)
+        def periods(invoicing_period, name, calendar)
           matches = name.match(REGEX)
 
           offset = matches[1]

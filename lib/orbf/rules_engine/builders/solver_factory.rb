@@ -9,7 +9,7 @@ module Orbf
         @invoice_period = invoice_period
         @package_vars = package_vars
         @package_arguments = package_arguments
-        raise PACKAGE_TYPE_ERROR unless package_arguments.is_a?(Hash)        
+        raise PACKAGE_TYPE_ERROR unless package_arguments.is_a?(Hash)
         @package_builders = package_builders || default_package_builders
       end
 
@@ -38,7 +38,7 @@ module Orbf
       end
 
       def register_package(solver, package, package_argument)
-        PeriodIterator.each_periods(invoice_period, package.frequency) do |period|
+        package.calendar.each_periods(invoice_period, package.frequency) do |period|
           package_builders.each do |builder_class|
             variables = builder_class.new(package, package_argument.orgunits, period).to_variables
             solver.register_variables(variables)
