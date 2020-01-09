@@ -11,14 +11,15 @@ module Orbf
 
         month_of_quarter = calendar.periods(quarter, "monthly").index(month) + 1
         month_of_year = calendar.periods(year, "monthly").index(month) + 1
+        quarter_of_year = quarter.split("Q")[1]
 
-        quarter_of_year = calendar.periods(year, "quarterly").index(quarter) + 1
-
-        {
+        facts = {
           "quarter_of_year"  => quarter_of_year.to_s,
           "month_of_year"    => month_of_year.to_s,
           "month_of_quarter" => month_of_quarter.to_s
         }.freeze
+
+        facts
       end
     end
   end
