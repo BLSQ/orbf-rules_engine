@@ -2,8 +2,6 @@ AllCops:
   TargetRubyVersion: 2.3
   Exclude:
     - db/schema.rb
-Rails:
-  Enabled: false
 Layout/AlignHash:
   # Alignment of entries using hash rocket as separator. Valid values are:
   #

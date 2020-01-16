@@ -8,6 +8,15 @@ module Orbf
       def periods(period, frequency)
         PeriodIterator.periods(period, frequency)
       end
+
+      def from_iso(date)
+        date
+      end
+
+      def to_iso(date)
+        date
+      end
+
     end
   end
 end
