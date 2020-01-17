@@ -49,7 +49,7 @@ module Orbf
                   suffixed_state = package.subcontract? ? suffix_raw(state) : state
                   express = expression.value
                   array.push register_vars(package, activity.activity_code, suffixed_state, express, orgunit_id, period)
-                  
+
                   if using_is_null?(flattened_dependencies, state)
                     express = expression.is_null ? "1" : "0"
                     array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
@@ -101,7 +101,7 @@ module Orbf
             next unless dependencies.include?(code)
 
             keys = if code.end_with?("_quarterly")
-                     quarter = PeriodIterator.periods(period, "quarterly").first
+                     quarter = package.calendar.periods(period, "quarterly").first
                      [[hash[:id], quarter, activity_state.ext_id]]
                    else
                      build_keys_with_yearly([hash[:id], period, activity_state.ext_id])
@@ -171,12 +171,12 @@ module Orbf
 
         keys = [
           key,
-          [orgunit, PeriodIterator.periods(period, "yearly").first, de],
-          [orgunit, PeriodIterator.periods(period, "financial_july").first, de]
+          [orgunit, package.calendar.periods(period, "yearly").first, de],
+          [orgunit, package.calendar.periods(period, "financial_july").first, de]
         ]
 
         if period.include?("Q")
-          keys << PeriodIterator.periods(period, "monthly").map { |pe| [orgunit, pe, de] }
+          keys << package.calendar.periods(period, "monthly").map { |pe| [orgunit, pe, de] }
         end
 
         keys

@@ -4,7 +4,7 @@ module Orbf
     class ActivityFormulaValuesExpander
       include VariablesBuilderSupport
 
-      def initialize(package_code, activity_code, expression, values_dependencies, rule_kind, orgunit, period)
+      def initialize(package_code, activity_code, expression, values_dependencies, rule_kind, orgunit, period, calendar)
         @package_code = package_code
         @activity_code = activity_code
         @expression = expression
@@ -12,6 +12,7 @@ module Orbf
         @values_dependencies = values_dependencies
         @orgunit = orgunit
         @period = period
+        @calendar = calendar
       end
 
       # turn %{..._values} in to their :
@@ -28,7 +29,8 @@ module Orbf
 
       private
 
-      attr_reader :package_code, :activity_code, :rule_kind, :expression, :orgunit, :period, :values_dependencies
+      attr_reader :package_code, :activity_code, :rule_kind, :expression, :orgunit,
+                  :period, :values_dependencies, :calendar
 
       # return hash with values to susbstitute in the formula
       #   key is dependency symbol and values is the joined values
@@ -45,7 +47,7 @@ module Orbf
       end
 
       def to_values_list(span, dependency)
-        periods = span.periods(period, dependency)
+        periods = span.periods(period, dependency, calendar)
         code = span.prefix(dependency)
         val = periods.map do |period|
           suffix_for_id_activity(package_code, activity_code, code, orgunit.ext_id, period)

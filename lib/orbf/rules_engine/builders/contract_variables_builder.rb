@@ -60,7 +60,7 @@ module Orbf
           formula.values_dependencies.each do |dependency|
             span = Orbf::RulesEngine::Spans.matching_span(dependency, formula.rule.kind)
             next unless span
-            set.merge(span.periods(period, dependency))
+            set.merge(span.periods(period, dependency, package.calendar))
           end
         end
       end

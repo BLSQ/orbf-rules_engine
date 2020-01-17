@@ -16,6 +16,8 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
     ]
   end
 
+  let(:project) {Orbf::RulesEngine::Project.new({})}
+
   context "null values" do
     let(:activities) do
       [
@@ -42,6 +44,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         frequency:  :quarterly,
@@ -187,6 +190,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         frequency:  :quarterly,
@@ -344,6 +348,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         frequency:  :quarterly,
@@ -444,6 +449,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         frequency:  :quarterly,
@@ -533,6 +539,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:         project,
         code:            :facility,
         kind:            :zone,
         frequency:       :quarterly,
@@ -625,6 +632,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         frequency:  :quarterly,
@@ -761,6 +769,7 @@ RSpec.describe Orbf::RulesEngine::ActivityVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         frequency:  :quarterly,

@@ -5,15 +5,26 @@ module Orbf
     class Project
       attr_reader :packages, :payment_rules, :dhis2_params,
                   :default_category_option_combo_ext_id, :default_attribute_option_combo_ext_id,
-                  :engine_version
+                  :engine_version, :calendar
 
       def initialize(args)
         @packages = args[:packages] || []
+        @packages.each do |package|
+          package.project = self
+        end
         @payment_rules = args[:payment_rules] || []
+        @payment_rules.each do |package|
+          package.project = self
+        end
         @dhis2_params = args[:dhis2_params] || {}
         @default_category_option_combo_ext_id = args[:default_category_combo_ext_id]
         @default_attribute_option_combo_ext_id = args[:default_attribute_option_combo_ext_id]
         @engine_version = args.fetch(:engine_version, 3)
+        @calendar = args[:calendar]
+      end
+
+      def calendar
+        @calendar ||= ::Orbf::RulesEngine::GregorianCalendar.new
       end
 
       def indicators

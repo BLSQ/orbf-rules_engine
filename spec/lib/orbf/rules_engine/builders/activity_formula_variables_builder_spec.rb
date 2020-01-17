@@ -7,6 +7,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
     ).to_variables
   end
 
+  let(:project) { Orbf::RulesEngine::Project.new({}) }
+
   let(:activities) do
     [
       Orbf::RulesEngine::Activity.with(
@@ -49,6 +51,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
 
   let(:package) do
     Orbf::RulesEngine::Package.new(
+      project:    project,
       code:       :facility,
       kind:       :single,
       frequency:  :quarterly,
@@ -146,6 +149,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         activities: activities,
@@ -160,12 +164,6 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
             ]
           )
         ]
-      )
-    end
-
-    let(:project) do
-      Orbf::RulesEngine::Project.new(
-        packages: [package]
       )
     end
 
@@ -216,6 +214,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         activities: activities,
@@ -297,6 +296,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         activities: activities,
@@ -311,12 +311,6 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
             ]
           )
         ]
-      )
-    end
-
-    let(:project) do
-      Orbf::RulesEngine::Project.new(
-        packages: [package]
       )
     end
 
@@ -367,6 +361,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:    project,
         code:       :facility,
         kind:       :single,
         activities: activities,
@@ -432,6 +427,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
 
     let(:package) do
       Orbf::RulesEngine::Package.new(
+        project:         project,
         code:            :facility,
         kind:            :zone,
         activities:      activities,

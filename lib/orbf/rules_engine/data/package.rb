@@ -32,12 +32,12 @@ module Orbf
                   :main_org_unit_group_ext_ids, :target_org_unit_group_ext_ids,
                   :groupset_ext_id, :dataset_ext_ids,
                   :matching_groupset_ext_ids, :include_main_orgunit, :loop_over_combo
-
+      attr_accessor :project
       KNOWN_ATTRIBUTES = %i[kind rules code activities frequency
                             main_org_unit_group_ext_ids
                             target_org_unit_group_ext_ids
                             groupset_ext_id dataset_ext_ids
-                            matching_groupset_ext_ids include_main_orgunit loop_over_combo].freeze
+                            matching_groupset_ext_ids include_main_orgunit loop_over_combo project].freeze
 
       def initialize(args)
         Assertions.valid_arg_keys!(args, KNOWN_ATTRIBUTES)
@@ -56,6 +56,7 @@ module Orbf
         @matching_groupset_ext_ids = Array(args[:matching_groupset_ext_ids])
         @dataset_ext_ids = args[:dataset_ext_ids]
         @include_main_orgunit = args[:include_main_orgunit]
+        @project = args[:project]
         validate
       end
 
@@ -69,6 +70,10 @@ module Orbf
 
       def quarterly?
         frequency == Frequencies::QUARTERLY
+      end
+
+      def calendar
+        project.calendar
       end
 
       def states

@@ -35,7 +35,7 @@ module Orbf
               next unless formula_dependencies.include?(formula.code)
 
               var_dependencies = []
-              PeriodIterator.each_periods(@invoice_period, package.frequency) do |period|
+              package.calendar.each_periods(@invoice_period, package.frequency) do |period|
                 var_dependencies.push suffix_for_package(package.code, formula.code, orgunit, period)
               end
               var_key = suffix_for_package(package.code, formula.code, orgunit, @invoice_period)
@@ -70,7 +70,7 @@ module Orbf
           payment_rule.packages.select(&:quarterly?).each do |package|
             package.package_rules.flat_map(&:formulas).each do |formula|
               index = 0
-              PeriodIterator.each_periods(@invoice_period, "monthly") do |period|
+              package.calendar.each_periods(@invoice_period, "monthly") do |period|
                 var_key = suffix_for_package(package.code, formula.code, orgunit, period)
                 expression = index != 2 ? "0" : suffix_for_package(package.code, formula.code, orgunit, @invoice_period)
 
@@ -91,13 +91,14 @@ module Orbf
       def payment_rule_variables
         substitutions = values(payment_rule)
         orgunits.each_with_object([]) do |orgunit, array|
-          PeriodIterator.each_periods(@invoice_period, payment_rule.frequency) do |period|
+          payment_rule.calendar.each_periods(@invoice_period, payment_rule.frequency) do |period|
             payment_rule.rule.formulas.each do |formula|
               expanded = RulesEngine::PaymentFormulaValuesExpander.new(
                 payment_rule_code: payment_rule.code,
                 formula:           formula,
                 orgunit:           orgunit,
-                period:            period
+                period:            period,
+                calendar:          payment_rule.calendar
               ).expand_values
               substitued = Tokenizer.replace_token_from_expression(
                 expanded,

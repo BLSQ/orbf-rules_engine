@@ -5,11 +5,12 @@ module Orbf
     class PaymentFormulaValuesExpander
       include VariablesBuilderSupport
 
-      def initialize(payment_rule_code:, formula:, orgunit:, period:)
+      def initialize(payment_rule_code:, formula:, orgunit:, period:, calendar:)
         @payment_rule_code = payment_rule_code
         @formula = formula
         @orgunit = orgunit
         @period = period
+        @calendar = calendar
       end
 
       # turn %{..._values} in to their :
@@ -22,7 +23,7 @@ module Orbf
 
       private
 
-      attr_reader :payment_rule_code, :formula, :orgunit, :period
+      attr_reader :payment_rule_code, :formula, :orgunit, :period, :calendar
 
       # return hash with values to susbstitute in the formula
       #   key is dependency symbol and values is the joined values
@@ -39,7 +40,7 @@ module Orbf
       end
 
       def to_values_list(span, dependency)
-        periods = span.periods(period, dependency)
+        periods = span.periods(period, dependency, calendar)
         code = span.prefix(dependency)
         val = periods.map do |period|
           suffix_for_package(payment_rule_code, code, orgunit, period)

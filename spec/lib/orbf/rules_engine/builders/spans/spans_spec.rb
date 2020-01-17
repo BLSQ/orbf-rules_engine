@@ -1,4 +1,6 @@
 RSpec.describe "spans" do
+  let(:cal) { Orbf::RulesEngine::GregorianCalendar.new }
+
   it "detect matching dependencies" do
     expect_matching_span(
       "sample_matching_previous_year_values",
@@ -33,19 +35,19 @@ RSpec.describe "spans" do
     end
 
     it "give periods" do
-      expect(span.periods("2016Q1", "#{var_name}_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_values", cal)).to eq(
         months + quarters + year
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_monthly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_monthly_values", cal)).to eq(
         months
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_quarterly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_quarterly_values", cal)).to eq(
         quarters
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_yearly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_yearly_values", cal)).to eq(
         year
       )
     end
@@ -63,19 +65,19 @@ RSpec.describe "spans" do
     end
 
     it "give periods" do
-      expect(span.periods("2016Q1", "#{var_name}_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_values", cal)).to eq(
         %w[201501 201502 201503 2015Q1 2015]
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_monthly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_monthly_values", cal)).to eq(
         %w[201501 201502 201503]
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_quarterly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_quarterly_values", cal)).to eq(
         ["2015Q1"]
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_yearly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_yearly_values", cal)).to eq(
         %w[2015]
       )
     end
@@ -93,19 +95,19 @@ RSpec.describe "spans" do
     end
 
     it "give periods" do
-      expect(span.periods("2016Q1", "#{var_name}_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_values", cal)).to eq(
         %w[201601 201602 201603]
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_monthly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_monthly_values", cal)).to eq(
         %w[201601 201602 201603]
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_quarterly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_quarterly_values", cal)).to eq(
         %w[2016Q1]
       )
 
-      expect(span.periods("2016Q1", "#{var_name}_yearly_values")).to eq(
+      expect(span.periods("2016Q1", "#{var_name}_yearly_values", cal)).to eq(
         %w[2016]
       )
     end
@@ -120,19 +122,19 @@ RSpec.describe "spans" do
 
     let(:name) { "sample_matching_previous_values" }
     it "give periods" do
-      expect(span.periods("201601", name)).to eq(
+      expect(span.periods("201601", name, cal)).to eq(
         []
       )
-      expect(span.periods("201602", name)).to eq(
+      expect(span.periods("201602", name, cal)).to eq(
         ["201601"]
       )
-      expect(span.periods("201603", name)).to eq(
+      expect(span.periods("201603", name, cal)).to eq(
         %w[201601 201602]
       )
     end
   end
 
-  # PeriodIterator.extract_periods((Time.now - 5.months)..Time.now, "monthly")
+
   describe Orbf::RulesEngine::Spans::SlidingWindow do
     let(:span) { described_class.new }
 
@@ -156,7 +158,7 @@ RSpec.describe "spans" do
     let(:name) { "sample_matching" }
 
     it "give periods" do
-      expect(span.periods("201601", "#{name}_last_6_months_window_values")).to eq(
+      expect(span.periods("201601", "#{name}_last_6_months_window_values", cal)).to eq(
         %w[
           201508
           201509
@@ -179,20 +181,20 @@ RSpec.describe "spans" do
     ].each do |suffix, expected|
 
       it "#{suffix}_window_values for 2016Q1 should return #{expected}" do
-        expect(span.periods("2016Q1", "#{name}_#{suffix}_window_values")).to eq(
+        expect(span.periods("2016Q1", "#{name}_#{suffix}_window_values", cal)).to eq(
           expected
         )
       end
     end
 
     it "should fail fast on invalid modifier" do
-      expect { span.periods("2016Q1", "#{name}_last_3_months_unknown_window_values") }.to(
+      expect { span.periods("2016Q1", "#{name}_last_3_months_unknown_window_values", cal) }.to(
         raise_error("Sorry unsupported modifier mode : sample_matching_last_3_months_unknown_window_values")
       )
     end
 
     it "should fail fast on invalid period unit" do
-      expect { span.periods("2016Q1", "#{name}_last_3_weeks_exclusive_window_values") }.to(
+      expect { span.periods("2016Q1", "#{name}_last_3_weeks_exclusive_window_values", cal) }.to(
         raise_error("Sorry 'weeks' is not supported only months and quarters in sample_matching_last_3_weeks_exclusive_window_values")
       )
     end

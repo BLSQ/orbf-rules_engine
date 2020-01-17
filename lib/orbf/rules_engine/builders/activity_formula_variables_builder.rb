@@ -11,7 +11,7 @@ module Orbf
         @orgunits = orgunits.out_list
         @period = period
         @tokens = {}
-        @period_facts = Orbf::RulesEngine::PeriodFacts.for(period)
+        @period_facts = Orbf::RulesEngine::PeriodFacts.for(period, package.calendar)
         @package_rule_codes = package.package_rules.flat_map(&:formulas).map(&:code).to_set
         @activity_rule_codes = package.activity_rules.flat_map(&:formulas).map(&:code).to_set
       end
@@ -37,7 +37,8 @@ module Orbf
                   package.code, activity_code,
                   instantiated_formula,
                   formula.values_dependencies,
-                  formula.rule.kind, orgunit, period
+                  formula.rule.kind, orgunit, period,
+                  package.calendar
                 ).expand_values
                 array << build_variable(orgunit, activity_code, formula, instantiated_formula)
               end

@@ -1,6 +1,7 @@
 
 RSpec.describe Orbf::RulesEngine::ActivityFormulaValuesExpander do
   let(:period) { "2016" }
+  let(:calendar) { Orbf::RulesEngine::GregorianCalendar.new }
 
   let(:orgunit) do
     Orbf::RulesEngine::OrgUnit.with(
@@ -29,7 +30,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaValuesExpander do
         formula_without_values_pattern.values_dependencies,
         formula_without_values_pattern.rule.kind,
         orgunit,
-        period
+        period,
+        calendar
       ).expand_values
       expect(substitued).to eq "if (percent_achieved < 0.75, 0, percent_achieved)"
     end
@@ -52,7 +54,8 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaValuesExpander do
         formula_with_values_pattern.values_dependencies,
         formula_with_values_pattern.rule.kind,
         orgunit,
-        period
+        period,
+        calendar
       ).expand_values
       expect(substitued).to eq "sum(package_code_tst_activity_code_tst_achieved_for_1_and_2015)"
     end
