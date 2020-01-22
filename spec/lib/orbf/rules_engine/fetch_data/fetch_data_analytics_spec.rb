@@ -104,7 +104,8 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
               .to_return(status: 200, body: JSON.pretty_generate(
                 "rows" => [
                   ["dhis2_de_1", orgunit_1.ext_id, "201601", "1.4"],
-                  ["dhis2_de_1.coc_1", orgunit_1.ext_id, "201601", "3.2"]
+                  ["dhis2_de_1.coc_1", orgunit_1.ext_id, "201601", "3.2"],
+                  ["dhis2_de_1.coc_2", orgunit_1.ext_id, "201601", "NaN"]
                 ]
               ), headers: {})
 

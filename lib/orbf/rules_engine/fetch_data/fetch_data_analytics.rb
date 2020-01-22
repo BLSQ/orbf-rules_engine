@@ -26,8 +26,9 @@ module Orbf
       attr_reader :dhis2_connection, :package_arguments
 
       def map_to_data_values(analytics_response)
-        analytics_response["rows"].map do |v|
-          {
+        analytics_response["rows"].each_with_object([]) do |v, array|
+          next if v[3] == "NaN"
+          array.push(
             "dataElement"          => data_element_mappings[v[0]] || v[0],
             "period"               => v[2],
             "orgUnit"              => v[1],
@@ -35,7 +36,7 @@ module Orbf
             "attributeOptionCombo" => "default",
             "value"                => v[3],
             "origin"               => "analytics"
-          }
+          )
         end
       end
 
