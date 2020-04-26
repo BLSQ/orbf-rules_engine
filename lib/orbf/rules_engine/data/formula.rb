@@ -32,16 +32,19 @@ module Orbf
         dependencies + values_dependencies
       end
 
-      def dhis2_mapping(activity_code = nil)
-        return activity_mappings[activity_code] if activity_mappings
-        return single_mapping if single_mapping
+      def dhis2_mapping_de(activity_code = nil)
+        (dhis2_mapping(activity_code) || "").split(".")[0]
+      end
+
+      def dhis2_mapping_coc(activity_code = nil)
+        (dhis2_mapping(activity_code) || "").split(".")[1]
       end
 
       def data_elements_ids
         if single_mapping
-          [single_mapping]
+          [single_mapping.split(".")[0]]
         elsif activity_mappings
-          activity_mappings.values
+          activity_mappings.values.map { |v| v.split(".")[0] }
         else
           []
         end
@@ -50,6 +53,11 @@ module Orbf
       private
 
       attr_reader :single_mapping, :activity_mappings
+
+      def dhis2_mapping(activity_code = nil)
+        return activity_mappings[activity_code] if activity_mappings
+        return single_mapping if single_mapping
+      end
 
       def mocked_values
         values_dependencies.each_with_object({}) do |k, mocked_value|
