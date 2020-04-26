@@ -83,7 +83,7 @@ RSpec.describe Orbf::RulesEngine::Datasets do
             Orbf::RulesEngine::Formula.new(
               "half_price", "price/2",
               "",
-              activity_mappings: { "act1" => "de_act1_month" }
+              activity_mappings: { "act1" => "de_act1_month.coc" }
             ),
             Orbf::RulesEngine::Formula.new(
               "half_price_quarterl", "price/2",
@@ -159,6 +159,8 @@ RSpec.describe Orbf::RulesEngine::Datasets do
         [payment_rule, "quarterly"] => Set.new(%w[de_act1_quarter de2_pack_quarter])
       }
 
+       #<Set: {"de_act1_month.coc", "de1_pack_month"}>
+       #<Set: {"de_act1_month", "de1_pack_month"}>
       expected_elements.each do |k, _v|
         expect(expected_elements[k]).to eq(data_elements[k])
       end
