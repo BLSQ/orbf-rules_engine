@@ -29,9 +29,17 @@ module Orbf
       end
 
       def add_coc_and_aoc(variable, value)
-        value[:categoryOptionCombo] ||= variable.category_option_combo_ext_id if variable.category_option_combo_ext_id.present?
-        value[:categoryOptionCombo] ||= default_category_option_combo_ext_id if default_category_option_combo_ext_id.present?
-        value[:attributeOptionCombo] ||= default_attribute_option_combo_ext_id if default_attribute_option_combo_ext_id.present?
+        if variable.category_option_combo_ext_id.present?
+          value[:categoryOptionCombo] ||= variable.category_option_combo_ext_id
+        elsif variable.dhis2_coc
+          value[:categoryOptionCombo] ||= variable.dhis2_coc
+        elsif default_category_option_combo_ext_id.present?
+          value[:categoryOptionCombo] ||= default_category_option_combo_ext_id
+        end
+
+        if default_attribute_option_combo_ext_id.present?
+          value[:attributeOptionCombo] ||= default_attribute_option_combo_ext_id
+        end
         value
       end
 

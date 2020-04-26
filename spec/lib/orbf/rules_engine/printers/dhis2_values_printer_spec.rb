@@ -331,6 +331,39 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
     end
 
+    describe "and mapping configured with category combo" do
+      let(:data_element_id) { "dhis2_data_element_id" }
+      let(:coc_id) { "specific_coc_id"}
+      let(:variable_with_mapping) do
+        build_activity_variable(
+          activity_mappings: {
+            activity.activity_code => "#{data_element_id}.#{coc_id}"
+          },
+          frequency:         "monthly"
+        )
+      end
+
+      it "export values " do
+        result_values = described_class.new(
+          [variable_with_mapping],
+          { variable_with_mapping.key => 53 }
+        ).print
+
+        expect(result_values).to eq(
+          [
+            {
+              dataElement:          data_element_id,
+              orgUnit:              "1",
+              period:               "201603",
+              value:                53,
+              comment:              variable_with_mapping.key,
+              categoryOptionCombo:  coc_id
+            }
+          ]
+        )
+      end
+    end
+
     def expect_exported_value(variable, solution_value, expected_value, period)
       result_values = described_class.new(
         [variable],
