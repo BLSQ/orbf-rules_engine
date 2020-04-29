@@ -1,3 +1,4 @@
+# coding: utf-8
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -37,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dhis2", "2.3.8"
   spec.add_dependency "descriptive_statistics"
 
-  spec.add_development_dependency "bundler", "~> 2.0.2"
+  spec.add_development_dependency "bundler", "~> 2.1.4"
   spec.add_development_dependency "ruby-prof"
   spec.add_development_dependency "byebug"
   spec.add_development_dependency "pronto"

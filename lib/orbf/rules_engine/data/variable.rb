@@ -179,7 +179,11 @@ module Orbf
       end
 
       def dhis2_data_element
-        formula&.dhis2_mapping(activity_code)
+        formula&.dhis2_mapping_de(activity_code)
+      end
+
+      def dhis2_coc
+        formula&.dhis2_mapping_coc(activity_code)
       end
 
       def exportable_value(solution)

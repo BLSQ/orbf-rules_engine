@@ -42,7 +42,7 @@ module Orbf
         def self.assert_valid_origin(activity_state_origin, instance)
           return if ORIGINS.include?(activity_state_origin)
 
-          raise "Invalid activity state origin '#{activity_state_kind}' only supports #{ORIGINS}: #{instance.debug_info}"
+          raise "Invalid activity state origin '#{activity_state_origin}' only supports #{ORIGINS}: #{instance.debug_info}"
         end
       end
 
@@ -92,7 +92,7 @@ module Orbf
         after_init
       end
 
-      attr_reader :state, :ext_id, :name, :kind, :formula, :category_combo_ext_id 
+      attr_reader :state, :ext_id, :name, :kind, :formula, :category_combo_ext_id
 
       def origin
         @origin || "dataValueSets"
