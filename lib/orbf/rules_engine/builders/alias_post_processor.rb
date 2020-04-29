@@ -5,7 +5,7 @@ module Orbf
     class AliasPostProcessor
       def initialize(variables, default_category_option_combo_ext_id)
         @variables = variables
-        @default_category_option_combo_ext_id = default_category_option_combo_ext_id
+        @default_category_option_combo_ext_id = default_category_option_combo_ext_id || "default"
       end
 
       def call
