@@ -203,7 +203,19 @@ RSpec.describe "allow to export nil" do
       )
     end
 
-    it "exports nil values to dhis2 when no dhis2 values" do
+    it "aliases package a formula output to package b activity state and export the correct value for both packages" do
+      # Package A will read from `dhis2acta` got get the `stock_start`
+      # (`stockstartcoc`) and `stock_end` (`stockendcoc`), it will then
+      # output a `comsumption` to `"dhis2acta.consumptioncoc"`.
+      #
+      # Package B will read from `dhis2acta` to get the `stock_end`
+      # (`stockendcoc`) and from the newly created
+      # `dhis2acta.consumptioncoc`
+      #
+      # So putting this all together, if `start_stock` is 8 and `stock_end`
+      # is 6, the `consumption` will be 2 and that will be stored in
+      # `dhis2acta.consumptioncoc`
+
       fetch_and_solve.call
 
       invoices = Orbf::RulesEngine::InvoicePrinter.new(
@@ -212,14 +224,14 @@ RSpec.describe "allow to export nil" do
       ).print
 
       invoice = invoices.first
-      puts fetch_and_solve.exported_values
+
       expect(fetch_and_solve.exported_values).to eq(
         [
           { dataElement: "dhis2acta", orgUnit: "1", period: "2018Q1",
-              value: 2, comment: "quantity_a_acta_consumption_for_1_and_2018q1",
+              value: (8.0 - 6.0), comment: "quantity_a_acta_consumption_for_1_and_2018q1",
                categoryOptionCombo: "consumptioncoc" },
           { dataElement: "dhis2actb", orgUnit: "1", period: "2018Q1",
-              value: 33.33, comment: "quantity_b_actb_score_for_1_and_2018q1",
+              value: (2.0 / 6.0 * 100).round(2), comment: "quantity_b_actb_score_for_1_and_2018q1",
               categoryOptionCombo: "scorecoc" },
           { dataElement: "payment_de", orgUnit: "1", period: "2018Q1",
               value: 1, comment: "pbf_payment_nothing_for_1_and_2018q1" }
