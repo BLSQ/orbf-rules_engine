@@ -10,6 +10,7 @@ module Orbf
         @package_vars = package_vars
         @package_arguments = package_arguments
         raise PACKAGE_TYPE_ERROR unless package_arguments.is_a?(Hash)
+
         @package_builders = package_builders || default_package_builders
       end
 
@@ -25,7 +26,7 @@ module Orbf
       private
 
       def register_aliases(solver)
-        alias_post_processor = AliasPostProcessor.new solver.variables
+        alias_post_processor = AliasPostProcessor.new(solver.variables, project.default_category_option_combo_ext_id)
         solver.register_variables(alias_post_processor.call)
       end
 
@@ -33,6 +34,7 @@ module Orbf
         project.packages.each do |package|
           package_argument = package_arguments[package]
           next unless package_argument
+
           register_package(solver, package, package_argument)
         end
       end
