@@ -70,7 +70,7 @@ module Orbf
         end
 
         def with(hash)
-          new(hash)
+          new(**hash)
         end
       end
     end
