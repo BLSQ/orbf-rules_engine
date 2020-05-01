@@ -2,15 +2,7 @@
 
 module Orbf
   module RulesEngine
-    class IndicatorExpression < Orbf::RulesEngine::ValueObject
-      attributes :expression, :data_element, :category_combo
-      attr_reader :expression, :data_element, :category_combo
-      def initialize(expression: nil, data_element: nil, category_combo: nil)
-        @expression = expression
-        @data_element = data_element
-        @category_combo = category_combo
-        freeze
-      end
+    class IndicatorExpression < Orbf::RulesEngine::ValueObject::Model(:expression, :data_element, :category_combo)
     end
 
     class UnsupportedFormulaException < StandardError
@@ -45,7 +37,7 @@ module Orbf
         def to_indicator_expression(expression)
           data_element_category =  expression.sub('#{', "").sub("}", "")
           data_element, category = data_element_category.split(".").map(&:strip)
-          IndicatorExpression.new(
+          IndicatorExpression.with(
             expression:     '#{' + expression.strip + '}',
             data_element:   data_element,
             category_combo: category

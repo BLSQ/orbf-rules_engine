@@ -27,7 +27,7 @@ module Orbf
             array.push(to_total_item(var, solution_as_string))
           end
 
-          Orbf::RulesEngine::Invoice.new(
+          Orbf::RulesEngine::Invoice.with(
             kind:           "package",
             period:         period,
             orgunit_ext_id: orgunit,
@@ -54,7 +54,7 @@ module Orbf
             array.push(to_total_item(var, solution_as_string))
           end
 
-          Orbf::RulesEngine::Invoice.new(
+          Orbf::RulesEngine::Invoice.with(
             kind:           "payment_rule",
             period:         period,
             orgunit_ext_id: org_unit,
@@ -79,7 +79,7 @@ module Orbf
 
         not_exported = export_explanations(explanations, var, solution_as_string)
 
-        Orbf::RulesEngine::TotalItem.new(
+        Orbf::RulesEngine::TotalItem.with(
           formula:      var.formula,
           explanations: explanations,
           value:        solution[var.key],
@@ -127,7 +127,7 @@ module Orbf
 
         return nil if values.values.compact.none?
 
-        Orbf::RulesEngine::ActivityItem.new(
+        Orbf::RulesEngine::ActivityItem.with(
           activity:   activity,
           solution:   values,
           problem:    problem,

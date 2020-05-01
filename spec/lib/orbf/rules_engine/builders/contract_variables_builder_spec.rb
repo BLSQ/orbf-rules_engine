@@ -41,11 +41,11 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
 
   let(:orgunits) do
     [
-      Orbf::RulesEngine::OrgUnitWithFacts.new(
+      Orbf::RulesEngine::OrgUnitWithFacts.with(
         orgunit: district_orgunit1,
         facts:   { "level" => "2" }
       ),
-      Orbf::RulesEngine::OrgUnitWithFacts.new(
+      Orbf::RulesEngine::OrgUnitWithFacts.with(
         orgunit: Orbf::RulesEngine::OrgUnit.with(
           ext_id:        "2",
           path:          "country_id/county_id/2",
@@ -54,7 +54,7 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
         ),
         facts:   { "level" => "3" }
       ),
-      Orbf::RulesEngine::OrgUnitWithFacts.new(
+      Orbf::RulesEngine::OrgUnitWithFacts.with(
         orgunit: Orbf::RulesEngine::OrgUnit.with(
           ext_id:        "4",
           path:          "country_id/county_id/4",
