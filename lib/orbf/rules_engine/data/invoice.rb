@@ -3,7 +3,7 @@ module Orbf
     class ActivityItem < Orbf::RulesEngine::ValueObject::Model(:activity, :solution, :problem, :substitued, :variables)
 
       def after_init
-        @indexed_variables = (variables || {}).index_by { |v| [v.state, v.activity_code] }
+        @indexed_variables = variables.index_by { |v| [v.state, v.activity_code] }
         freeze
       end
 
