@@ -1,16 +1,9 @@
 module Orbf
   module RulesEngine
-    class ActivityItem < Orbf::RulesEngine::ValueObject
-      attributes :activity, :solution, :problem, :substitued, :variables
-      attr_reader :activity, :solution, :problem, :substitued, :variables
+    class ActivityItem < Orbf::RulesEngine::ValueObject::Model(:activity, :solution, :problem, :substitued, :variables)
 
-      def initialize(activity: nil, solution: nil, problem: nil, substitued: nil, variables: nil)
-        @activity = activity
-        @solution = solution
-        @problem = problem
-        @substitued = substitued
-        @variables = variables
-        @indexed_variables = variables.index_by { |v| [v.state, v.activity_code] }
+      def after_init
+        @indexed_variables = (variables || {}).index_by { |v| [v.state, v.activity_code] }
         freeze
       end
 
@@ -40,21 +33,9 @@ module Orbf
       end
     end
 
-    class TotalItem < Orbf::RulesEngine::ValueObject
-      attributes :key, :formula, :explanations, :value, :not_exported
-      attr_reader :key, :formula, :explanations, :value, :not_exported
-
-      def initialize(key:nil, formula: nil, explanations: nil, value: nil, not_exported:)
-        @key = key
-        @formula = formula
-        @explanations = explanations
-        @value = value
-        @not_exported = not_exported
-        freeze
-      end
-
+    class TotalItem < Orbf::RulesEngine::ValueObject::Model(:key, :formula, :explanations, :value, :not_exported)
       def not_exported?
-        @not_exported
+        not_exported
       end
 
       def inspect
@@ -62,8 +43,7 @@ module Orbf
       end
     end
 
-    class Invoice < Orbf::RulesEngine::ValueObject
-      attributes :kind, :period, :orgunit_ext_id, :package, :payment_rule, :activity_items, :total_items
+    class Invoice < Orbf::RulesEngine::ValueObject::Model(:kind, :period, :orgunit_ext_id, :package, :payment_rule, :activity_items, :total_items)
 
       def code
         package&.code || payment_rule&.code

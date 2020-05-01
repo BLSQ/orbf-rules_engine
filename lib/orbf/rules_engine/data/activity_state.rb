@@ -1,7 +1,6 @@
 module Orbf
   module RulesEngine
-    class ActivityState < Orbf::RulesEngine::ValueObject
-      attributes :state, :ext_id, :name, :kind, :formula, :origin, :category_combo_ext_id
+    class ActivityState < Orbf::RulesEngine::ValueObject::Model(:state, :ext_id, :name, :kind, :formula, :origin, :category_combo_ext_id)
 
       module Kinds
         KIND_CONSTANT = "constant".freeze
@@ -80,22 +79,8 @@ module Orbf
         )
       end
 
-      def initialize(state: nil, ext_id: nil, name: nil, kind: nil, formula: nil, origin: nil, category_combo_ext_id: nil)
-        @state = state
-        @ext_id = ext_id
-        @name = name
-        @kind = kind
-        @formula = formula
-        @origin =  origin
-        @category_combo_ext_id = category_combo_ext_id
-
-        after_init
-      end
-
-      attr_reader :state, :ext_id, :name, :kind, :formula, :category_combo_ext_id
-
       def origin
-        @origin || "dataValueSets"
+        @values[:origin] || "dataValueSets"
       end
 
       def constant?
@@ -123,9 +108,9 @@ module Orbf
       end
 
       def after_init
-        raise "State is mandatory #{debug_info}" unless @state
+        raise "State is mandatory #{debug_info}" unless state
 
-        @state = state.to_s
+        @values[:state] = state.to_s
         Kinds.assert_valid_kind_and_formula(kind, formula,self )
         Origins.assert_valid_origin(origin, self)
       end
