@@ -46,7 +46,7 @@ module Orbf
 
       def decorate_with_facts(orgunits)
         orgunits.map do |org_unit|
-          OrgUnitWithFacts.new(
+          OrgUnitWithFacts.with(
             orgunit: org_unit,
             facts:   OrgunitFacts.new(org_unit, pyramid).to_facts
           )

@@ -12,7 +12,7 @@ RSpec.describe Orbf::RulesEngine::OrgUnitWithFacts do
 
   let(:facts) { { sample: "facts" } }
 
-  let(:orgunit_with_facts) { described_class.new(orgunit: orgunit, facts: facts)}
+  let(:orgunit_with_facts) { described_class.with(orgunit: orgunit, facts: facts)}
 
   it "have facts" do
     expect(orgunit_with_facts.facts).to eq(facts)
