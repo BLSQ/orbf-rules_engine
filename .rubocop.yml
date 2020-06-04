@@ -1,8 +1,8 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   Exclude:
     - db/schema.rb
-Layout/AlignHash:
+Layout/HashAlignment:
   # Alignment of entries using hash rocket as separator. Valid values are:
   #
   # key - left alignment of keys

@@ -1,0 +1,114 @@
+{
+  "pager": { "page": 1, "pageCount": 1698, "total": 3396, "pageSize": 2 },
+  "listGrid": {
+    "metaData": {},
+    "headerWidth": 6,
+    "subtitle": "all program events",
+    "width": 6,
+    "title": "all program events",
+    "height": 2,
+    "headers": [
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "eventid",
+        "column": "eventid",
+        "type": "java.lang.String"
+      },
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "datavalues",
+        "column": "datavalues",
+        "type": "java.lang.String"
+      },
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "orgunitid",
+        "column": "orgunitid",
+        "type": "java.lang.String"
+      },
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "orgunitname",
+        "column": "orgunitname",
+        "type": "java.lang.String"
+      },
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "programid",
+        "column": "programid",
+        "type": "java.lang.String"
+      },
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "programstageid",
+        "column": "programstageid",
+        "type": "java.lang.String"
+      }
+    ],
+    "rows": [
+      [
+        "OgVbqGV2WMH",
+        {
+          "type": "jsonb",
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": \"GROUP_1_CODE\"}}"
+        },
+        "1",
+        "kl Lisala Centre de Santé",
+        "TwcqxaLn11C",
+        "gHPyjsmOXHy"
+      ],
+      [
+        "zIU4tW3NRER",
+        {
+          "type": "jsonb",
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\" }, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\" }, \"xti2FJDgX0U\": {\"value\": \"GROUP_2_CODE\" }}"
+        },
+        "2",
+        "kl Lareme Centre de Santé",
+        "TwcqxaLn11C",
+        "gHPyjsmOXHy"
+      ],
+      [
+        "zIU4tW3NRER",
+        {
+          "type": "jsonb",
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\" }, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\" }, \"xti2FJDgX0U\": {\"value\": \"GROUP_3_CODE\" }}"
+        },
+        "3",
+        "kl Lareme Centre de Santé",
+        "TwcqxaLn11C",
+        "gHPyjsmOXHy"
+      ],
+      [
+        "zIU4tW3NRER",
+        {
+          "type": "jsonb",
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": \"GROUP_1_CODE\"}, \"extra2FJDgX0U\": {\"value\": \"GROUP_X_CODE\"} }"
+        },
+        "4",
+        "kl Lareme Centre de Santé",
+        "TwcqxaLn11C",
+        "gHPyjsmOXHy"
+      ],
+
+      [
+        "zIU4tW3NRER",
+        {
+          "type": "jsonb",
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": null}, \"extra2FJDgX0U\": {\"value\": \"GROUP_X_CODE\"}, \"EBDWBYsJvuz\":{\"value\": \"X\"}}"
+        },
+        "X",
+        "kl Lareme Centre de Santé",
+        "TwcqxaLn11C",
+        "gHPyjsmOXHy"
+      ]
+
+    ]
+  }
+}

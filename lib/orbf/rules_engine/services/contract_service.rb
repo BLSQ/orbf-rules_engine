@@ -23,9 +23,7 @@ module Orbf
         @mappings ||= begin
           data_elements = program.program_stages.flat_map do |ps|
             ps["program_stage_data_elements"].map do |psde|
-              de = psde["data_element"]
-              de["code"] = Codifier.codify(de["code"])
-              de
+              psde["data_element"]
             end
           end
 
@@ -34,15 +32,34 @@ module Orbf
       end
 
       def find_all
-        raw_events = dhis2_connection.get(
-          "/sqlViews/" +
-            @all_event_sql_view_id +
-              "/data.json?var=programId:" +
-              @program_id +
-              "&paging=false"
-        )
-        events = raw_events["list_grid"]["rows"].map { |e| to_event(e) }
-        events.map { |e| to_contract(e) }
+        @all_contracts ||= begin
+          raw_events = dhis2_connection.get(
+            "/sqlViews/" +
+              @all_event_sql_view_id +
+                "/data.json?var=programId:" +
+                @program_id +
+                "&paging=false"
+          )
+          events = raw_events["list_grid"]["rows"].map { |e| to_event(e) }
+          events.map { |e| to_contract(e) }
+        end
+      end
+
+      def for(org_unit_id, period)
+        select_contracts = find_all.select do |contract|
+          contract.org_unit_id == org_unit_id && contract.match_period?(period)
+        end
+        if select_contracts.size > 1
+          raise "Overlapping contracts for #{org_unit_id} and period #{period} : #{select_contracts}"
+        end
+
+        select_contracts[0]
+      end
+
+      def for_subcontract(main_org_unit_id, period)
+        find_all.select do |contract|
+          contract.field_values["contract_main_orgunit"] == main_org_unit_id && contract.match_period?(period)
+        end
       end
 
       private
@@ -50,10 +67,10 @@ module Orbf
       attr_reader :dhis2_connection
 
       def to_event(row)
-        dataVals = JSON.parse(row[1]["value"])
-        dataValues = dataVals.keys.map do |k|
-          dataVals[k]["dataElement"] = k
-          dataVals[k]
+        data_vals = JSON.parse(row[1]["value"])
+        data_values = data_vals.keys.map do |k|
+          data_vals[k]["dataElement"] = k
+          data_vals[k]
         end
         {
           "event"        => row[0],
@@ -61,7 +78,7 @@ module Orbf
           "orgUnitName"  => row[3],
           "program"      => row[4],
           "programStage" => row[5],
-          "dataValues"   => dataValues
+          "dataValues"   => data_values
         }
       end
 
