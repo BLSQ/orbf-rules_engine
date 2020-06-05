@@ -62,6 +62,12 @@ module Orbf
         end
       end
 
+      def for_groups(groups_codes, period)
+        find_all.select do |contract|
+          (contract.codes & groups_codes) && contract.match_period?(period)
+        end
+      end
+
       private
 
       attr_reader :dhis2_connection

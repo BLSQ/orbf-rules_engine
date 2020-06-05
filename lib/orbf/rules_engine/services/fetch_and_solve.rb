@@ -39,12 +39,22 @@ module Orbf
         @dhis2_connection ||= ::Dhis2::Client.new(project.dhis2_params)
       end
 
+      def contract_service
+        @contract_service ||= ::Orbf::RulesEngine::ContractService.new(
+          program_id: "TwcqxaLn11C",
+          all_event_sql_view_id: "QNKOsX4EGEk",
+          dhis2_connection:      dhis2_connection,
+          calendar:              project.calendar
+        )
+      end
+
       def resolve_package_arguments
         ResolveArguments.new(
           project:          project,
           pyramid:          pyramid,
           orgunit_ext_id:   orgunit_ext_id,
-          invoicing_period: invoicing_period
+          invoicing_period: invoicing_period,
+          contract_service: contract_service
         ).call
       end
 

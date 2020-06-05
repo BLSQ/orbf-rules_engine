@@ -32,7 +32,7 @@ module Orbf
           k = e[0]
           v = e[1]
           !KNOWN_FIELDS.include?(k) && v.is_a?(String)
-        end.map { |_k, v| v }
+        end.map { |_k, v| v.downcase }
       end
 
       def overlaps(contract)
