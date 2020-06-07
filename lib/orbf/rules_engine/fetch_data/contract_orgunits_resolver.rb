@@ -13,6 +13,10 @@ module Orbf
       end
 
       def call
+        unless @main_orgunit_contract
+          return OrgUnits.new(orgunits: [], package: package)
+        end
+
         selected_orgunits = if package.subcontract? then handle_subcontract
                             elsif package.single?      then handle_single
                             elsif package.zone?        then handle_zone

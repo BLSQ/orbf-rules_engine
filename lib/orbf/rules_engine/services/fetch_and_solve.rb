@@ -40,9 +40,11 @@ module Orbf
       end
 
       def contract_service
+        return nil unless project.contract_settings
+
         @contract_service ||= ::Orbf::RulesEngine::ContractService.new(
-          program_id: "TwcqxaLn11C",
-          all_event_sql_view_id: "QNKOsX4EGEk",
+          program_id:            project.contract_settings[:program_id],
+          all_event_sql_view_id: project.contract_settings[:all_event_sql_view_id],
           dhis2_connection:      dhis2_connection,
           calendar:              project.calendar
         )
