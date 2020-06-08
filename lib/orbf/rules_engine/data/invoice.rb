@@ -4,8 +4,7 @@ module Orbf
       plugin Plugins::AfterInitialize
 
       def after_init
-        @indexed_variables = variables.index_by { |v| [v.state, v.activity_code] }
-        freeze
+        @indexed_variables = @values[:variables].index_by { |v| [v.state, v.activity_code] }
       end
 
       def variable(code)
