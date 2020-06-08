@@ -1,6 +1,7 @@
 module Orbf
   module RulesEngine
     class ActivityState < Orbf::RulesEngine::ValueObject::Model(:state, :ext_id, :name, :kind, :formula, :origin, :category_combo_ext_id)
+      plugin Plugins::AfterInitialize
 
       module Kinds
         KIND_CONSTANT = "constant".freeze

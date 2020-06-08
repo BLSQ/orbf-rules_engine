@@ -7,7 +7,7 @@ module Orbf
             :activity_code, :orgunit_ext_id, :formula, :package, :payment_rule,
             :exportable_variable_key, :category_option_combo_ext_id,
             :formula, :payment_rule)
-
+      plugin Plugins::AfterInitialize
       class << self
         def new_activity_decision_table(params)
           Variable.with(
@@ -195,16 +195,14 @@ module Orbf
                         end
       end
 
+      def after_init
+        raise "Variable type '#{type}' must be one of #{Types::TYPES}" unless Types::TYPES.include?(type.to_s)
+      end
+
       protected
 
       def values
         @values.slice(:key, :period, :expression, :type, :state, :activity_code, :orgunit_ext_id, :formula, :package, :payment_rule)
-      end
-
-      private
-
-      def after_init
-        raise "Variable type '#{type}' must be one of #{Types::TYPES}" unless Types::TYPES.include?(type.to_s)
       end
     end
   end

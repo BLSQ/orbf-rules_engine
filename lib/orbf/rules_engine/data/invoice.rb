@@ -1,6 +1,7 @@
 module Orbf
   module RulesEngine
     class ActivityItem < Orbf::RulesEngine::ValueObject::Model(:activity, :solution, :problem, :substitued, :variables)
+      plugin Plugins::AfterInitialize
 
       def after_init
         @indexed_variables = variables.index_by { |v| [v.state, v.activity_code] }

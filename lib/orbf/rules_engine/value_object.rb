@@ -1,4 +1,24 @@
 # frozen_string_literal: true
+module Orbf
+  module Plugins
+    module AfterInitialize
+      module ClassMethods
+        def call(_)
+          v = super
+          v.after_init
+          v
+        end
+      end
+
+      module InstanceMethods
+        # An empty after_initialize hook, so that plugins that use this
+        # can always call super to get the default behavior.
+        def after_init
+        end
+      end
+    end
+  end
+end
 
 module Orbf
   module RulesEngine
@@ -59,9 +79,13 @@ module Orbf
       end
 
       class << self
+        def plugin(a_module)
+          extend(a_module::ClassMethods)
+          include(a_module::InstanceMethods)
+        end
+
         def with(hash)
           i = call(hash)
-          i.send(:after_init)
           i
         end
       end
