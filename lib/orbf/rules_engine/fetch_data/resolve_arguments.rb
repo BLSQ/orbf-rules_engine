@@ -3,7 +3,7 @@
 module Orbf
   module RulesEngine
     class ResolveArguments
-      def initialize(project:, pyramid:, orgunit_ext_id:, invoicing_period:, contract_service:)
+      def initialize(project:, pyramid:, orgunit_ext_id:, invoicing_period:, contract_service: nil)
         @project = project
         @pyramid = pyramid
         @orgunit_ext_id = orgunit_ext_id
