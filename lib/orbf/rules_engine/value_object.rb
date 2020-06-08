@@ -33,6 +33,10 @@ module Orbf
         @values = coder.map.transform_keys(&:to_sym)
       end
 
+      def inspect
+        "#<#{self.class}:0x#{object_id.to_s(16)} #{@values.inspect}"
+      end
+
       def eql?(other)
         self.class == other.class && values == other.values
       end
