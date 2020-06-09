@@ -1,7 +1,7 @@
 module Orbf
   module RulesEngine
     class Contract
-      KNOWN_FIELDS = %w[contract_start_date contract_end_date id org_unit].freeze
+      KNOWN_FIELDS = %w[contract_start_date contract_end_date id org_unit date].freeze
 
       attr_reader :id, :start_period, :end_period, :field_values
 
@@ -39,16 +39,16 @@ module Orbf
           end
       end
 
-      def overlaps(contract)
+      def overlaps?(contract)
         return false if contract.id == id
 
         (
-          contract.start_period < end_period &&
-          start_period < contract.end_period
+          contract.start_period <= end_period &&
+          start_period <= contract.end_period
         )
       end
 
-      def to_hash
+      def to_h
         {
           id:            id,
           org_unit_id:   org_unit_id,
@@ -64,7 +64,7 @@ module Orbf
       end
 
       def to_s
-        JSON.pretty_generate(to_hash)
+        JSON.pretty_generate(to_h)
       end
     end
   end
