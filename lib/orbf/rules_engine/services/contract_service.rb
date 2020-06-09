@@ -40,7 +40,11 @@ module Orbf
                 @program_id +
                 "&paging=false"
           )
-          events = raw_events["list_grid"]["rows"].map { |e| to_event(e) }
+          indexes = {}
+          raw_events["list_grid"]["headers"].each_with_index do |header, index|
+            indexes[header["column"]] = index
+          end
+          events = raw_events["list_grid"]["rows"].map { |e| to_event(e, indexes) }
           events.map { |e| to_contract(e) }
         end
       end
@@ -72,29 +76,36 @@ module Orbf
 
       attr_reader :dhis2_connection
 
-      def to_event(row)
-        data_vals = JSON.parse(row[1]["value"])
+      def to_event(row, indexes)
+        data_vals = JSON.parse(row[indexes.fetch("data_values")]["value"])
         data_values = data_vals.keys.map do |k|
           data_vals[k]["dataElement"] = k
           data_vals[k]
         end
         {
-          "event"        => row[0],
-          "orgUnit"      => row[2],
-          "orgUnitName"  => row[3],
-          "program"      => row[4],
-          "programStage" => row[5],
+          "event"        => row[indexes.fetch("event_id")],
+          "date"         => row[indexes.fetch("event_date")],
+          "orgUnit"      => row[indexes.fetch("org_unit_id")],
+          "orgUnitName"  => row[indexes.fetch("org_unit_name")],
+          "orgUnitPath"  => row[indexes.fetch("org_unit_path")],
+          "program"      => row[indexes.fetch("program_id")],
+          "programStage" => row[indexes.fetch("program_stage_id")],
           "dataValues"   => data_values
         }
       end
 
       def to_contract(event)
         contract_field_values = {
-          "id"       => event["event"],
-          "org_unit" => { "id" => event["orgUnit"], "name" => event["orgUnitName"] }
+          "id"       => event.fetch("event"),
+          "org_unit" => {
+            "id"   => event.fetch("orgUnit"),
+            "name" => event.fetch("orgUnitName"),
+            "path" => event.fetch("orgUnitPath")
+          },
+          "date"     => event.fetch("date")
         }
-        event["dataValues"].each do |dv|
-          de = mappings[dv["dataElement"]]
+        event.fetch("dataValues").each do |dv|
+          de = mappings[dv.fetch("dataElement")]
           contract_field_values[de["code"]] = dv["value"]
         end
         Orbf::RulesEngine::Contract.new(contract_field_values, @calendar)

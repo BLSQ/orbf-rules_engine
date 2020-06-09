@@ -11,43 +11,57 @@
       {
         "hidden": false,
         "meta": false,
-        "name": "eventid",
-        "column": "eventid",
+        "name": "event id",
+        "column": "event_id",
         "type": "java.lang.String"
       },
       {
         "hidden": false,
         "meta": false,
-        "name": "datavalues",
-        "column": "datavalues",
+        "name": "data values",
+        "column": "data_values",
         "type": "java.lang.String"
       },
       {
         "hidden": false,
         "meta": false,
         "name": "orgunitid",
-        "column": "orgunitid",
+        "column": "org_unit_id",
         "type": "java.lang.String"
       },
       {
         "hidden": false,
         "meta": false,
         "name": "orgunitname",
-        "column": "orgunitname",
+        "column": "org_unit_name",
         "type": "java.lang.String"
       },
       {
         "hidden": false,
         "meta": false,
-        "name": "programid",
-        "column": "programid",
+        "name": "program_id",
+        "column": "program_id",
         "type": "java.lang.String"
       },
       {
         "hidden": false,
         "meta": false,
-        "name": "programstageid",
-        "column": "programstageid",
+        "name": "program_stage_id",
+        "column": "program_stage_id",
+        "type": "java.lang.String"
+      },
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "event date",
+        "column": "event_date",
+        "type": "java.lang.String"
+      },
+      {
+        "hidden": false,
+        "meta": false,
+        "name": "org unit path",
+        "column": "org_unit_path",
         "type": "java.lang.String"
       }
     ],
@@ -108,7 +122,6 @@
         "TwcqxaLn11C",
         "gHPyjsmOXHy"
       ]
-
     ]
   }
 }
