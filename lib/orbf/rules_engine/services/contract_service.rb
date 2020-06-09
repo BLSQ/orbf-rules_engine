@@ -3,6 +3,8 @@ require "json"
 module Orbf
   module RulesEngine
     class ContractService
+      PROGRAM_FIELDS = "id,name,programStages[programStageDataElements[dataElement[id,name,code,optionSet[id,name,code,options[id,code,name]]]]".freeze
+
       def initialize(program_id:, all_event_sql_view_id:, dhis2_connection:, calendar:)
         @program_id = program_id
         @all_event_sql_view_id = all_event_sql_view_id
@@ -12,10 +14,7 @@ module Orbf
 
       def program
         @program ||= begin
-          dhis2_connection.programs.find(@program_id,
-                                         fields:
-                                                 "id,name,programStages[programStageDataElements[dataElement[id,name,code,optionSet[id,name,code,options[id,name]]]]",
-                                         paging: false)
+          dhis2_connection.programs.find(@program_id, fields: PROGRAM_FIELDS, paging: false)
         end
       end
 
@@ -68,7 +67,7 @@ module Orbf
 
       def for_groups(groups_codes, period)
         find_all.select do |contract|
-          (contract.codes & groups_codes) && contract.match_period?(period)
+          (contract.codes & groups_codes).present? && contract.match_period?(period)
         end
       end
 

@@ -70,10 +70,10 @@
         "OgVbqGV2WMH",
         {
           "type": "jsonb",
-          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": \"GROUP_1_CODE\"}}"
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": \"GROUP_CSI_1_CODE\"}, \"extra2FJDgX0U\":{\"value\":\"GROUP_RURAL_CODE\" }}"
         },
         "1",
-        "kl Lisala Centre de Santé",
+        "CSI A",
         "TwcqxaLn11C",
         "gHPyjsmOXHy"
       ],
@@ -81,10 +81,10 @@
         "zIU4tW3NRER",
         {
           "type": "jsonb",
-          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\" }, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\" }, \"xti2FJDgX0U\": {\"value\": \"GROUP_2_CODE\" }}"
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\" }, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\" }, \"xti2FJDgX0U\": {\"value\": \"GROUP_CSI_2_CODE\" }, \"extra2FJDgX0U\":{\"value\":\"GROUP_URBAN_CODE\" }}"
         },
         "2",
-        "kl Lareme Centre de Santé",
+        "CSI B",
         "TwcqxaLn11C",
         "gHPyjsmOXHy"
       ],
@@ -95,7 +95,7 @@
           "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\" }, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\" }, \"xti2FJDgX0U\": {\"value\": \"GROUP_3_CODE\" }}"
         },
         "3",
-        "kl Lareme Centre de Santé",
+        "Hospital District",
         "TwcqxaLn11C",
         "gHPyjsmOXHy"
       ],
@@ -103,22 +103,21 @@
         "zIU4tW3NRER",
         {
           "type": "jsonb",
-          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": \"GROUP_1_CODE\"}, \"extra2FJDgX0U\": {\"value\": \"GROUP_X_CODE\"} }"
-        },
-        "4",
-        "kl Lareme Centre de Santé",
-        "TwcqxaLn11C",
-        "gHPyjsmOXHy"
-      ],
-
-      [
-        "zIU4tW3NRER",
-        {
-          "type": "jsonb",
-          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": null}, \"extra2FJDgX0U\": {\"value\": \"GROUP_X_CODE\"}, \"EBDWBYsJvuz\":{\"value\": \"X\"}}"
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": null}, \"extra2FJDgX0U\": {\"value\": \"GROUP_X_CODE\"}, \"EBDWBYsJvuz\":{\"value\": \"province_id\"}}"
         },
         "X",
         "kl Lareme Centre de Santé",
+        "TwcqxaLn11C",
+        "gHPyjsmOXHy"
+      ],
+      [
+        "zIU4tW3NRER",
+        {
+          "type": "jsonb",
+          "value": "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": null}, \"extra2FJDgX0U\": {\"value\": \"GROUP_PROVINCE_CODE\"}, \"EBDWBYsJvuz\":{\"value\": \"province_id\"}}"
+        },
+        "province_id",
+        "Province",
         "TwcqxaLn11C",
         "gHPyjsmOXHy"
       ]
