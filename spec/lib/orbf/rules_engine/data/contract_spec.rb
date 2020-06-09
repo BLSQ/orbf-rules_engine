@@ -39,7 +39,6 @@ RSpec.describe Orbf::RulesEngine::Contract do
     end
   end
 
-
   describe "#start_period && #end_period" do
     it "turns dates into dhis2 start/end monthly periods" do
       expect(contract.start_period).to eq("201807")
@@ -107,6 +106,30 @@ RSpec.describe Orbf::RulesEngine::Contract do
 
     it "do not overlaps at the end" do
       test_overlaps("2022-01", "2022-05", false)
+    end
+  end
+
+  describe "#overlappings" do
+    it "return pair of overlapping contracts per orgunit" do
+      other_contract = build_contract("2021-12", "2022-05")
+      contracts = [
+        contract,
+        other_contract
+      ]
+      overlappings = Orbf::RulesEngine::Contract.overlappings(contracts)
+
+      expect(overlappings).to eq([[
+                                   [contract, other_contract],
+                                   [other_contract, contract]
+                                 ]])
+    end
+
+    it "return empty if no overlappings" do
+      contracts = [
+        contract,
+        build_contract("2022-01", "2022-05")
+      ]
+      expect(Orbf::RulesEngine::Contract.overlappings(contracts)).to eq([])
     end
   end
 

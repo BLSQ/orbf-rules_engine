@@ -66,6 +66,25 @@ module Orbf
       def to_s
         JSON.pretty_generate(to_h)
       end
+
+      def self.overlappings(contracts)
+        results = []
+        contracts.group_by(&:org_unit_id).each do |_org_unit_id, ou_contracts|
+          overlappings = overlapping_contracts(ou_contracts)
+          results.push(overlappings) if overlappings.present?
+        end
+        results
+      end
+
+      def self.overlapping_contracts(contracts)
+        overlappings = []
+        contracts.each do |c1|
+          contracts.each do |c2|
+            overlappings.push([c1, c2]) if c1.overlaps?(c2)
+          end
+        end
+        overlappings
+      end
     end
   end
 end
