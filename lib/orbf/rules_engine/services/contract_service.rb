@@ -4,6 +4,7 @@ module Orbf
   module RulesEngine
     class ContractService
       PROGRAM_FIELDS = "id,name,programStages[programStageDataElements[dataElement[id,name,code,optionSet[id,name,code,options[id,code,name]]]]".freeze
+      attr_reader :dhis2_connection
 
       def initialize(program_id:, all_event_sql_view_id:, dhis2_connection:, calendar:)
         @program_id = program_id
@@ -71,9 +72,11 @@ module Orbf
         end
       end
 
-      private
+      def synchronize_groups(period)
+        GroupsSynchro.new(self).synchronize(period)
+      end
 
-      attr_reader :dhis2_connection
+      private
 
       def to_event(row, indexes)
         data_vals = JSON.parse(row[indexes.fetch("data_values")]["value"])

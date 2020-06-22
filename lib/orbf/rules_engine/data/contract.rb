@@ -22,6 +22,11 @@ module Orbf
         end
       end
 
+      def distance(period)
+        period_start_month = @calendar.periods(period, "monthly")[0]
+        [start_period.to_i - period_start_month.to_i, end_period.to_i - period_start_month.to_i].min
+      end
+
       def org_unit_id
         @org_unit["id"]
       end

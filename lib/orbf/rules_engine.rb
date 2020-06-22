@@ -60,6 +60,7 @@ require_relative "./rules_engine/fetch_data/orgunit_facts"
 require_relative "./rules_engine/fetch_data/pyramid_factory"
 require_relative "./rules_engine/fetch_data/create_pyramid"
 require_relative "./rules_engine/services/fetch_and_solve"
+require_relative "./rules_engine/services/groups_synchro"
 
 require_relative "./rules_engine/builders/sum_if"
 require_relative "./rules_engine/builders/dhis2_indexed_values"
