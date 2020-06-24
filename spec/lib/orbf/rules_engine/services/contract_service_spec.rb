@@ -57,7 +57,7 @@ RSpec.describe Orbf::RulesEngine::ContractService do
     stub_request(:put, "https://play.dhis2.org/api/organisationUnitGroups/").to_return(->(request) { requests.append(JSON.parse(request.body)); { body: "{}" } })
 
     stub_groups_load
-    contract_service.synchronize_groups("2018Q3")
+    contract_service.synchronise_groups("2018Q3")
 
     results = requests.map { |group| [group["code"], group["organisationUnits"].map { |ou| ou["id"] }] }.to_h
 
@@ -85,7 +85,7 @@ RSpec.describe Orbf::RulesEngine::ContractService do
 
     stub_groups_load
 
-    contract_service.synchronize_groups("2041Q2")
+    contract_service.synchronise_groups("2041Q2")
 
     results = requests.map { |group| [group["code"], group["organisationUnits"].map { |ou| ou["id"] }] }.to_h
 

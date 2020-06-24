@@ -10,7 +10,7 @@ module Orbf
         @groups = {}
       end
 
-      def synchronize(period)
+      def synchronise(period)
         contract_by_orgunits = contract_service.find_all.group_by(&:org_unit_id)
 
         contract_by_orgunits.each do |(org_unit_id, contracts)|

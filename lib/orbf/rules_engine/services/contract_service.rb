@@ -72,8 +72,8 @@ module Orbf
         end
       end
 
-      def synchronize_groups(period)
-        GroupsSynchro.new(self).synchronize(period)
+      def synchronise_groups(period)
+        GroupsSynchro.new(self).synchronise(period)
       end
 
       private
