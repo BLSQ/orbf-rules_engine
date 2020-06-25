@@ -31,14 +31,6 @@ module Orbf
         exported_values
       end
 
-      private
-
-      attr_reader :project, :dhis2_connection, :orgunit_ext_id, :invoicing_period
-
-      def dhis2_connection
-        @dhis2_connection ||= ::Dhis2::Client.new(project.dhis2_params)
-      end
-
       def contract_service
         return nil unless project.contract_settings
 
@@ -48,6 +40,14 @@ module Orbf
           dhis2_connection:      dhis2_connection,
           calendar:              project.calendar
         )
+      end
+
+      private
+
+      attr_reader :project, :dhis2_connection, :orgunit_ext_id, :invoicing_period
+
+      def dhis2_connection
+        @dhis2_connection ||= ::Dhis2::Client.new(project.dhis2_params)
       end
 
       def resolve_package_arguments
