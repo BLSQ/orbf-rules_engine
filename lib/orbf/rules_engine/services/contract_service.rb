@@ -76,6 +76,14 @@ module Orbf
         GroupsSynchro.new(self).synchronise(period)
       end
 
+      def group_based_data_elements
+        program.program_stages.flat_map do |ps|
+          ps["program_stage_data_elements"].map do |psde|
+            psde["data_element"]
+          end
+        end.select { |de| de["option_set"] }
+      end
+
       private
 
       def to_event(row, indexes)

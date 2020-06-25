@@ -21,7 +21,7 @@ module Orbf
           end
 
           # for each dataset, add to need group and remove other groups
-          data_elements.each do |de|
+          @contract_service.group_based_data_elements.each do |de|
             de["option_set"]["options"].each do |option|
               ou_group = find_group(option["code"])
               should_add = option["code"] == contract_for_period.field_values[de["code"]]
@@ -81,14 +81,6 @@ module Orbf
           end
           ou_groups[0]
         end
-      end
-
-      def data_elements
-        @data_elements ||= contract_service.program.program_stages.flat_map do |ps|
-          ps["program_stage_data_elements"].map do |psde|
-            psde["data_element"]
-          end
-        end.select { |de| de["option_set"] }
       end
 
       def update_all_groups

@@ -27,7 +27,6 @@ module Orbf
 
       def build_package_arguments
         project.packages.each_with_object({}) do |package, hash|
-
           orgunits = decorate_with_facts(build_orgunit_resolver(package, pyramid, main_orgunit).call)
 
           hash[package] = PackageArguments.with(
@@ -54,7 +53,7 @@ module Orbf
         orgunits.map do |org_unit|
           OrgUnitWithFacts.new(
             orgunit: org_unit,
-            facts:   OrgunitFacts.new(org_unit, pyramid).to_facts
+            facts:   OrgunitFacts.new(org_unit: org_unit, pyramid: pyramid, contract_service: @contract_service, invoicing_period: invoicing_period).to_facts
           )
         end
       end
