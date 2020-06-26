@@ -46,9 +46,15 @@ module Orbf
 
       def build_orgunit_resolver(package, pyramid, main_orgunit)
         if @contract_service
-          ContractOrgunitsResolver.new(package, pyramid, main_orgunit, @contract_service, invoicing_period)
+          ContractOrgunitsResolver.new(
+            package:          package,
+            pyramid:          pyramid,
+            main_orgunit:     main_orgunit,
+            contract_service: @contract_service,
+            period:           invoicing_period
+          )
         else
-          GroupOrgunitsResolver.new(package, pyramid, main_orgunit)
+          GroupOrgunitsResolver.new(package: package, pyramid: pyramid, main_orgunit: main_orgunit)
         end
       end
 

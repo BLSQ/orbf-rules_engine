@@ -3,7 +3,7 @@
 module Orbf
   module RulesEngine
     class ContractOrgunitsResolver
-      def initialize(package, pyramid, main_orgunit, contract_service, period)
+      def initialize(package:, pyramid:, main_orgunit:, contract_service:, period:)
         @package = package
         @pyramid = pyramid
         @main_orgunit = main_orgunit

@@ -3,7 +3,7 @@
 module Orbf
   module RulesEngine
     class GroupOrgunitsResolver
-      def initialize(package, pyramid, main_orgunit)
+      def initialize(package:, pyramid:, main_orgunit:)
         @package = package
         @pyramid = pyramid
         @main_orgunit = main_orgunit

@@ -26,7 +26,9 @@ module Orbf
               # and so keep the groups to synchronise the datasets
               # and not the contracts
               # see contract_service.synchronise_groups
-              resolved_orgunits = GroupOrgunitsResolver.new(package, pyramid, orgunit).call
+              resolved_orgunits = GroupOrgunitsResolver.new(
+                package: package, pyramid: pyramid, main_orgunit:orgunit
+              ).call
               orgunits = resolved_orgunits.out_list
               orgunits.push(resolved_orgunits.ref_orgunit) if package.zone?
               registry[package.code].merge(orgunits)
