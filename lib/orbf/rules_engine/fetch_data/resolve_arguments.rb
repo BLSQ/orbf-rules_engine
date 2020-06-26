@@ -27,7 +27,10 @@ module Orbf
 
       def build_package_arguments
         project.packages.each_with_object({}) do |package, hash|
-          orgunits = decorate_with_facts(build_orgunit_resolver(package, pyramid, main_orgunit).call)
+          raw_orgunits = build_orgunit_resolver(package, pyramid, main_orgunit).call
+          next if raw_orgunits.empty?
+
+          orgunits = decorate_with_facts(raw_orgunits)
 
           hash[package] = PackageArguments.with(
             periods:          PeriodsResolver.new(package, invoicing_period).call,
@@ -45,7 +48,7 @@ module Orbf
         if @contract_service
           ContractOrgunitsResolver.new(package, pyramid, main_orgunit, @contract_service, invoicing_period)
         else
-          OrgunitsResolver.new(package, pyramid, main_orgunit)
+          GroupOrgunitsResolver.new(package, pyramid, main_orgunit)
         end
       end
 

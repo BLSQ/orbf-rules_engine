@@ -1,4 +1,4 @@
-RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
+RSpec.describe Orbf::RulesEngine::GroupOrgunitsResolver do
   def action(main_orgunit)
     described_class.new(package, pyramid, main_orgunit).call.to_a
   end

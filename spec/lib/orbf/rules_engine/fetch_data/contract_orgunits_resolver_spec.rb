@@ -1,7 +1,16 @@
 RSpec.describe Orbf::RulesEngine::ContractOrgunitsResolver do
   def action(main_orgunit)
     stub_contract_program
-    described_class.new(package, pyramid, main_orgunit, contract_service, "2019Q1").call.to_a
+    project = Orbf::RulesEngine::Project.new(
+      packages: [package],
+      dhis2_params: dhis2_params
+    )
+    # call the resolved args to improve a bit the coverage since the "contract_service routing logic is there"
+    #   described_class.new(package, pyramid, main_orgunit, contract_service, ).call.to_a
+    resolved_args = Orbf::RulesEngine::ResolveArguments.new(project: project, pyramid: pyramid, orgunit_ext_id: main_orgunit.ext_id, invoicing_period:"2019Q1", contract_service: contract_service).call
+    # return the orgunits without facts
+    resolved_arg = resolved_args.values[0]
+    resolved_arg ? resolved_arg.orgunits.to_a.map(&:orgunit) : []
   end
 
   def stub_contract_program

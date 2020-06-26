@@ -47,7 +47,7 @@ require_relative "./rules_engine/data/contract"
 
 require_relative "./rules_engine/fetch_data/datasets_resolver"
 require_relative "./rules_engine/fetch_data/periods_resolver"
-require_relative "./rules_engine/fetch_data/orgunits_resolver"
+require_relative "./rules_engine/fetch_data/group_orgunits_resolver"
 require_relative "./rules_engine/fetch_data/contract_orgunits_resolver"
 require_relative "./rules_engine/fetch_data/datasets/compute_orgunits"
 require_relative "./rules_engine/fetch_data/datasets/compute_data_elements"

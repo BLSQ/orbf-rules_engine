@@ -2,7 +2,7 @@
 
 module Orbf
   module RulesEngine
-    class OrgunitsResolver
+    class GroupOrgunitsResolver
       def initialize(package, pyramid, main_orgunit)
         @package = package
         @pyramid = pyramid
@@ -10,6 +10,8 @@ module Orbf
       end
 
       def call
+        return OrgUnits.new(orgunits: [], package: package) unless match_group?(package)
+
         selected_orgunits = if package.subcontract? then handle_subcontract
                             elsif package.single?      then handle_single
                             elsif package.zone?        then handle_zone
@@ -21,6 +23,10 @@ module Orbf
       private
 
       attr_reader :package, :pyramid, :main_orgunit
+
+      def match_group?(package)
+        (package.main_org_unit_group_ext_ids & main_orgunit.group_ext_ids).any?
+      end
 
       def handle_zone
         if package.target_org_unit_group_ext_ids.any?

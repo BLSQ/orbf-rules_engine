@@ -22,7 +22,11 @@ module Orbf
         def fill_registry
           pyramid.orgunits_in_groups([group_ext_id]).each do |orgunit|
             project.packages.each do |package|
-              resolved_orgunits = OrgunitsResolver.new(package, pyramid, orgunit).call
+              # assume the fuzzy groups synchronisation is enough
+              # and so keep the groups to synchronise the datasets
+              # and not the contracts
+              # see contract_service.synchronise_groups
+              resolved_orgunits = GroupOrgunitsResolver.new(package, pyramid, orgunit).call
               orgunits = resolved_orgunits.out_list
               orgunits.push(resolved_orgunits.ref_orgunit) if package.zone?
               registry[package.code].merge(orgunits)
