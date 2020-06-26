@@ -105,6 +105,20 @@ RSpec.describe Orbf::RulesEngine::ContractService do
     )
   end
 
+  it "fails fast if can't synchronize if a group reference by the program isn't available" do
+    stub_contract_program
+
+    stub_request(:get, "https://play.dhis2.org/api/organisationUnitGroups?fields=:all&filter=code:eq:GROUP_CSI_1_CODE")
+      .to_return(status: 200, body: JSON.pretty_generate({ organisationUnitGroups: [] }))
+
+    expect do
+      contract_service.synchronise_groups("2041Q2")
+    end.to raise_error(
+      Orbf::RulesEngine::IncoherentProgramGroupError,
+      "no organisation unit group with code GROUP_CSI_1_CODE but assumed by the program FOSA Contrats (TwcqxaLn11C)"
+    )
+  end
+
   def stub_groups_load
     stub_request(:get, "https://play.dhis2.org/api/organisationUnitGroups?fields=:all&filter=code:eq:GROUP_CSI_1_CODE")
       .to_return(status: 200, body: JSON.pretty_generate(
