@@ -23,6 +23,12 @@ module Orbf
         org_units_by_ext_id[ext_id]
       end
 
+      def org_units_for(ext_ids)
+        Array(ext_ids).each_with_object(Set.new) do |ext_id, set|
+          set.merge([org_units_by_ext_id[ext_id]])
+        end
+      end
+
       def groupset(ext_id)
         raise "No groupset for '#{ext_id}'" unless org_unit_groupsets_by_id[ext_id]
         org_unit_groupsets_by_id[ext_id]

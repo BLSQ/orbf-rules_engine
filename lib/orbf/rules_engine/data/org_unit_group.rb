@@ -10,6 +10,10 @@ module Orbf
         @name = name
         @code = code
       end
+
+      def code_downcase
+        @code.downcase
+      end
     end
   end
 end

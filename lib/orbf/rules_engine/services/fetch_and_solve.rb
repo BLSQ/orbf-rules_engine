@@ -31,6 +31,17 @@ module Orbf
         exported_values
       end
 
+      def contract_service
+        return nil unless project.contract_settings
+
+        @contract_service ||= ::Orbf::RulesEngine::ContractService.new(
+          program_id:            project.contract_settings[:program_id],
+          all_event_sql_view_id: project.contract_settings[:all_event_sql_view_id],
+          dhis2_connection:      dhis2_connection,
+          calendar:              project.calendar
+        )
+      end
+
       private
 
       attr_reader :project, :dhis2_connection, :orgunit_ext_id, :invoicing_period
@@ -44,7 +55,8 @@ module Orbf
           project:          project,
           pyramid:          pyramid,
           orgunit_ext_id:   orgunit_ext_id,
-          invoicing_period: invoicing_period
+          invoicing_period: invoicing_period,
+          contract_service: contract_service
         ).call
       end
 

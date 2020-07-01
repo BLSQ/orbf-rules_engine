@@ -1,6 +1,6 @@
-RSpec.describe Orbf::RulesEngine::OrgunitsResolver do
+RSpec.describe Orbf::RulesEngine::GroupOrgunitsResolver do
   def action(main_orgunit)
-    described_class.new(package, pyramid, main_orgunit).call.to_a
+    described_class.new(package: package, pyramid: pyramid, main_orgunit: main_orgunit).call.to_a
   end
 
   let(:matching_groupset_ext_ids) do
