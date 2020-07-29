@@ -99,7 +99,54 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
     WebMock::Config.instance.query_values_notation = nil
   end
 
-  it "combines all arguments and fetch data in one call" do
+  it "splits out the API calls with too many different periods" do
+    periods = ["202004", "202005", "202006", "202007","202008", "202009", "202010", "202011"]
+    periods_with_years = periods.each_slice(4).map { |slice| slice += ["2020", "2019July"] }
+
+    package_arguments = periods_with_years.map do |periods|
+      Orbf::RulesEngine::PackageArguments.with(
+        periods:          periods,
+        orgunits:         Orbf::RulesEngine::OrgUnits.new(
+          orgunits: [orgunit_1], package: package
+        ),
+        datasets_ext_ids: [],
+        package:          package
+      )
+    end
+
+    fetcher = described_class.new(dhis2_connection, package_arguments)
+
+    stubbed_requests = periods.each_slice(described_class::MAX_PERIODS_PER_FETCH).map do |period_slice|
+      pe = period_slice.join(";")
+      rows = period_slice.inject([]) do |result, period|
+        result << ["dhis2_de_1", orgunit_1.ext_id, period, "1.4"]
+        result << ["dhis2_de_1.coc_1", orgunit_1.ext_id, period, "3.2"]
+        result << ["dhis2_de_1.coc_2", orgunit_1.ext_id, period, "NaN"]
+        result
+      end
+      stub_request(:get, "https://play.dhis2.org/2.28/api/analytics?dimension=dx:dhis2_de_1%3Bdhis2_indic_1%3Bdhis2_de_1.coc_1&dimension=ou:1&dimension=pe:#{pe}")
+              .to_return(status: 200, body: JSON.pretty_generate(
+                "rows" => rows
+              ), headers: {})
+    end
+    fetcher = described_class.new(dhis2_connection, package_arguments)
+    values = fetcher.call
+    stubbed_requests.each {|sr| expect(sr).to have_been_made.once }
+
+
+    periods.each do |period|
+
+      expect(values).to include({ "attributeOptionCombo" => "default",
+                                  "categoryOptionCombo"  => "default",
+                                  "dataElement"          => "dhis2_de_1",
+                                  "orgUnit"              => "1",
+                                  "period"               => period,
+                                  "value"                => "1.4",
+                                  "origin"               => "analytics" })
+    end
+  end
+
+  it "combines all arguments and fetch data in one call (with limited amount of periods)" do
     request = stub_request(:get, "https://play.dhis2.org/2.28/api/analytics?dimension=dx:dhis2_de_1%3Bdhis2_indic_1%3Bdhis2_de_1.coc_1&dimension=ou:1%3B2&dimension=pe:201601")
               .to_return(status: 200, body: JSON.pretty_generate(
                 "rows" => [
@@ -108,6 +155,8 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
                   ["dhis2_de_1.coc_2", orgunit_1.ext_id, "201601", "NaN"]
                 ]
               ), headers: {})
+
+    values = described_class.new(dhis2_connection, package_arguments)
 
     values = fetch_data.call
 

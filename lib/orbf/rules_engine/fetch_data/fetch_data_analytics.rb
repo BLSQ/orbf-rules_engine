@@ -1,22 +1,28 @@
 module Orbf
   module RulesEngine
     class FetchDataAnalytics
+      MAX_PERIODS_PER_FETCH = 5
+
       def initialize(dhis2_connection, package_arguments)
         @package_arguments = package_arguments
         @dhis2_connection = dhis2_connection
       end
 
-      # TODO: SMS ask piet ;)
-      #    - handle too long urls ?
       def call
         return [] if analytics_activity_states.none?
 
-        analytics_response = dhis2_connection.analytics.list(
-          periods:            without_yearly_periods,
-          organisation_units: orgunit_ext_ids,
-          data_elements:      data_elements
-        )
-        map_to_data_values(analytics_response)
+        combined_response = Array(without_yearly_periods).each_slice(MAX_PERIODS_PER_FETCH).inject({}) do |result, period_slice|
+          analytics_response = dhis2_connection.analytics.list(
+            periods:            period_slice.join(";"),
+            organisation_units: orgunit_ext_ids,
+            data_elements:      data_elements
+          )
+          result["rows"] ||= []
+          result["rows"] += analytics_response["rows"]
+          result
+        end
+
+        map_to_data_values(combined_response)
       end
 
       private
@@ -65,7 +71,7 @@ module Orbf
       end
 
       def without_yearly_periods
-        package_arguments.map(&:periods).map { |p| p[0..-3] }.uniq.flatten.join(";")
+        package_arguments.map(&:periods).map { |p| p[0..-3] }.uniq.flatten
       end
     end
   end
