@@ -99,7 +99,7 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
     WebMock::Config.instance.query_values_notation = nil
   end
 
-  it "combines all arguments and fetch data in one call" do
+  it "splits out the API calls with too many different periods" do
     periods = ["202004", "202005", "202006", "202007","202008", "202009", "202010", "202011"]
     periods_with_years = periods.each_slice(4).map { |slice| slice += ["2020", "2019July"] }
 
@@ -146,7 +146,7 @@ RSpec.describe Orbf::RulesEngine::FetchDataAnalytics do
     end
   end
 
-  it "splits out the API calls with many periods" do
+  it "combines all arguments and fetch data in one call (with limited amount of periods)" do
     request = stub_request(:get, "https://play.dhis2.org/2.28/api/analytics?dimension=dx:dhis2_de_1%3Bdhis2_indic_1%3Bdhis2_de_1.coc_1&dimension=ou:1%3B2&dimension=pe:201601")
               .to_return(status: 200, body: JSON.pretty_generate(
                 "rows" => [
