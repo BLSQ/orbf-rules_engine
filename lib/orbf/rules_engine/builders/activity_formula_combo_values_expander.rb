@@ -61,10 +61,17 @@ module Orbf
         code = span.prefix(dependency)
         val = periods.map do |period|
             category_option_combo_id = (category_option_combo[:id] || category_option_combo["id"])
+            # to handle %{..._current_quarter_values}
+            is_formula_reference = package.activity_rules.flat_map(&:formulas).find {|f| f.code == code}
+
+            # to handle %{..._last_3_months_window_values}
             activity_state = activity.activity_states.find { |s| s.state == code }
-            if activity_state&.data_element? && activity_state.category_combo_ext_id == package.loop_over_combo[:id]
+            is_de_with_same_combo = activity_state&.data_element? && activity_state.category_combo_ext_id == package.loop_over_combo[:id]
+
+            if is_de_with_same_combo || is_formula_reference
                 suffix_for_id_activity(package_code, activity_code + "_" + category_option_combo_id , code, orgunit.ext_id, period)
             else
+                # to handle activity_state but with the default combo, eg a price
                 suffix_for_id_activity(package_code, activity_code, code, orgunit.ext_id, period)
             end
         end
