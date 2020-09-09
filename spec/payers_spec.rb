@@ -65,6 +65,10 @@ RSpec.describe "Payers" do
                 build_activity_formula(
                   "payer_payment", "to_pay * percentage_calculated",
                   ""
+                ),
+                build_activity_formula(
+                  "avg_percentage", "avg(%{percentage_last_3_months_window_values})",
+                  ""
                 )
               ]
             )
@@ -144,6 +148,10 @@ RSpec.describe "Payers" do
       )
       expect(problem["facility_spread_01_#{coc}_payer_payment_for_orgunit_id_and_2016q1"]).to eq(
         "facility_spread_01_to_pay_for_orgunit_id_and_2016q1 * facility_spread_01_#{coc}_percentage_calculated_for_orgunit_id_and_2016q1"
+      )
+
+      expect(problem["facility_spread_01_#{coc}_avg_percentage_for_orgunit_id_and_2016q1"]).to eq(
+        "avg(facility_spread_01_#{coc}_percentage_for_orgunit_id_and_201511,facility_spread_01_#{coc}_percentage_for_orgunit_id_and_201512,facility_spread_01_#{coc}_percentage_for_orgunit_id_and_201601)"
       )
     end
   end

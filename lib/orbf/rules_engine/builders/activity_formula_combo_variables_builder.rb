@@ -34,13 +34,15 @@ module Orbf
               package.activity_rules.each do |rule|
                 rule.formulas.each do |formula|
                   instantiated_formula = instantiate_formula(formula, activity, orgunit, category_option_combo)
-                  Orbf::RulesEngine::ActivityFormulaValuesExpander.new(
-                    package.code, activity_code,
+                  Orbf::RulesEngine::ActivityFormulaComboValuesExpander.new(
+                    package, activity,
                     instantiated_formula,
                     formula.values_dependencies,
                     formula.rule.kind, orgunit, period,
-                    package.calendar
+                    package.calendar,
+                    category_option_combo
                   ).expand_values
+
                   array << build_variable(orgunit, activity_code, formula, instantiated_formula, category_option_combo)
                 end
               end
@@ -56,7 +58,6 @@ module Orbf
         subs = {}
         formula.dependencies.each do |dependency|
           activity_state = activity.activity_states.find { |s| s.state == dependency }
-
           if @period_facts[dependency]
             subs[dependency] = @period_facts[dependency]
           elsif activity_state&.constant?
