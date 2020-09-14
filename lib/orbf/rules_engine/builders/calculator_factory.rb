@@ -88,6 +88,13 @@ module Orbf
           calculator.add_function(:between, :logical, BETWEEN)
           calculator.add_function(:abs, :number, ->(number) { number.abs })
           calculator.add_function(:score_table, :numeric, SCORE_TABLE)
+          # Dentaku now has AVG and SUM builtin, as well as ROUNDDOWN and ROUNDUP
+          # Their behavior is slightly different.
+          #      AVG(1,3,9) => In our function: 4,333333
+          #                    In Dentaku: 4.0 (if one of the elements is a float, it does work the same)
+          #
+          # Since we're mostly using our go-hesabu library, I'm just keeping these as is and ignoring the
+          # builtin functions.
           calculator.add_function(:avg, :numeric, AVG)
           calculator.add_function(:sum, :numeric, SUM)
           calculator.add_function(:safe_div, :numeric, SAFE_DIV)

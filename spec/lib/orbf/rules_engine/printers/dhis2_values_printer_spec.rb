@@ -37,7 +37,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       it "export no values" do
         result_values = described_class.new(
           [variable_without_mapping],
-          variable_without_mapping.key => 1.5
+          { variable_without_mapping.key => 1.5 }
         ).print
 
         expect(result_values).to eq([])
@@ -52,7 +52,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       it "export values " do
         result_values = described_class.new(
           [variable_with_mapping],
-          variable_with_mapping.key => 1.5
+          { variable_with_mapping.key => 1.5 }
         ).print
 
         expect(result_values).to eq(
@@ -153,7 +153,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       it "export no values" do
         result_values = described_class.new(
           [activity_variable_without_mapping],
-          activity_variable_without_mapping.key => 1.5
+          { activity_variable_without_mapping.key => 1.5 }
         ).print
         expect(result_values).to eq([])
       end
@@ -191,7 +191,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       it "export decimal that are actually integer as integer" do
         result_values = described_class.new(
           [var1, var2],
-          var1.key => 15, var2.key => 15
+          {var1.key => 15, var2.key => 15}
         ).print
         expect(result_values).to eq(
           [
@@ -218,8 +218,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
         result_values = described_class.new(
           variables,
-          activity_variable_with_exportable_formula_code.key => 15.0,
-          exportable_variable.key                            => false
+          { activity_variable_with_exportable_formula_code.key => 15.0,
+          exportable_variable.key                            => false }
         ).print
 
         expect(result_values).to eq(
@@ -239,8 +239,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
         result_values = described_class.new(
           variables,
-          activity_variable_with_exportable_formula_code.key => 15.0,
-          exportable_variable.key                            => true
+          { activity_variable_with_exportable_formula_code.key => 15.0,
+          exportable_variable.key                            => true }
         ).print
 
         expect(result_values).to eq(
@@ -300,7 +300,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
               formulas: [
                 Orbf::RulesEngine::Formula.new(
                   "quality_score", "31", "",
-                  options
+                  **options
                 ),
                 Orbf::RulesEngine::Formula.new(
                   "exportable", "1 == 1", ""
@@ -367,7 +367,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
     def expect_exported_value(variable, solution_value, expected_value, period)
       result_values = described_class.new(
         [variable],
-        variable.key => solution_value
+        { variable.key => solution_value }
       ).print
       expect(result_values).to eq(
         [
@@ -411,7 +411,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
             formulas: [
               Orbf::RulesEngine::Formula.new(
                 "quality_score", "31", "",
-                options
+                **options
               )
             ]
           )
