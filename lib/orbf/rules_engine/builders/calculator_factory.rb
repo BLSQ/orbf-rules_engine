@@ -83,6 +83,14 @@ module Orbf
         ((args[0] / multiple).floor * multiple)
       }
 
+      CAL_DAYS_IN_MONTH = lambda { |*args|
+        year = args[0]
+        month = args[1]
+        raise "Not a valid year #{year}" if year < 1900
+        raise "Not a valid monthOfYear #{year}" if month <=0 || month > 12
+        Date.new(year, month, -1).day
+      }
+
       def self.build(options = { nested_data_support: false, case_sensitive: true })
         Dentaku::Calculator.new(options).tap do |calculator|
           calculator.add_function(:between, :logical, BETWEEN)
@@ -94,6 +102,7 @@ module Orbf
           calculator.add_function(:access, :numeric, ACCESS)
           calculator.add_function(:randbetween, :numeric, RANDBETWEEN)
           calculator.add_function(:eval_array, :array, EVAL_ARRAY)
+          calculator.add_function(:cal_days_in_month, :numeric, CAL_DAYS_IN_MONTH)
           calculator.add_function(:array, :array, ARRAY)
           calculator.add_function(:stdevp, :numeric, STDEVP)
           calculator.add_function(:sqrt, :numeric, SQRT)

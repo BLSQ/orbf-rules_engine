@@ -111,6 +111,17 @@ RSpec.describe Orbf::RulesEngine::CalculatorFactory do
         end
       end
 
+      describe "support cal_days_in_month function" do
+        it "solve" do
+          solution = calculator.solve("my_var" => "cal_days_in_month(2020,1)")
+          expect(solution["my_var"]).to eq(31)
+        end
+        it "solve knowing about leap year" do
+          solution = calculator.solve("my_var" => "cal_days_in_month(2020,2)")
+          expect(solution["my_var"]).to eq(29)
+        end
+      end
+
       describe "eval_array" do
         it "solves" do
           solution = calculator.solve("my_var" => "sum(eval_array('a', ARRAY(1.5,-3,4), 'b', ARRAY(2,-4,5.2), 'b - a'))")

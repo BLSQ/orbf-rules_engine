@@ -14,6 +14,7 @@ module Orbf
         quarter_of_year = quarter.split("Q")[1]
 
         facts = {
+          "year"             => year.to_s,
           "quarter_of_year"  => quarter_of_year.to_s,
           "month_of_year"    => month_of_year.to_s,
           "month_of_quarter" => month_of_quarter.to_s
