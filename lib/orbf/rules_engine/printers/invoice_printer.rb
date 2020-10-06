@@ -80,6 +80,7 @@ module Orbf
         not_exported = export_explanations(explanations, var, solution_as_string)
 
         Orbf::RulesEngine::TotalItem.new(
+          key: var.key,
           formula:      var.formula,
           explanations: explanations,
           value:        solution[var.key],
