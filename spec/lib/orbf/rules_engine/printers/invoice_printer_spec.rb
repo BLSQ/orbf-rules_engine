@@ -155,6 +155,7 @@ RSpec.describe Orbf::RulesEngine::InvoicePrinter do
       expect(invoice.total_items).to eq(
         [
           Orbf::RulesEngine::TotalItem.with(
+            key:          "quality_score_for_1_and_201601",
             formula:      variable_total.formula,
             explanations: %W[31 31 31\n\t],
             value:        31,
