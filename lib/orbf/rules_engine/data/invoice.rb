@@ -41,10 +41,11 @@ module Orbf
     end
 
     class TotalItem < Orbf::RulesEngine::ValueObject
-      attributes :formula, :explanations, :value, :not_exported
-      attr_reader :formula, :explanations, :value, :not_exported
+      attributes :key, :formula, :explanations, :value, :not_exported
+      attr_reader :key, :formula, :explanations, :value, :not_exported
 
-      def initialize(formula: nil, explanations: nil, value: nil, not_exported:)
+      def initialize(key:nil, formula: nil, explanations: nil, value: nil, not_exported:)
+        @key = key
         @formula = formula
         @explanations = explanations
         @value = value

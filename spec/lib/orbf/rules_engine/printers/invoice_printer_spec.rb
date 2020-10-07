@@ -128,6 +128,7 @@ RSpec.describe Orbf::RulesEngine::InvoicePrinter do
 
       expect(payment_invoice.activity_items).to eq([])
       expect(payment_invoice.total_items.first.to_h).to eq(
+        key:          "rbf_amount_for_1_and_201601",
         formula:      variable_payment.formula,
         explanations: ["quality_score * 100", "120", "120\n\t"],
         value:        120,
@@ -154,6 +155,7 @@ RSpec.describe Orbf::RulesEngine::InvoicePrinter do
       expect(invoice.total_items).to eq(
         [
           Orbf::RulesEngine::TotalItem.with(
+            key:          "quality_score_for_1_and_201601",
             formula:      variable_total.formula,
             explanations: %W[31 31 31\n\t],
             value:        31,
