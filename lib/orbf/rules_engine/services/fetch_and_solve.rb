@@ -84,7 +84,11 @@ module Orbf
       def fetch_data(package_arguments)
         return [] if package_arguments.empty?
 
-        values = @mock_values || FetchData.new(dhis2_connection, package_arguments.values).call
+        values = @mock_values || FetchData.new(
+          dhis2_connection:  dhis2_connection,
+          package_arguments: package_arguments.values,
+          read_through_deg:  project.read_through_deg
+        ).call
 
         values += RulesEngine::IndicatorEvaluator.new(
           project.indicators,

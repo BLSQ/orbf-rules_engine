@@ -5,7 +5,7 @@ module Orbf
     class Project
       attr_reader :packages, :payment_rules, :dhis2_params,
                   :default_category_option_combo_ext_id, :default_attribute_option_combo_ext_id,
-                  :engine_version, :calendar, :contract_settings
+                  :engine_version, :calendar, :contract_settings, :read_through_deg
 
       def initialize(args)
         @packages = args[:packages] || []
@@ -22,6 +22,7 @@ module Orbf
         @engine_version = args.fetch(:engine_version, 3)
         @calendar = args[:calendar]
         @contract_settings = args[:contract_settings]
+        @read_through_deg = args[:read_through_deg]
       end
 
       def calendar

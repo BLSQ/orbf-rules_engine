@@ -1,4 +1,3 @@
-
 RSpec.describe Orbf::RulesEngine::FetchData do
   let(:dhis2_connection) do
     ::Dhis2::Client.new(
@@ -27,7 +26,7 @@ RSpec.describe Orbf::RulesEngine::FetchData do
   end
 
   let(:package) do
-    double(:package, activities: [])
+    double(:package, activities: [], deg_ext_id: "DEGDHIS2ID")
   end
 
   let(:package_arguments) do
@@ -51,8 +50,6 @@ RSpec.describe Orbf::RulesEngine::FetchData do
     ]
   end
 
-  let(:fetch_data) { described_class.new(dhis2_connection, package_arguments) }
-
   let(:expected_url) do
     [
       "https://play.dhis2.org/2.28/api/dataValueSets",
@@ -63,18 +60,67 @@ RSpec.describe Orbf::RulesEngine::FetchData do
     ].join
   end
 
-  it "combines all arguments and fetch data in one call" do
-    request = stub_request(:get, expected_url)
-              .to_return(status: 200, body: JSON.pretty_generate(
-                "dataValues" => []
-              ), headers: {})
+  context "from dataset" do
+    let(:fetch_data) do
+      described_class.new(
+        dhis2_connection:  dhis2_connection,
+        package_arguments: package_arguments,
+        read_through_deg:  false
+      )
+    end
 
-    fetch_data.call
+    it "combines all arguments and fetch data in one call" do
+      request = stub_request(:get, expected_url)
+                .to_return(status: 200, body: JSON.pretty_generate(
+                  "dataValues" => []
+                ), headers: {})
 
-    expect(request).to have_been_made.once
+      fetch_data.call
+
+      expect(request).to have_been_made.once
+    end
+  end
+
+  context "from dataset" do
+    let(:fetch_data) do
+      described_class.new(
+        dhis2_connection:  dhis2_connection,
+        package_arguments: package_arguments,
+        read_through_deg:  true
+      )
+    end
+
+    let(:expected_url) do
+      [
+        "https://play.dhis2.org/2.28/api/dataValueSets",
+        "?children=false",
+        "&dataElementGroup=DEGDHIS2ID",
+        "&orgUnit=county_id",
+        "&period=2016Q1"
+      ].join
+    end
+
+    it "combines all arguments and fetch data in one call" do
+      request = stub_request(:get, expected_url)
+                .to_return(status: 200, body: JSON.pretty_generate(
+                  "dataValues" => []
+                ), headers: {})
+
+      fetch_data.call
+
+      expect(request).to have_been_made.once
+    end
   end
 
   context "data cleaning" do
+    let(:fetch_data) do
+      described_class.new(
+        dhis2_connection:  dhis2_connection,
+        package_arguments: package_arguments,
+        read_through_deg:  false
+      )
+    end
+
     let(:ok_value) do
       {
         "value":                  "I'm ok",
@@ -125,7 +171,7 @@ RSpec.describe Orbf::RulesEngine::FetchData do
           "attributeOptionCombo" => "HllvX50cXC0",
           "value"                => "I'm ok",
           "storedBy"             => "dd",
-          "origin"               =>"dataValueSets",
+          "origin"               => "dataValueSets",
           "created"              => "2018-04-18T14:33:50.000+0000",
           "lastUpdated"          => "2018-04-30T10:26:24.371+0000",
           "followUp"             => false }
