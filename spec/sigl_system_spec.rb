@@ -158,6 +158,7 @@ RSpec.describe "SIGL System" do
       { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "200", "period" => "201601", "orgUnit" => "2" },
       { "dataElement" => "dhis2_act2_stock_start", "categoryOptionCombo" => "default", "value" => "200", "period" => "201601", "orgUnit" => "3" }
     ]
+    values << { "dataElement" => "dhis2_act1_consumed", "categoryOptionCombo" => "default", "value" => 500, "period" => "201601", "orgUnit" => "1" }
     (6..12).each do |month|
       values << { "dataElement" => "dhis2_act1_consumed", "categoryOptionCombo" => "default", "value" => month.to_s, "period" => "2015#{format('%02d', month)}", "orgUnit" => "1" }
       values << { "dataElement" => "dhis2_act2_consumed", "categoryOptionCombo" => "default", "value" => (month + 10).to_s, "period" => "2015#{format('%02d', month)}", "orgUnit" => "1" }
@@ -187,9 +188,9 @@ RSpec.describe "SIGL System" do
     solver = fetch_and_solve(project, pyramid, mock_values)
     average = ->(arr) { arr.inject(:+) / arr.size.to_f }
     solution = solver.solution
-    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201601"]).to eq(average.call([0, 12, 11, 10, 9, 8]))
-    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201602"]).to eq(average.call([0, 0, 12, 11, 10, 9]))
-    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201603"]).to eq(average.call([0, 0, 0, 12, 11, 10]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201601"]).to eq(average.call([500, 12, 11, 10, 9, 8]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201602"]).to eq(average.call([0, 500, 12, 11, 10, 9]))
+    expect(solution["sigl_zone_act1_last_6_months_consumption_for_1_and_201603"]).to eq(average.call([0, 0, 500, 12, 11, 10]))
   end
 
   it "can use null combined" do
