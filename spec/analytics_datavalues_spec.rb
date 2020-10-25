@@ -31,6 +31,32 @@ RSpec.describe "Mixed analytics/datavalues System" do
     ]
   end
 
+  let(:activities_bis) do
+    [
+      Orbf::RulesEngine::Activity.with(
+        name:            "spread2",
+        activity_code:   "spread_02",
+        activity_states: [
+          Orbf::RulesEngine::ActivityState.new_data_element(
+            state:                 "raw_indicator_value",
+            ext_id:                indicator_dataelement_id,
+            name:                  "spread_percentage",
+            origin:                "dataValueSets",
+            category_combo_ext_id: "default"
+          ),
+          Orbf::RulesEngine::ActivityState.new_indicator(
+            state:      "real_indicator_value",
+            ext_id:     indicator_id,
+            name:       "spread_to_pay",
+            origin:     "analytics",
+            expression: '#{' + indicator_dataelement_id + "}"
+          )
+        ]
+      )
+    ]
+  end
+
+
   let(:project) do
     Orbf::RulesEngine::Project.new(
       dhis2_params: {
@@ -70,7 +96,7 @@ RSpec.describe "Mixed analytics/datavalues System" do
           kind:                        :single,
           frequency:                   :quarterly,
           main_org_unit_group_ext_ids: ["G_ID_1"],
-          activities:                  activities,
+          activities:                  activities_bis,
           dataset_ext_ids:             ["ds2"],
           rules:                       [
             Orbf::RulesEngine::Rule.new(
