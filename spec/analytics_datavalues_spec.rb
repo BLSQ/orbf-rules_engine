@@ -133,10 +133,10 @@ RSpec.describe "Mixed analytics/datavalues System" do
     stub_request(:get, "https://sample/api/dataValueSets?children=false&dataSet=ds1&dataSet=ds2&orgUnit=path&period=2020&period=202007&period=202008&period=202009&period=2020July&period=2020Q3")
       .to_return(status: 200, body: JSON.pretty_generate(
         { "dataValues" => [
-          { "dataElement": indicator_dataelement_id, period: "202008", value: "2.0" ,categoryCombo:"coc1"},
-          { "dataElement": indicator_dataelement_id, period: "202008", value: "0.0" ,categoryCombo:"coc2"},
-          { "dataElement": indicator_dataelement_id, period: "202009", value: "2.0" ,categoryCombo:"coc1"},
-          { "dataElement": indicator_dataelement_id, period: "202009", value: "0.0" ,categoryCombo:"coc2"}
+          { "dataElement": indicator_dataelement_id, period: "202008", value: "2.0" ,categoryCombo:"Vo4mFUa9rlC"},
+          { "dataElement": indicator_dataelement_id, period: "202008", value: "0.0" ,categoryCombo:"PQrXhDwCZBF"},
+          { "dataElement": indicator_dataelement_id, period: "202009", value: "2.0" ,categoryCombo:"Vo4mFUa9rlC"},
+          { "dataElement": indicator_dataelement_id, period: "202009", value: "0.0" ,categoryCombo:"PQrXhDwCZBF"}
         ] }
       ))
 
