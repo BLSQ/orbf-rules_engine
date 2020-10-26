@@ -20,6 +20,10 @@ RSpec.describe Orbf::RulesEngine::PeriodsResolver do
             Orbf::RulesEngine::Formula.new(
               "increase",
               "safe_div(achieved,sum(%{achieved_previous_year_same_quarter_monthly_values}/4)"
+            ),
+            Orbf::RulesEngine::Formula.new(
+              "increase",
+              "safe_div(achieved,sum(%{achieved_last_24_months_window_values})"
             )
           ]
         )
