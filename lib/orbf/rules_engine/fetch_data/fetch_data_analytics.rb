@@ -12,10 +12,6 @@ module Orbf
         return [] if analytics_activity_states.none?
 
         combined_response = Array(without_yearly_periods).each_slice(MAX_PERIODS_PER_FETCH).inject({}) do |result, period_slice|
-          puts({periods:            period_slice.join(";"),
-          organisation_units: orgunit_ext_ids,
-          data_elements:      data_elements}.to_json)
-
           analytics_response = dhis2_connection.analytics.list(
             periods:            period_slice.join(";"),
             organisation_units: orgunit_ext_ids,
