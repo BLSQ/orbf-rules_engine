@@ -75,7 +75,7 @@ module Orbf
       end
 
       def without_yearly_periods
-        package_arguments.map(&:periods).map { |p| p[0..-3] }.uniq.flatten
+        package_arguments.map(&:periods).map { |p| p[0..-3] }.flatten.uniq.sort
       end
     end
   end
