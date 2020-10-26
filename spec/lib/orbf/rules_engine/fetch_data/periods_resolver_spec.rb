@@ -23,7 +23,7 @@ RSpec.describe Orbf::RulesEngine::PeriodsResolver do
             ),
             Orbf::RulesEngine::Formula.new(
               "increase",
-              "safe_div(achieved,sum(%{achieved_last_24_months_window_values})"
+              "safe_div(achieved,sum(%{achieved_last_12_months_window_values})"
             )
           ]
         )
@@ -56,8 +56,16 @@ RSpec.describe Orbf::RulesEngine::PeriodsResolver do
   end
 
   it "resolve periods from package frequency and activity span _values" do
-    expect(described_class.new(quantity_package, "2016Q1").call).to eq(
-      %w[201501 201502 201503 201601 201602 201603 2016 2015July]
-    )
+    previous_year_same_quarter = [
+      "201501", "201502", "201503", "201504", "201505"
+    ]
+    last_12_months = [
+      "201603", "201602", "201601", "201512", "201511",
+      "201510", "201509", "201508", "201507", "201506",
+      "201505", "201504"
+    ]
+    yearlies = ["2016", "2015July"]
+    expected = (previous_year_same_quarter + last_12_months).uniq.sort + yearlies
+    expect(described_class.new(quantity_package, "2016Q1").call).to eq(expected)
   end
 end
