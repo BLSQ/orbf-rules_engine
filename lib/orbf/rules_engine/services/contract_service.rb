@@ -87,7 +87,9 @@ module Orbf
       private
 
       def to_event(row, indexes)
-        data_vals = JSON.parse(row[indexes.fetch("data_values")]["value"])
+
+        raw_data_values = row[indexes.fetch("data_values")]
+        data_vals = raw_data_values.is_a?(String) ? JSON.parse(raw_data_values) : JSON.parse(raw_data_values["value"])
         data_values = data_vals.keys.map do |k|
           data_vals[k]["dataElement"] = k
           data_vals[k]

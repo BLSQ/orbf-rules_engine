@@ -15,7 +15,7 @@ RSpec.describe Orbf::RulesEngine::ContractOrgunitsResolver do
 
   def stub_contract_program
     stub_request(:get, "https://play.dhis2.org/api/sqlViews/DHIS2ALLEVENTSQLVIEWID/data.json?paging=false&var=programId:DHIS2CONTRACTPROGRAMID")
-      .to_return(status: 200, body: fixture_content(:dhis2, "contract_raw_events.json"))
+      .to_return(status: 200, body: fixture_content(:dhis2, "contract_raw_events_v2.json"))
     stub_request(:get, "https://play.dhis2.org/api/programs/DHIS2CONTRACTPROGRAMID?fields=id,name,programStages%5BprogramStageDataElements%5BdataElement%5Bid,name,code,optionSet%5Bid,name,code,options%5Bid,code,name%5D%5D%5D%5D&paging=false")
       .to_return(status: 200, body: fixture_content(:dhis2, "contract_program.json"))
   end
