@@ -84,9 +84,14 @@ module Orbf
         )
       end
 
-      def de_values(activity_state, period, _dependencies)
+      def de_values(activity_state, period, dependencies)
         orgunits.each do |orgunit|
-          current_value = lookup_value(build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id]), activity_state)
+          keys = build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id])
+          if (dependencies.include?(activity_state.state+"_quarterly")) 
+            quarter = package.calendar.periods(period, "quarterly").first
+            keys = [[orgunit.ext_id, quarter, activity_state.ext_id]] + keys
+          end
+          current_value = lookup_value(keys, activity_state)
           yield(orgunit.ext_id, activity_state.state, current_value)
         end
       end
