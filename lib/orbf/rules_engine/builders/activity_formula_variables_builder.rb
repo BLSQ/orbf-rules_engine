@@ -54,7 +54,10 @@ module Orbf
         subs = {}
         formula.dependencies.each do |dependency|
           activity_state = activity.activity_states.find { |s| s.state == dependency }
-          if @period_facts[dependency]
+          activity_state_quarterly = activity.activity_states.find { |s| s.state+"_quarterly" == dependency}
+          if activity_state_quarterly && dependency.end_with?("_quarterly") && !@activity_rule_codes.include?(dependency)
+            subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, activity_state_quarterly.state, orgunit.ext_id, period)
+          elsif @period_facts[dependency]
             subs[dependency] = @period_facts[dependency]
           elsif activity_state&.constant?
             subs[dependency] = name_constant(activity.activity_code, activity_state.state, period)
