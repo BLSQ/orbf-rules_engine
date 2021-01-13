@@ -52,11 +52,11 @@ module Orbf
       end
 
       def deg_ext_ids
-        @deg_ext_ids ||= package_arguments.map(&:package).map(&:deg_ext_id).uniq.sort
+        @deg_ext_ids ||= package_arguments.map(&:package).map(&:deg_ext_id).uniq.compact.sort
       end
 
       def dataset_ext_ids
-        @dataset_ext_ids ||= package_arguments.flat_map(&:datasets_ext_ids).uniq.sort
+        @dataset_ext_ids ||= package_arguments.flat_map(&:datasets_ext_ids).uniq.compact.sort
       end
 
       def periods
