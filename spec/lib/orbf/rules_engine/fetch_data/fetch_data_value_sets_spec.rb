@@ -29,6 +29,11 @@ RSpec.describe Orbf::RulesEngine::FetchData do
     double(:package, activities: [], deg_ext_id: "DEGDHIS2ID")
   end
 
+  let(:package_without_deg) do
+    double(:package, activities: [], deg_ext_id: nil)
+  end
+
+
   let(:package_arguments) do
     [
       Orbf::RulesEngine::PackageArguments.with(
@@ -46,7 +51,15 @@ RSpec.describe Orbf::RulesEngine::FetchData do
         ),
         datasets_ext_ids: %w[dataset1 dataset2],
         package:          package
-      )
+      ),
+      Orbf::RulesEngine::PackageArguments.with(
+        periods:          %w[2016Q1 2015Q1],
+        orgunits:         Orbf::RulesEngine::OrgUnits.new(
+          orgunits: [orgunit_2], package: package_without_deg
+        ),
+        datasets_ext_ids: %w[dataset1 dataset2],
+        package:          package_without_deg
+      ),
     ]
   end
 
