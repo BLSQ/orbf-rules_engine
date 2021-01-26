@@ -8,6 +8,7 @@ module Orbf
         @invoice_period = invoice_period
       end
 
+      # Will return an array of periods, guaranteed to be unique.
       def call
         from_values_span(package, invoice_period).merge(
           from_package_frequency(package, invoice_period)

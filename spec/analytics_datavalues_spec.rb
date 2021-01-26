@@ -85,6 +85,11 @@ RSpec.describe "Mixed analytics/datavalues System" do
                 build_activity_formula(
                   "de_m_from_indic", "real_indicator_value",
                   ""
+                ),
+
+                build_activity_formula(
+                  "de_m_average", "avg(%{real_indicator_value_last_6_months_window_values})",
+                  ""
                 )
               ]
             )
@@ -144,25 +149,39 @@ RSpec.describe "Mixed analytics/datavalues System" do
 
   it "builds problem per category option combo" do
     WebMock::Config.instance.query_values_notation = :flat_array
+    all = %w(202002 202003 202004 202005 202006 202007 202008 202009)
 
-    stub_request(:get, "https://sample/api/analytics?dimension=dx:dNaUIFe7vkY&dimension=ou:kH9XaP6eoDo&dimension=pe:202007%3B202008%3B202009%3B2020Q3")
-      .to_return(status: 200, body: JSON.pretty_generate(
-        {
-          "height": 3, "rows": [
-            ["dNaUIFe7vkY", "kH9XaP6eoDo", "202007", "2.0"],
-            ["dNaUIFe7vkY", "kH9XaP6eoDo", "202008", "2.0"],
-            ["dNaUIFe7vkY", "kH9XaP6eoDo", "2020Q3", "4.0"]
-          ], "width": 4
-        }
-      ))
+    [
+      all[0...5],
+      all[5..-1] + ["2020Q3"]
+    ].each do |periods|
+      pe = periods.join(";")
+      rows = periods.map do |period|
+        if "Q3" == period[0..-2]
+          value = "134"
+        else
+          value = period[-2..-1].to_i*100
+        end
+        ["dNaUIFe7vkY", "kH9XaP6eoDo", period, value]
+      end
 
-    stub_request(:get, "https://sample/api/dataValueSets?children=false&dataSet=ds1&dataSet=ds2&orgUnit=path&period=2020&period=202007&period=202008&period=202009&period=2020July&period=2020Q3")
+      stub_request(:get, "https://sample/api/analytics?dimension=dx:dNaUIFe7vkY&dimension=ou:kH9XaP6eoDo&dimension=pe:#{pe}")
+        .to_return(status: 200, body: JSON.pretty_generate(
+                     {
+                       "height": 3, "rows": rows, "width": 4
+                     }
+                   ))
+
+    end
+
+    pe = (all + %w(2020 2020July 2020Q3)).sort.map{|s| "period=#{s}" }.join("&")
+    stub_request(:get, "https://sample/api/dataValueSets?children=false&dataSet=ds1&dataSet=ds2&orgUnit=path&#{pe}")
       .to_return(status: 200, body: JSON.pretty_generate(
         { "dataValues" => [
-          { "dataElement": indicator_dataelement_id, period: "202008", value: "2.0" ,categoryCombo:"Vo4mFUa9rlC"},
-          { "dataElement": indicator_dataelement_id, period: "202008", value: "0.0" ,categoryCombo:"PQrXhDwCZBF"},
-          { "dataElement": indicator_dataelement_id, period: "202009", value: "2.0" ,categoryCombo:"Vo4mFUa9rlC"},
-          { "dataElement": indicator_dataelement_id, period: "202009", value: "0.0" ,categoryCombo:"PQrXhDwCZBF"}
+          { "dataElement": indicator_dataelement_id, period: "202008", value: "80.0" ,categoryCombo:"Vo4mFUa9rlC"},
+          { "dataElement": indicator_dataelement_id, period: "202008", value: "81.0" ,categoryCombo:"PQrXhDwCZBF"},
+          { "dataElement": indicator_dataelement_id, period: "202009", value: "90.0" ,categoryCombo:"Vo4mFUa9rlC"},
+          { "dataElement": indicator_dataelement_id, period: "202009", value: "91.0" ,categoryCombo:"PQrXhDwCZBF"}
         ] }
       ))
 
