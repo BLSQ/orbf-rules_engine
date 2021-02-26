@@ -63,7 +63,7 @@ module Orbf
         org_units_set_size = org_units_set.size
         org_units_set.delete(main_orgunit) unless include_main_orgunit
         orgunits = org_units_set.to_a.unshift(main_orgunit)
-
+        
         if include_main_orgunit && org_units_set_size == 0
           # make sure if main orgunit is alone, they appear twice,
           # once as main and once as target

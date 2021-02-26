@@ -1,21 +1,29 @@
 RSpec.describe Orbf::RulesEngine::ContractOrgunitsResolver do
-  def action(main_orgunit)
-    stub_contract_program
+  def action(main_orgunit, events_stub: "contract_raw_events_v2.json", raw: false)
+    stub_contract_program(events_stub)
     project = Orbf::RulesEngine::Project.new(
-      packages: [package],
+      packages:     [package],
       dhis2_params: dhis2_params
     )
     # call the resolved args to improve a bit the coverage since the "contract_service routing logic is there"
     #   described_class.new(package, pyramid, main_orgunit, contract_service, ).call.to_a
-    resolved_args = Orbf::RulesEngine::ResolveArguments.new(project: project, pyramid: pyramid, orgunit_ext_id: main_orgunit.ext_id, invoicing_period:"2019Q1", contract_service: contract_service).call
+    resolved_args = Orbf::RulesEngine::ResolveArguments.new(project: project, pyramid: pyramid, orgunit_ext_id: main_orgunit.ext_id, invoicing_period: "2019Q1", contract_service: contract_service).call
     # return the orgunits without facts
     resolved_arg = resolved_args.values[0]
-    resolved_arg ? resolved_arg.orgunits.to_a.map(&:orgunit) : []
+    if resolved_arg
+      if raw
+        resolved_arg.orgunits
+      else
+        resolved_arg.orgunits.to_a.map(&:orgunit)
+      end
+    else
+      []
+    end
   end
 
-  def stub_contract_program
+  def stub_contract_program(events_stub)
     stub_request(:get, "https://play.dhis2.org/api/sqlViews/DHIS2ALLEVENTSQLVIEWID/data.json?paging=false&var=programId:DHIS2CONTRACTPROGRAMID")
-      .to_return(status: 200, body: fixture_content(:dhis2, "contract_raw_events_v2.json"))
+      .to_return(status: 200, body: fixture_content(:dhis2, events_stub))
     stub_request(:get, "https://play.dhis2.org/api/programs/DHIS2CONTRACTPROGRAMID?fields=id,name,programStages%5BprogramStageDataElements%5BdataElement%5Bid,name,code,optionSet%5Bid,name,code,options%5Bid,code,name%5D%5D%5D%5D&paging=false")
       .to_return(status: 200, body: fixture_content(:dhis2, "contract_program.json"))
   end
@@ -374,4 +382,30 @@ RSpec.describe Orbf::RulesEngine::ContractOrgunitsResolver do
     end
   end
 
+  context "zone package à la subcontract including main orgunit (mali)" do
+    let(:package_kind) { :zone }
+    let(:package) do
+      Orbf::RulesEngine::Package.new(
+        code:                          :quantity,
+        kind:                          package_kind,
+        frequency:                     :monthly,
+        include_main_orgunit:          true,
+        activities:                    [],
+        rules:                         [],
+        main_org_unit_group_ext_ids:   [group_province].map(&:ext_id),
+        target_org_unit_group_ext_ids: [],
+        groupset_ext_id:               groupset_type.ext_id
+      )
+    end
+
+    it "returns main and target based on contract group" do
+      orgunits = action(orgunit_province, events_stub: "contract_raw_events-contract-zone-mali.json", raw: true)
+
+      expected_orgunits = [orgunit_province, orgunit_hd, orgunitx]
+
+      expect(orgunits.to_a.map(&:orgunit)).to eq(expected_orgunits) 
+      expect(orgunits.out_list.map(&:orgunit)).to eq(expected_orgunits) 
+      expect(orgunits.secondary_orgunits.map(&:orgunit)).to eq(expected_orgunits) 
+    end
+  end
 end
