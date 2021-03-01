@@ -18,7 +18,11 @@ module Orbf
         if package.subcontract?
           orgunits[0..0]
         elsif package.zone?
-          orgunits[1..-1] || []
+          if package.include_main_orgunit
+            orgunits
+          else
+            orgunits[1..-1] || []
+          end
         else
           orgunits
         end
@@ -29,6 +33,8 @@ module Orbf
       end
 
       def secondary_orgunits
+        return orgunits if package.zone? && package.include_main_orgunit
+
         orgunits[1..-1]
       end
 
