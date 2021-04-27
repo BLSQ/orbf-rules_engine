@@ -28,7 +28,7 @@ RSpec.describe Orbf::RulesEngine::PackageDecisionVariablesBuilder do
                   worldbank,fosa,1000,2000
                   worldbank,hospital,3000,4000
                   usaid,hospital,3000,4000
-                ))
+                ), start_period: nil, end_period: nil)
           ]
         )
       ]

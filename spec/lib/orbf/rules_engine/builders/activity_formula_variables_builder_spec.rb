@@ -231,7 +231,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
               Orbf::RulesEngine::DecisionTable.new(%(in:activity_code,in:level_2,out:equity_bonus
                 act1,county_id,1
                 act2,county_id,2
-              ))
+              ), start_period: nil, end_period: nil)
             ]
           )
         ]
@@ -378,7 +378,7 @@ RSpec.describe Orbf::RulesEngine::ActivityFormulaVariablesBuilder do
               Orbf::RulesEngine::DecisionTable.new(%(in:activity_code,in:level_2,out:equity_bonus
                 act1,county_id,1
                 act2,county_id,2
-              ))
+              ), start_period: nil, end_period: nil)
             ]
           )
         ]

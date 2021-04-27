@@ -4,17 +4,25 @@ require "csv"
 module Orbf
   module RulesEngine
     class DecisionTable
-      attr_reader :rules
+      attr_reader :rules, :start_period, :end_period
 
       HEADER_SEPERATOR = ":"
 
-      def initialize(csv_string)
+      def initialize(csv_string, start_period:, end_period:)
+        @start_period = start_period
+        @end_period = end_period
         csv = CSV.parse(csv_string, headers: true)
         @headers = csv.headers.compact.map(&:freeze)
 
         @rules = csv.each_with_index.map do |row, index|
           DecisionRule.new(@headers, row, index)
         end
+      end
+
+      def match_period?(period)
+        return true unless @start_period && @end_period
+
+        start_period <= period && period <= end_period
       end
 
       def find(raw_hash)
