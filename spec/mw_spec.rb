@@ -139,7 +139,7 @@ RSpec.describe "Malawi System" do
                 dhmt_1,public,false
                 dhmt_2,private,true
                 *,*,true
-              ))
+              ), start_period: nil, end_period: nil)
           ]
         ),
         Orbf::RulesEngine::Rule.new(

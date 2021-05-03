@@ -12,8 +12,12 @@ module Orbf
       end
 
       def to_variables
-        decision_tables = package.activity_rules.flat_map(&:decision_tables)
+        decision_tables = package.activity_rules
+                                 .flat_map(&:decision_tables)
+                                 .select { |decision_table| decision_table.match_period?(period) }
+
         return [] if decision_tables.none?
+
         decision_tables.each_with_object([]) do |decision_table, array|
           variables = decision_variables(decision_table)
           array.push(*variables)

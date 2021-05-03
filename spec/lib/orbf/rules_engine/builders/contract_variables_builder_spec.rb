@@ -171,7 +171,7 @@ RSpec.describe Orbf::RulesEngine::ContractVariablesBuilder do
                 1,false
                 2,false
                 *,true
-              ))
+              ), start_period: nil, end_period: nil)
             ]
           )
         ]
