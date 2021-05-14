@@ -22,7 +22,7 @@ module Orbf
           return OrgUnits.new(orgunits: [], package: package)
         end
 
-        selected_orgunits = if package.subcontract? then handle_subcontract
+        selected_orgunits = if package.subcontract? then handle_subcontract(include_main_orgunit: package.include_main_orgunit?)
                             elsif package.single?      then handle_single
                             elsif package.zone?        then handle_zone
                             else raise("unhandled package kind: #{package.kind}")
@@ -63,8 +63,8 @@ module Orbf
         org_units_set_size = org_units_set.size
         org_units_set.delete(main_orgunit) unless include_main_orgunit
         orgunits = org_units_set.to_a.unshift(main_orgunit)
-        
-        if include_main_orgunit && org_units_set_size == 0
+                
+        if include_main_orgunit && org_units_set_size == 0 && package.subcontract?          
           # make sure if main orgunit is alone, they appear twice,
           # once as main and once as target
           orgunits = orgunits.push(main_orgunit)
