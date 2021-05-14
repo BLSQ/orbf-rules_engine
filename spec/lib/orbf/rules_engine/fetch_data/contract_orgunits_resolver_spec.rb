@@ -332,6 +332,29 @@ RSpec.describe Orbf::RulesEngine::ContractOrgunitsResolver do
     it "return main and contracted" do
       expect(action(orgunit_province)).to eq [orgunit_province, orgunitx]
     end
+
+    describe "include main orgunit" do
+      let(:package) do
+        Orbf::RulesEngine::Package.new(
+          code:                        :quantity,
+          kind:                        package_kind,
+          frequency:                   :monthly,
+          activities:                  [],
+          rules:                       [],
+          main_org_unit_group_ext_ids: [group_province].map(&:ext_id),
+          groupset_ext_id:             groupset_type.ext_id,
+          include_main_orgunit:        true
+        )
+      end
+      it "return main twice if no subcontract" do
+        expected_orgunits = [orgunit_province, orgunit_province]
+        orgunits = action(orgunit_province, events_stub: "contract_raw_events-contract-zone-mali-alone.json", raw: true)
+
+        expect(orgunits.to_a.map(&:orgunit)).to eq(expected_orgunits)
+        expect(orgunits.out_list.map(&:orgunit)).to eq([orgunit_province])
+        expect(orgunits.secondary_orgunits.map(&:orgunit)).to eq([orgunit_province])
+      end
+    end
   end
 
   context "zone package all under matching target groups" do
@@ -403,9 +426,19 @@ RSpec.describe Orbf::RulesEngine::ContractOrgunitsResolver do
 
       expected_orgunits = [orgunit_province, orgunit_hd, orgunitx]
 
-      expect(orgunits.to_a.map(&:orgunit)).to eq(expected_orgunits) 
-      expect(orgunits.out_list.map(&:orgunit)).to eq(expected_orgunits) 
-      expect(orgunits.secondary_orgunits.map(&:orgunit)).to eq(expected_orgunits) 
+      expect(orgunits.to_a.map(&:orgunit)).to eq(expected_orgunits)
+      expect(orgunits.out_list.map(&:orgunit)).to eq(expected_orgunits)
+      expect(orgunits.secondary_orgunits.map(&:orgunit)).to eq(expected_orgunits)
+    end
+
+    it "returns main and target based on contract group : main alone, no subcontracts" do
+      orgunits = action(orgunit_province, events_stub: "contract_raw_events-contract-zone-mali-alone.json", raw: true)
+
+      expected_orgunits = [orgunit_province]
+
+      expect(orgunits.to_a.map(&:orgunit)).to eq(expected_orgunits)
+      expect(orgunits.out_list.map(&:orgunit)).to eq(expected_orgunits)
+      expect(orgunits.secondary_orgunits.map(&:orgunit)).to eq(expected_orgunits)
     end
   end
 end
