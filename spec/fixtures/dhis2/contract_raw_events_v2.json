@@ -68,11 +68,13 @@
     "rows": [
       [
         "OgVbqGV2WMH",
-        "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": \"GROUP_CSI_1_CODE\"}, \"extra2FJDgX0U\":{\"value\":\"GROUP_RURAL_CODE\" }}" ,
+        "{\"LvHWK2BkIJT\": {\"value\": \"2018-06-01\"}, \"vqE7cqNXVYK\": {\"value\": \"2021-12-31\"}, \"xti2FJDgX0U\": {\"value\": \"GROUP_CSI_1_CODE\"}, \"extra2FJDgX0U\":{\"value\":\"GROUP_RURAL_CODE\" }}",
         "1",
         "CSI A",
         "TwcqxaLn11C",
-        "gHPyjsmOXHy"
+        "gHPyjsmOXHy",
+        "",
+        "country_id/province_id/1"
       ],
       [
         "zIU4tW3NRER",
@@ -80,7 +82,9 @@
         "2",
         "CSI B",
         "TwcqxaLn11C",
-        "gHPyjsmOXHy"
+        "gHPyjsmOXHy",
+        "",
+        "country_id/province_id/2"
       ],
       [
         "zIU4tW3NRER",
@@ -88,7 +92,9 @@
         "3",
         "Hospital District",
         "TwcqxaLn11C",
-        "gHPyjsmOXHy"
+        "gHPyjsmOXHy",
+        "",
+        "path/dfdf/"
       ],
       [
         "zIU4tW3NRER",
@@ -96,7 +102,9 @@
         "X",
         "kl Lareme Centre de Santé",
         "TwcqxaLn11C",
-        "gHPyjsmOXHy"
+        "gHPyjsmOXHy",
+        "",
+        "path/dfdf/"
       ],
       [
         "zIU4tW3NRER",
@@ -104,7 +112,9 @@
         "province_id",
         "Province",
         "TwcqxaLn11C",
-        "gHPyjsmOXHy"
+        "gHPyjsmOXHy",
+        "",
+        "country_id/province_id"
       ]
     ]
   }
