@@ -50,7 +50,7 @@ module Orbf
         target_codes = pyramid.groups(package.target_org_unit_group_ext_ids).map(&:code_downcase)
         target_contracts = @contract_service.for_groups(target_codes, @period)
 
-        org_units_set = target_contracts.map(&:org_unit)
+        org_units_set = Set.new(target_contracts.map(&:org_unit))
         org_units_set = org_units_set.keep_if { |orgunit| orgunit.path.start_with?(main_orgunit.path)}
         org_units_set.delete(main_orgunit)
         org_units_set.to_a.unshift(main_orgunit)
@@ -61,7 +61,7 @@ module Orbf
 
         subcontracts = @contract_service.for_subcontract(main_orgunit.ext_id, @period)
         
-        org_units_set = subcontracts.map(&:org_unit)
+        org_units_set = Set.new(subcontracts.map(&:org_unit))
         org_units_set_size = org_units_set.size
         org_units_set.delete(main_orgunit) unless include_main_orgunit
         orgunits = org_units_set.to_a.unshift(main_orgunit)
