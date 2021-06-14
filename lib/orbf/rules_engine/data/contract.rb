@@ -27,6 +27,10 @@ module Orbf
         [start_period.to_i - period_start_month.to_i, end_period.to_i - period_start_month.to_i].min
       end
 
+      def org_unit
+        Orbf::RulesEngine::OrgUnit.new(ext_id: @org_unit["id"], name: @org_unit["name"], path: @org_unit["path"], group_ext_ids: [])
+      end
+
       def org_unit_id
         @org_unit["id"]
       end
