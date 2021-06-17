@@ -10,6 +10,12 @@ module Orbf
         @invoicing_period = invoicing_period
         @main_orgunit = pyramid.org_unit(orgunit_ext_id)
         @contract_service = contract_service
+
+        if @main_orgunit.nil? && contract_service
+          main_contract = contract_service.for(orgunit_ext_id, invoicing_period)
+          @main_orgunit = main_contract.org_unit if main_contract
+        end
+
         raise "unknown orgunit '#{orgunit_ext_id}'" unless @main_orgunit
       end
 
