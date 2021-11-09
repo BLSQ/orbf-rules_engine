@@ -25,7 +25,15 @@ module Orbf
         eyear = 4 * ((jdn - era) / 1461) + r / 365 - r / 1460
         emonth = (n / 30) + 1
         eday = n.modulo(30) + 1
-        Date.new(eyear, emonth, eday)
+        begin
+          Date.new(eyear, emonth, eday)
+        rescue ArgumentError
+          begin
+            Date.new(eyear, emonth, eday - 1)
+          rescue ArgumentError
+            Date.new(eyear, emonth, eday - 2)
+        end
+        end
       end
 
       def to_iso(ethiopic)

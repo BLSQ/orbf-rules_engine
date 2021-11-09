@@ -39,6 +39,37 @@ RSpec.describe Orbf::RulesEngine::EthiopianCalendar do
     expect(gregorian).to eq(gregorian2)
   end
 
+
+  it "works on bisextile a bit before" do 
+    gregorian = Date.new(2021, 11, 7)
+    ethiopian = cal.from_iso(gregorian)
+    gregorian2 = cal.to_iso(ethiopian)
+    expect(gregorian).to eq(gregorian2)
+  end  
+
+
+  it "works on bisextile and silently offset by 1 day" do 
+    gregorian = Date.new(2021, 11, 8)
+    ethiopian = cal.from_iso(gregorian)
+    gregorian2 = cal.to_iso(ethiopian)
+    expect(Date.new(2021, 11, 7)).to eq(gregorian2)
+  end
+
+  it "works on bisextile and silently offset by 2 day" do 
+    gregorian = Date.new(2021, 11, 9)
+    ethiopian = cal.from_iso(gregorian)
+    gregorian2 = cal.to_iso(ethiopian)
+    expect(Date.new(2021, 11, 7)).to eq(gregorian2)
+  end  
+
+  it "works on bisextile a bit after" do 
+    gregorian = Date.new(2021, 11, 10)
+    ethiopian = cal.from_iso(gregorian)
+    gregorian2 = cal.to_iso(ethiopian)
+    expect(gregorian).to eq(gregorian2)
+  end  
+
+
   def expect_from_ethiopian(year, month, expected)
     ethiopian = Date.new(year, month, 1)
     date = cal.to_iso(ethiopian)
