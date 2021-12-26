@@ -18,6 +18,10 @@ module Orbf
         raise "mapping and mappings can't be both filled" if single_mapping && activity_mappings
       end
 
+      def self.with(code, expression, comment = "", single_mapping: nil,activity_mappings: nil, frequency: nil, exportable_formula_code: nil) 
+        Formula.new(code, expression, comment, single_mapping: single_mapping, activity_mappings: activity_mappings, frequency: frequency, exportable_formula_code: exportable_formula_code)
+      end
+
       def dependencies
         @dependencies ||= CalculatorFactory.dependencies(format(expression, mocked_values))
       rescue StandardError => e

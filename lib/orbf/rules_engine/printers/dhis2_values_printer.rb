@@ -5,7 +5,7 @@ module Orbf
     class Dhis2ValuesPrinter
       attr_reader :variables, :solution, :default_category_option_combo_ext_id, :default_attribute_option_combo_ext_id
 
-      def initialize(variables, solution, default_category_option_combo_ext_id: nil, default_attribute_option_combo_ext_id: nil)
+      def initialize(variables:nil, solution:nil, default_category_option_combo_ext_id: nil, default_attribute_option_combo_ext_id: nil)
         @variables = variables
         @solution = solution
         @default_category_option_combo_ext_id = default_category_option_combo_ext_id

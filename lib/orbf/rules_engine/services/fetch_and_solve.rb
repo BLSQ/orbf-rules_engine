@@ -21,11 +21,11 @@ module Orbf
 
         @solver = new_solver(package_arguments)
         solver.solve!
-
+        
         @exported_values = RulesEngine::Dhis2ValuesPrinter.new(
-          solver.variables,
-          solver.solution,
-          project.default_combos_ext_ids
+          variables: solver.variables,
+          solution: solver.solution,
+          **project.default_combos_ext_ids
         ).print
 
         exported_values

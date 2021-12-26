@@ -2,18 +2,7 @@
 
 module Orbf
   module RulesEngine
-    class OrgUnit < Orbf::RulesEngine::ValueObject
-      attributes :ext_id, :name, :path, :group_ext_ids
-
-      attr_reader :ext_id, :name, :path, :group_ext_ids, :parent_ext_ids
-
-      def initialize(ext_id:, name:, path:, group_ext_ids:)
-        @ext_id = ext_id
-        @name = name
-        @path = path
-        @group_ext_ids = group_ext_ids || []
-      end
-
+    class OrgUnit < Orbf::RulesEngine::ValueObject::Model(:ext_id, :name, :path, :group_ext_ids)
       def parent_ext_ids
         @parent_ext_ids ||= path.split("/").reject(&:empty?)
       end

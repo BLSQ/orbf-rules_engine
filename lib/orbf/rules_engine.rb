@@ -4,6 +4,7 @@ require "dentaku"
 require "json"
 require "dhis2"
 require "set"
+require "active_support"
 require "active_support/time"
 require "active_support/core_ext/enumerable"
 

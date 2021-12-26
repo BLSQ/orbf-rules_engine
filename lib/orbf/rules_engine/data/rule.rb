@@ -46,6 +46,10 @@ module Orbf
         validate
       end
 
+      def self.with(args)
+        Rule.new(**args)
+      end
+      
       def activity_kind?
         @kind == Kinds::ACTIVITY
       end

@@ -2,7 +2,12 @@
 
 module Orbf
   module RulesEngine
-    class Variable < Orbf::RulesEngine::ValueObject
+    class Variable < Orbf::RulesEngine::ValueObject::Model(
+      :key, :period, :expression, :type, :state,
+      :activity_code, :orgunit_ext_id, :formula, :package, :payment_rule,
+      :exportable_variable_key, :category_option_combo_ext_id,
+      :formula, :payment_rule)
+
       class << self
         def new_activity_decision_table(params)
           Variable.with(
@@ -137,28 +142,6 @@ module Orbf
         category_option_combo_ext_id
       ].freeze
 
-      attributes(*ATTRIBUTES)
-      attr_reader(*ATTRIBUTES)
-      attr_reader :dhis2_period
-
-      def initialize(key: nil, period: nil, expression: nil, type: nil, state: nil,
-                     activity_code: nil, orgunit_ext_id: nil, formula: nil, package: nil, payment_rule: nil,
-                     exportable_variable_key: nil, category_option_combo_ext_id: nil)
-        @key = key
-        @period = period
-        @expression = expression
-        @type = type
-        @state = state
-        @activity_code = activity_code
-        @orgunit_ext_id = orgunit_ext_id
-        @formula = formula
-        @package = package
-        @payment_rule = payment_rule
-        @exportable_variable_key = exportable_variable_key
-        @category_option_combo_ext_id = category_option_combo_ext_id
-        after_init
-      end
-
       def exportable?
         !!(orgunit_ext_id && dhis2_data_element)
       end
@@ -207,36 +190,29 @@ module Orbf
 
       def payment_rule_type?
         type == Types::PAYMENT_RULE
+      end    
+
+      def dhis2_period
+        @dhis2_period ||= if formula&.frequency
+                          Orbf::RulesEngine::PeriodIterator.periods(period, formula.frequency).last
+                        else
+                          period
+                        end
       end
 
       protected
 
       def values
-        @values ||= {
-          key:            @key,
-          period:         @period,
-          expression:     @expression,
-          type:           @type,
-          state:          @state,
-          activity_code:  @activity_code,
-          orgunit_ext_id: @orgunit_ext_id,
-          formula:        @formula,
-          package:        @package,
-          payment_rule:   @payment_rule
-        }
+        @values.slice(:key, :period, :expression, :type, :state, :activity_code, :orgunit_ext_id, :formula, :package, :payment_rule)
       end
 
       private
 
       def after_init
-        @dhis2_period = if formula&.frequency
-                          Orbf::RulesEngine::PeriodIterator.periods(period, formula.frequency).last
-                        else
-                          period
-                        end
-
         raise "Variable type '#{type}' must be one of #{Types::TYPES}" unless Types::TYPES.include?(type.to_s)
       end
+
+
     end
   end
 end

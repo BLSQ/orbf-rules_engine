@@ -34,11 +34,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport"
   spec.add_dependency "colorize"
   spec.add_dependency "hesabu"
-  spec.add_dependency "dentaku", "3.1.0"
+  spec.add_dependency "dentaku", "3.4.2"
   spec.add_dependency "dhis2", "2.3.8"
   spec.add_dependency "descriptive_statistics"
 
-  spec.add_development_dependency "bundler", "~> 2.2.3"
+  spec.add_development_dependency "bundler", "~> 2.3.3"
   spec.add_development_dependency "ruby-prof"
   spec.add_development_dependency "byebug"
   spec.add_development_dependency "pronto"

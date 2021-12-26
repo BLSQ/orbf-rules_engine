@@ -27,7 +27,7 @@ module Orbf
             next unless orgunits_per_package[package.code]
             set.merge(orgunits_per_package[package.code])
           end
-          Orbf::RulesEngine::DatasetInfo.new(
+          Orbf::RulesEngine::DatasetInfo.with(
             payment_rule_code: payment_rule.code,
             frequency:         frequency,
             data_elements:     data_elements.to_a,

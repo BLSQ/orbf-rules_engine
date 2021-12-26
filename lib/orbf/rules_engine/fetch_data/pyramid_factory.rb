@@ -21,7 +21,7 @@ module Orbf
         private
 
         def to_org_unit(ou)
-          Orbf::RulesEngine::OrgUnit.new(
+          Orbf::RulesEngine::OrgUnit.with(
             ext_id:        ou["id"],
             name:          display_name(ou),
             path:          ou["path"],
@@ -30,7 +30,7 @@ module Orbf
         end
 
         def to_org_unit_group(group)
-          Orbf::RulesEngine::OrgUnitGroup.new(
+          Orbf::RulesEngine::OrgUnitGroup.with(
             ext_id: group["id"],
             name:   display_name(group),
             code:   to_code(group)
@@ -38,7 +38,7 @@ module Orbf
         end
 
         def to_org_unit_group_set(gs)
-          Orbf::RulesEngine::OrgUnitGroupset.new(
+          Orbf::RulesEngine::OrgUnitGroupset.with(
             ext_id:        gs["id"],
             name:          display_name(gs),
             code:          to_code(gs),

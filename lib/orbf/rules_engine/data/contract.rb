@@ -28,7 +28,7 @@ module Orbf
       end
 
       def org_unit
-        Orbf::RulesEngine::OrgUnit.new(ext_id: @org_unit["id"], name: @org_unit["name"], path: @org_unit["path"], group_ext_ids: [])
+        Orbf::RulesEngine::OrgUnit.with(ext_id: @org_unit["id"], name: @org_unit["name"], path: @org_unit["path"], group_ext_ids: [])
       end
 
       def org_unit_id

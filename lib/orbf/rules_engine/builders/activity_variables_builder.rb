@@ -5,16 +5,7 @@ module Orbf
     class ActivityVariablesBuilder
       include VariablesBuilderSupport
 
-      class ValueLookup < Orbf::RulesEngine::ValueObject
-        attributes :value, :is_null
-
-        attr_reader :value, :is_null
-
-        def initialize(value:, is_null:)
-          @value = value
-          @is_null = is_null
-          freeze
-        end
+      class ValueLookup < Orbf::RulesEngine::ValueObject::Model(:value, :is_null)
       end
 
       class << self
@@ -155,7 +146,7 @@ module Orbf
 
           if looked_vals.size == 1
             # preserved type of original value (avoid to string)
-            return ValueLookup.new(value: looked_vals.first, is_null: false)
+            return ValueLookup.with(value: looked_vals.first, is_null: false)
           end
 
           looked_vals = if activity_state.origin_data_value_sets?
@@ -164,9 +155,9 @@ module Orbf
                           vals.reject { |val| val["origin"] != "analytics" || val["value"].nil? }
                         end
 
-          return ValueLookup.new(value: looked_vals.map { |val| val["value"] }.join(" + "), is_null: false)
+          return ValueLookup.with(value: looked_vals.map { |val| val["value"] }.join(" + "), is_null: false)
         end
-        ValueLookup.new(value: "0", is_null: true)
+        ValueLookup.with(value: "0", is_null: true)
       end
 
       def build_keys_with_yearly(key)
