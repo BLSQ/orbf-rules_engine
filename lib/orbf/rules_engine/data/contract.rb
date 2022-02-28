@@ -1,27 +1,64 @@
 module Orbf
   module RulesEngine
+    class ContractValidationException < StandardError
+      def initialize(missing_attrs, org_unit)
+        missing_attrs = missing_attrs.join(", ")
+        org_unit_missing = org_unit.values.uniq[0] == "missing"
+        message = org_unit_missing ? "The following attributes are missing for this contract: #{missing_attrs}" : "The following attributes are missing for this contract: #{missing_attrs}. This contract is for orgunit #{org_unit.fetch("name")} with id #{org_unit.fetch("id")}"
+        
+        super(message)
+      end
+    end
+
     class Contract
       KNOWN_FIELDS = %w[contract_start_date contract_end_date id org_unit date].freeze
 
       attr_reader :id, :start_period, :end_period, :field_values
 
       def initialize(field_values, calendar)
-        begin
-          @field_values = field_values
-          @id = field_values.fetch("id")
-          @org_unit = field_values.fetch("org_unit")
-          @start_period = field_values.fetch("contract_start_date").gsub("-", "").slice(0, 6)
-          @end_period = field_values.fetch("contract_end_date").gsub("-", "").slice(0, 6)
-          @calendar = calendar
-        rescue => e
-          if e.class == KeyError
-            contract_id ||= field_values.fetch("id")
-            org_unit_name ||= field_values.fetch("org_unit").fetch("name")
-            org_unit_id ||= field_values.fetch("org_unit").fetch("id")
-            raise $!, "There is no attribute #{e.key} in the contract with id #{contract_id}, for the #{org_unit_name} orgunit with id #{org_unit_id}", $!.backtrace
-          else
-            raise
-          end
+        validate!(field_values)
+        @field_values = field_values
+        @id = field_values.fetch("id")
+        @org_unit = field_values.fetch("org_unit")
+        @start_period = field_values.fetch("contract_start_date").gsub("-", "").slice(0, 6)
+        @end_period = field_values.fetch("contract_end_date").gsub("-", "").slice(0, 6)
+        @calendar = calendar
+      end 
+
+      def validate!(values)
+        missing_attrs = []
+        missing = "missing"
+        contract_id = values.fetch("id") do
+          missing_attrs << "id"
+          missing
+        end
+        contract_start_date = values.fetch("contract_start_date") do 
+          missing_attrs << "contract_start_date"
+          missing 
+        end
+        contract_end_date = values.fetch("contract_end_date") do 
+          missing_attrs << "contract_end_date"
+          missing 
+        end
+        org_unit = values.fetch("org_unit") do 
+          missing_attrs << "org_unit" 
+          { "name" => missing, "id" => missing, "path" => "missing" }
+        end
+        org_unit_name = org_unit.fetch("name") do
+          missing_attrs << "org_unit_name" 
+          missing
+        end
+        org_unit_id = org_unit.fetch("id") do     
+          missing_attrs << "org_unit_id" 
+          missing
+        end
+        org_unit_path = org_unit.fetch("path") do 
+          missing_attrs << "org_unit_path"
+          missing 
+        end
+    
+        if missing_attrs.any?
+          raise ContractValidationException.new(missing_attrs, org_unit)
         end
       end
 
