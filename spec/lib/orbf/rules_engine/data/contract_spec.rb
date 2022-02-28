@@ -133,6 +133,31 @@ RSpec.describe Orbf::RulesEngine::Contract do
     end
   end
 
+  describe "#initialize" do
+    it "raises KeyError with custom message on missing field values" do
+      field_values = {
+        "id"                  => "GPAGzdsLDTP",
+        "org_unit"            => {
+          "id"   => "cLc2uthCRfm",
+          "name" => "kl Kinguendi Centre de Santé",
+          "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
+        },
+        "date"                => "2018-06-01T00:00:00.000+0000",
+        "contract_end_date"   => "2021-12-31",
+        "contract_type"       => "PMA"
+      }
+      
+      missing_key = "contract_start_date"
+      contract_id ||= field_values.fetch("id")
+      org_unit_name ||= field_values.fetch("org_unit").fetch("name")
+      org_unit_id ||= field_values.fetch("org_unit").fetch("id")
+      message = "There is no attribute #{missing_key} in the contract with id #{contract_id}, for the #{org_unit_name} orgunit with id #{org_unit_id}"
+      
+      expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(KeyError)
+      expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{message}/)
+    end
+  end
+
   def build_contract(start_month, end_month)
     field_values = {
       "id"                  => "OTHERID",

@@ -6,12 +6,23 @@ module Orbf
       attr_reader :id, :start_period, :end_period, :field_values
 
       def initialize(field_values, calendar)
-        @field_values = field_values
-        @id = field_values.fetch("id")
-        @org_unit = field_values.fetch("org_unit")
-        @start_period = field_values.fetch("contract_start_date").gsub("-", "").slice(0, 6)
-        @end_period = field_values.fetch("contract_end_date").gsub("-", "").slice(0, 6)
-        @calendar = calendar
+        begin
+          @field_values = field_values
+          @id = field_values.fetch("id")
+          @org_unit = field_values.fetch("org_unit")
+          @start_period = field_values.fetch("contract_start_date").gsub("-", "").slice(0, 6)
+          @end_period = field_values.fetch("contract_end_date").gsub("-", "").slice(0, 6)
+          @calendar = calendar
+        rescue => e
+          if e.class == KeyError
+            contract_id ||= field_values.fetch("id")
+            org_unit_name ||= field_values.fetch("org_unit").fetch("name")
+            org_unit_id ||= field_values.fetch("org_unit").fetch("id")
+            raise $!, "There is no attribute #{e.key} in the contract with id #{contract_id}, for the #{org_unit_name} orgunit with id #{org_unit_id}", $!.backtrace
+          else
+            raise
+          end
+        end
       end
 
       def match_period?(period)
