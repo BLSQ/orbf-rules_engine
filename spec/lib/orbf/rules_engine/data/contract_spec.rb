@@ -151,7 +151,7 @@ RSpec.describe Orbf::RulesEngine::Contract do
         end
       end
 
-      describe "missing orgunit attributes" do
+      describe "missing contract attributes, missing orgunit attributes" do
         it "raises ContractValidationException with custom message on missing orgunit attributes" do
           field_values = {
             "id"                  => "GPAGzdsLDTP",
