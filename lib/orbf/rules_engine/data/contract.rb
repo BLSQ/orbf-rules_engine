@@ -2,9 +2,11 @@ module Orbf
   module RulesEngine
     class ContractValidationException < StandardError
       def initialize(missing_attrs, org_unit)
+        org_unit_missing = missing_attrs.include?("org_unit")
+        org_unit_name = !org_unit_missing && org_unit.fetch("name") { "missing org_unit name" }
+        org_unit_id = !org_unit_missing && org_unit.fetch("id") { "missing org_unit id" }
         missing_attrs = missing_attrs.join(", ")
-        org_unit_missing = org_unit.values.uniq[0] == "missing"
-        message = org_unit_missing ? "The following attributes are missing for this contract: #{missing_attrs}" : "The following attributes are missing for this contract: #{missing_attrs}. This contract is for orgunit #{org_unit.fetch("name")} with id #{org_unit.fetch("id")}"
+        message = org_unit_missing ? "The following attributes are missing for this contract: #{missing_attrs}" : "The following attributes are missing for this contract: #{missing_attrs}. This contract is for orgunit: name - #{org_unit_name || 'missing'}, id - #{org_unit_id || 'missing'}"
         
         super(message)
       end
@@ -27,34 +29,27 @@ module Orbf
 
       def validate!(values)
         missing_attrs = []
-        missing = "missing"
-        contract_id = values.fetch("id") do
-          missing_attrs << "id"
-          missing
+        keys_to_validate = ["id", "contract_start_date", "contract_end_date", "org_unit"]
+        keys_to_validate.each do |key|
+          if values[key] && (values[key].nil? || values[key].blank?)
+            missing_attrs << key
+          else 
+            values.fetch(key) { missing_attrs << key } 
+          end 
         end
-        contract_start_date = values.fetch("contract_start_date") do 
-          missing_attrs << "contract_start_date"
-          missing 
-        end
-        contract_end_date = values.fetch("contract_end_date") do 
-          missing_attrs << "contract_end_date"
-          missing 
-        end
-        org_unit = values.fetch("org_unit") do 
-          missing_attrs << "org_unit" 
-          { "name" => missing, "id" => missing, "path" => "missing" }
-        end
-        org_unit_name = org_unit.fetch("name") do
-          missing_attrs << "org_unit_name" 
-          missing
-        end
-        org_unit_id = org_unit.fetch("id") do     
-          missing_attrs << "org_unit_id" 
-          missing
-        end
-        org_unit_path = org_unit.fetch("path") do 
-          missing_attrs << "org_unit_path"
-          missing 
+
+        if !missing_attrs.include?("org_unit")
+          org_unit = values.fetch("org_unit")
+          org_unit_keys_to_validate = ["name", "id", "path"]
+          org_unit_keys_to_validate.each do |key|
+            if org_unit.keys.include?(key) && (org_unit[key].nil? || org_unit[key].blank?)
+              missing_attrs << "org_unit_#{key}"
+            else 
+              org_unit.fetch(key) do 
+                missing_attrs << "org_unit_#{key}"
+              end 
+            end 
+          end
         end
     
         if missing_attrs.any?
