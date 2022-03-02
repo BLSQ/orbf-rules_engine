@@ -2,11 +2,11 @@ module Orbf
   module RulesEngine
     class ContractValidationException < StandardError
       def initialize(missing_attrs, org_unit)
-        org_unit_missing = missing_attrs.include?("org_unit")
-        org_unit_name = !org_unit_missing && org_unit.fetch("name") { "missing org_unit name" }
-        org_unit_id = !org_unit_missing && org_unit.fetch("id") { "missing org_unit id" }
+        org_unit ||= {}
+        org_unit_name = org_unit.fetch("name") { "missing" }
+        org_unit_id = org_unit.fetch("id") { "missing" }
         missing_attrs = missing_attrs.join(", ")
-        message = org_unit_missing ? "The following attributes are missing for this contract: #{missing_attrs}" : "The following attributes are missing for this contract: #{missing_attrs}. This contract is for orgunit: name - #{org_unit_name || 'missing'}, id - #{org_unit_id || 'missing'}"
+        message = "The following attributes are missing for this contract: #{missing_attrs}. This contract is for orgunit: name - #{org_unit_name || 'missing'}, id - #{org_unit_id || 'missing'}"
         
         super(message)
       end
@@ -39,7 +39,7 @@ module Orbf
         end
     
         if missing_attrs.any?
-          raise ContractValidationException.new(missing_attrs, values.fetch("org_unit") { nil })
+          raise ContractValidationException.new(missing_attrs, values["org_unit"])
         end
       end
 

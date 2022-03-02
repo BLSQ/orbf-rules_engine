@@ -135,6 +135,44 @@ RSpec.describe Orbf::RulesEngine::Contract do
 
   describe "#initialize" do
     describe "#validate!" do
+      describe "missing contract attributes" do
+        it "raises ContractValidationException" do
+          
+          field_values = {
+            "id"                  => "GPAGzdsLDTP",
+            "org_unit"            => {
+              "id"   => "cLc2uthCRfm",
+              "name" => "kl Kinguendi Centre de Santé",
+              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
+            },
+            "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_start_date" => "2018-07-01",
+            "contract_type"       => "PMA"
+          }
+    
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
+        end
+      end
+
+      describe "contract attributes nil or blank" do
+        it "raises ContractValidationException" do
+          field_values = {
+            "id"                  => "GPAGzdsLDTP",
+            "org_unit"            => {
+              "id"   => "cLc2uthCRfm",
+              "name" => "kl Kinguendi Centre de Santé",
+              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
+            },
+            "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_start_date" => "2018-07-01",
+            "contract_end_date"   => "",
+            "contract_type"       => "PMA"
+          }
+
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
+        end
+      end
+
       describe "missing orgunit" do
         it "raises ContractValidationException with custom message on missing orgunit" do
           field_values = {
@@ -151,8 +189,8 @@ RSpec.describe Orbf::RulesEngine::Contract do
         end
       end
 
-      describe "missing contract attributes, missing orgunit attributes" do
-        it "raises ContractValidationException with custom message on missing orgunit attributes" do
+      describe "missing orgunit attributes" do
+        it "does not raise ContractValidationException on missing orgunit attributes" do
           field_values = {
             "id"                  => "GPAGzdsLDTP",
             "org_unit"            => {
@@ -160,19 +198,15 @@ RSpec.describe Orbf::RulesEngine::Contract do
               "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
             },
             "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_end_date"   => "2021-12-31",
             "contract_start_date" => "2018-07-01",
             "contract_type"       => "PMA"
           }
-      
-          missing_attrs = "contract_end_date"
-          relevant_org_unit_id = "cLc2uthCRfm"
           
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{missing_attrs}/)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{relevant_org_unit_id}/)
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.not_to raise_error(Orbf::RulesEngine::ContractValidationException)
         end
 
-        it "raises ContractValidationException with custom message on missing orgunit attributes" do
+        it "does not raise ContractValidationException on nil or blank orgunit attributes" do
           field_values = {
             "id"                  => "GPAGzdsLDTP",
             "org_unit"            => {
@@ -181,63 +215,12 @@ RSpec.describe Orbf::RulesEngine::Contract do
               "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
             },
             "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_end_date"   => "2021-12-31",
             "contract_start_date" => "2018-07-01",
             "contract_type"       => "PMA"
           }
       
-          missing_attrs = "contract_end_date"
-          relevant_org_unit_id = "cLc2uthCRfm"
-          
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{missing_attrs}/)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{relevant_org_unit_id}/)
-        end
-      end
-  
-      describe "missing attributes, existing orgunit" do
-        it "raises ContractValidationException with custom message on missing attributes, relevant orgunit" do
-          
-          field_values = {
-            "id"                  => "GPAGzdsLDTP",
-            "org_unit"            => {
-              "id"   => "cLc2uthCRfm",
-              "name" => "kl Kinguendi Centre de Santé",
-              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
-            },
-            "date"                => "2018-06-01T00:00:00.000+0000",
-            "contract_start_date" => "2018-07-01",
-            "contract_type"       => "PMA"
-          }
-    
-          missing_attrs = "contract_end_date"
-          relevant_org_unit = "kl Kinguendi Centre de Santé"
-            
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{missing_attrs}/)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{relevant_org_unit}/)
-        end
-      end
-
-      describe "attributes nil or blank" do
-        it "raises ContractValidationException with custom message on missing attributes, relevant orgunit" do
-          field_values = {
-            "id"                  => "GPAGzdsLDTP",
-            "org_unit"            => {
-              "id"   => "cLc2uthCRfm",
-              "name" => "kl Kinguendi Centre de Santé",
-              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
-            },
-            "date"                => "2018-06-01T00:00:00.000+0000",
-            "contract_start_date" => "2018-07-01",
-            "contract_end_date"   => "",
-            "contract_type"       => "PMA"
-          }
-          missing_attrs = "contract_end_date"
-          relevant_org_unit = "kl Kinguendi Centre de Santé"
-
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{missing_attrs}/)
-          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{relevant_org_unit}/)
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.not_to raise_error(Orbf::RulesEngine::ContractValidationException)
         end
       end
     end
