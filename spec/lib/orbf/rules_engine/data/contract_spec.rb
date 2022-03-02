@@ -164,7 +164,7 @@ RSpec.describe Orbf::RulesEngine::Contract do
             "contract_type"       => "PMA"
           }
       
-          missing_attrs = "contract_end_date, org_unit_name"
+          missing_attrs = "contract_end_date"
           relevant_org_unit_id = "cLc2uthCRfm"
           
           expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
@@ -185,7 +185,7 @@ RSpec.describe Orbf::RulesEngine::Contract do
             "contract_type"       => "PMA"
           }
       
-          missing_attrs = "contract_end_date, org_unit_name"
+          missing_attrs = "contract_end_date"
           relevant_org_unit_id = "cLc2uthCRfm"
           
           expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)

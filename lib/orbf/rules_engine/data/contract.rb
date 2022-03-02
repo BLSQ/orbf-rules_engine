@@ -37,23 +37,9 @@ module Orbf
             values.fetch(key) { missing_attrs << key } 
           end 
         end
-
-        if !missing_attrs.include?("org_unit")
-          org_unit = values.fetch("org_unit")
-          org_unit_keys_to_validate = ["name", "id", "path"]
-          org_unit_keys_to_validate.each do |key|
-            if org_unit.keys.include?(key) && (org_unit[key].nil? || org_unit[key].blank?)
-              missing_attrs << "org_unit_#{key}"
-            else 
-              org_unit.fetch(key) do 
-                missing_attrs << "org_unit_#{key}"
-              end 
-            end 
-          end
-        end
     
         if missing_attrs.any?
-          raise ContractValidationException.new(missing_attrs, org_unit)
+          raise ContractValidationException.new(missing_attrs, values.fetch("org_unit") { nil })
         end
       end
 
