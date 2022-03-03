@@ -133,6 +133,100 @@ RSpec.describe Orbf::RulesEngine::Contract do
     end
   end
 
+  describe "#initialize" do
+    describe "#validate!" do
+      describe "missing contract attributes" do
+        it "raises ContractValidationException" do
+          
+          field_values = {
+            "id"                  => "GPAGzdsLDTP",
+            "org_unit"            => {
+              "id"   => "cLc2uthCRfm",
+              "name" => "kl Kinguendi Centre de Santé",
+              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
+            },
+            "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_start_date" => "2018-07-01",
+            "contract_type"       => "PMA"
+          }
+    
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
+        end
+      end
+
+      describe "contract attributes nil or blank" do
+        it "raises ContractValidationException" do
+          field_values = {
+            "id"                  => "GPAGzdsLDTP",
+            "org_unit"            => {
+              "id"   => "cLc2uthCRfm",
+              "name" => "kl Kinguendi Centre de Santé",
+              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
+            },
+            "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_start_date" => "2018-07-01",
+            "contract_end_date"   => "",
+            "contract_type"       => "PMA"
+          }
+
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
+        end
+      end
+
+      describe "missing orgunit" do
+        it "raises ContractValidationException with custom message on missing orgunit" do
+          field_values = {
+            "id"                  => "GPAGzdsLDTP",
+            "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_end_date"   => "2021-12-31",
+            "contract_type"       => "PMA"
+          }
+      
+          missing_attrs = "contract_start_date, org_unit"
+          
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error(Orbf::RulesEngine::ContractValidationException)
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.to raise_error.with_message(/#{missing_attrs}/)
+        end
+      end
+
+      describe "missing orgunit attributes" do
+        it "does not raise ContractValidationException on missing orgunit attributes" do
+          field_values = {
+            "id"                  => "GPAGzdsLDTP",
+            "org_unit"            => {
+              "id"   => "cLc2uthCRfm",
+              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
+            },
+            "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_end_date"   => "2021-12-31",
+            "contract_start_date" => "2018-07-01",
+            "contract_type"       => "PMA"
+          }
+          
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.not_to raise_error(Orbf::RulesEngine::ContractValidationException)
+        end
+
+        it "does not raise ContractValidationException on nil or blank orgunit attributes" do
+          field_values = {
+            "id"                  => "GPAGzdsLDTP",
+            "org_unit"            => {
+              "id"   => "cLc2uthCRfm",
+              "name" => nil,
+              "path" => "/pL5A7C1at1M/BmKjwqc6BEw/DkK8tVZ6xfJ/z6sJvc6NR59/cLc2uthCRfm"
+            },
+            "date"                => "2018-06-01T00:00:00.000+0000",
+            "contract_end_date"   => "2021-12-31",
+            "contract_start_date" => "2018-07-01",
+            "contract_type"       => "PMA"
+          }
+      
+          expect { Orbf::RulesEngine::Contract.new(field_values, calendar) }.not_to raise_error(Orbf::RulesEngine::ContractValidationException)
+        end
+      end
+    end
+    
+  end
+
   def build_contract(start_month, end_month)
     field_values = {
       "id"                  => "OTHERID",

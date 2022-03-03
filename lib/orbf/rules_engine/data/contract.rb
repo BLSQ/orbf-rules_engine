@@ -1,17 +1,46 @@
 module Orbf
   module RulesEngine
+    class ContractValidationException < StandardError
+      def initialize(missing_attrs, org_unit)
+        org_unit ||= {}
+        org_unit_name = org_unit.fetch("name") { "missing" }
+        org_unit_id = org_unit.fetch("id") { "missing" }
+        missing_attrs = missing_attrs.join(", ")
+        message = "The following attributes are missing for this contract: #{missing_attrs}. This contract is for orgunit: name - #{org_unit_name || 'missing'}, id - #{org_unit_id || 'missing'}"
+        
+        super(message)
+      end
+    end
+
     class Contract
       KNOWN_FIELDS = %w[contract_start_date contract_end_date id org_unit date].freeze
 
       attr_reader :id, :start_period, :end_period, :field_values
 
       def initialize(field_values, calendar)
+        validate!(field_values)
         @field_values = field_values
         @id = field_values.fetch("id")
         @org_unit = field_values.fetch("org_unit")
         @start_period = field_values.fetch("contract_start_date").gsub("-", "").slice(0, 6)
         @end_period = field_values.fetch("contract_end_date").gsub("-", "").slice(0, 6)
         @calendar = calendar
+      end 
+
+      def validate!(values)
+        missing_attrs = []
+        keys_to_validate = ["id", "contract_start_date", "contract_end_date", "org_unit"]
+        keys_to_validate.each do |key|
+          if values[key] && (values[key].nil? || values[key].blank?)
+            missing_attrs << key
+          else 
+            values.fetch(key) { missing_attrs << key } 
+          end 
+        end
+    
+        if missing_attrs.any?
+          raise ContractValidationException.new(missing_attrs, values["org_unit"])
+        end
       end
 
       def match_period?(period)
