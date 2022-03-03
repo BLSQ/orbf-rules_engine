@@ -1,23 +1,40 @@
 # frozen_string_literal: true
+module Orbf
+  module Plugins
+    module AfterInitialize
+      module ClassMethods
+        def call(_)
+          v = super
+          v.after_init
+          v
+        end
+      end
 
-require "active_support/core_ext/class/attribute"
+      module InstanceMethods
+        # An empty after_initialize hook, so that plugins that use this
+        # can always call super to get the default behavior.
+        def after_init
+        end
+      end
+    end
+  end
+end
+
 module Orbf
   module RulesEngine
     class ValueObject
-      class_attribute :_attributes
-      self._attributes = []
-
-      def initialize(hash)
-        check_args_present!(hash)
-        hash.each do |name, value|
-          instance_variable_set("@#{name}", value)
-        end
-        after_init
-        freeze
-      end
+      attr_reader :values
 
       def ==(other)
         eql?(other)
+      end
+
+      def init_with(coder)
+        @values = coder.map.transform_keys(&:to_sym)
+      end
+
+      def inspect
+        "#<#{self.class}:0x#{object_id.to_s(16)} #{@values.inspect}"
       end
 
       def eql?(other)
@@ -31,17 +48,32 @@ module Orbf
       end
 
       def to_h
-        self.class._attributes.each_with_object({}) { |field, hash| hash[field] = send(field) }
+        values
       end
 
       def to_json(options = nil)
         to_h.to_json(options)
       end
 
-      protected
+      def self.Model(*keys)
+        klass = Class.new(self)
+        klass.set_keys(keys)
+        klass
+      end
 
-      def values
-        self.class._attributes.map { |field| send(field) }
+      def self.call(values)
+        o = allocate
+        o.instance_variable_set(:@values, values)
+        o
+      end
+
+      def self.set_keys(keys)
+        im = instance_methods
+        keys.each do |key|
+          meth = :"#{key}="
+          module_eval("def #{key}; @values[:#{key}] end", __FILE__, __LINE__) unless im.include?(key)
+          module_eval("def #{meth}(v); @values[:#{key}] = v end", __FILE__, __LINE__) unless im.include?(meth)
+        end
       end
 
       private
@@ -50,27 +82,15 @@ module Orbf
         # override at will
       end
 
-      def check_args_present!(hash)
-        return if (hash.keys & self.class._attributes).count == self.class._attributes.count
-        raise "#{self.class} : incorrect number of args no such attributes: extra : #{hash.keys - self.class._attributes} missing: #{self.class._attributes - hash.keys}  possible attributes: #{self.class._attributes}"
-      end
-
       class << self
-        def attributes(*attrs)
-          self._attributes = _attributes.dup
-
-          attrs.each { |attr| attribute attr }
-        end
-
-        def attribute(attr)
-          self._attributes = _attributes.concat([attr])
-          define_method attr do
-            instance_variable_get("@#{attr}")
-          end
+        def plugin(a_module)
+          extend(a_module::ClassMethods)
+          include(a_module::InstanceMethods)
         end
 
         def with(hash)
-          new(hash)
+          i = call(hash)
+          i
         end
       end
     end
