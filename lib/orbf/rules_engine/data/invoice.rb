@@ -63,14 +63,14 @@ module Orbf
     end
 
     class Invoice < Orbf::RulesEngine::ValueObject
-      attributes :kind, :period, :orgunit_ext_id, :package, :payment_rule, :activity_items, :total_items
+      attributes :kind, :period, :orgunit_ext_id, :package, :payment_rule, :activity_items, :total_items, :coc_ext_id
 
       def code
         package&.code || payment_rule&.code
       end
 
       def inspect
-        "Invoice(#{kind} #{period} #{orgunit_ext_id} #{code})"
+        "Invoice(#{kind} #{period} #{orgunit_ext_id} #{code} #{coc_ext_id})"
       end
 
       def headers

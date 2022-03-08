@@ -108,27 +108,27 @@ RSpec.describe "Payers" do
       {
         "dataElement"         => "dhis2_to_pay",
         "categoryOptionCombo" => "default",
-        "value"               => 10_000,
+        "value"               => "10000",
         "period"              => period,
         "orgUnit"             => orgunit_id
       },
       {
         "dataElement"         => "dhis2_spread_percentage",
         "categoryOptionCombo" => "dhis2_payer_1",
-        "value"               => 10,
+        "value"               => "10",
         "period"              => period,
         "orgUnit"             => orgunit_id
       },
       {
         "dataElement"         => "dhis2_spread_percentage",
         "categoryOptionCombo" => "dhis2_payer_2",
-        "value"               => 60,
+        "value"               => "60",
         "period"              => period,
         "orgUnit"             => orgunit_id
       }, {
         "dataElement"         => "dhis2_spread_percentage",
         "categoryOptionCombo" => "dhis2_payer_3",
-        "value"               => 30,
+        "value"               => "30",
         "period"              => period,
         "orgUnit"             => orgunit_id
       }
@@ -188,6 +188,16 @@ RSpec.describe "Payers" do
       value:               600
     )
 
+  end
+
+  it "should print invoices" do
+    solved = build_and_solve(orgunits_full, dhis2_values)
+    invoices = Orbf::RulesEngine::InvoicePrinter.new(
+      solved.solver.variables,
+      solved.solver.solution
+    ).print
+    invoice = invoices.find { |i| i.coc_ext_id == "dhis2_payer_3" }
+    expect(invoice.activity_items.first.solution["payer_payment"]).to eq(600)
   end
 
   def build_activity_formula(code, expression, comment = nil)
