@@ -149,7 +149,7 @@ RSpec.describe Orbf::RulesEngine::InvoicePrinter do
       expect(invoice.activity_items.first.output?("achieved")).to eq false
 
       expect(invoice.headers).to eq(["achieved"])
-      expect(invoice.inspect).to eq("Invoice(package 201601 1 quantity)")
+      expect(invoice.inspect).to eq("Invoice(package 201601 1 quantity )")
       expect(invoice.total_items.inspect).to eq('[TotalItem(quality_score ["31", "31", "31\n\t"])]')
 
       expect(invoice.total_items).to eq(
