@@ -14,9 +14,8 @@ module Orbf
         invoices = variables.select(&:orgunit_ext_id)
                             .select(&:package)
                             .group_by { |v| [v.package, v.orgunit_ext_id, v.period, v.category_option_combo_ext_id] }
-                            .map do |package_orgunit_period, vars|
-          package, orgunit, period = package_orgunit_period
-
+                            .map do |package_orgunit_period_coc, vars|
+          package, orgunit, period, coc = package_orgunit_period_coc
           activity_items = package.activities.map do |activity|
             to_activity_item(package, activity, vars, solution_as_string)
           end
@@ -32,6 +31,7 @@ module Orbf
             period:         period,
             orgunit_ext_id: orgunit,
             package:        package,
+            coc_ext_id:     coc,
             payment_rule:   nil,
             activity_items: activity_items.compact,
             total_items:    total_items
@@ -59,6 +59,7 @@ module Orbf
             period:         period,
             orgunit_ext_id: org_unit,
             package:        nil,
+            coc_ext_id:     nil,
             payment_rule:   payment_rule,
             activity_items: [],
             total_items:    total_items
