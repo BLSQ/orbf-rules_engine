@@ -34,11 +34,13 @@ module Orbf
           end
         end
 
-        alias_quarterly_reference(aliases, hash_out)
-        aliases
+        quarterly_aliases = alias_quarterly_reference(hash_out)
+        aliases + quarterly_aliases
       end
 
-      def alias_quarterly_reference(aliases, hash_out)
+      def alias_quarterly_reference(hash_out)
+        quarterly_aliases = []
+
         # find variables that have the expression %{state}_quarterly
         activity_formulas_variables_using_quarterly = variables
                                                       .select { |v| v.type == "activity_rule" && v.formula && v.activity_code }
@@ -48,7 +50,7 @@ module Orbf
           end
         end
 
-        return if activity_formulas_variables_using_quarterly.none?
+        return quarterly_aliases if activity_formulas_variables_using_quarterly.none?
 
         variables_by_key = variables.index_by(&:key)
 
@@ -66,11 +68,7 @@ module Orbf
           existing_out = hash_out[key]
 
           if existing_out
-            puts "Should alias ? #{key}"
-            puts "     #{activity_value_var}"
-            puts " and #{existing_out}"
-
-            aliases.push(Variable.new_alias(
+            quarterly_aliases.push(Variable.new_alias(
                            key:            activity_value_var.key,
                            expression:     existing_out[0].key,
                            period:         activity_value_var.period,
@@ -83,6 +81,7 @@ module Orbf
                          ))
           end
         end
+        quarterly_aliases
       end
 
       private
