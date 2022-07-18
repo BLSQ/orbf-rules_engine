@@ -7,6 +7,8 @@ module Orbf
       REGEXP_VALIDATION = /\A[a-z_0-9]+\z/
 
       def self.codify(string)
+        return string if string.nil?
+
         in_cache = CACHE[string]
 
         return in_cache if in_cache

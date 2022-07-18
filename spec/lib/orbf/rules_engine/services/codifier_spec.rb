@@ -28,4 +28,8 @@ RSpec.describe Orbf::RulesEngine::Codifier do
   it "doesn't touch codified code" do
     expect(subject.codify("pma__pca")).to eq("pma__pca")
   end
+
+  it "nil safe" do
+    expect(subject.codify(nil)).to eq(nil)
+  end
 end
