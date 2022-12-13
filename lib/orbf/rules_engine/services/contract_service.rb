@@ -41,10 +41,12 @@ module Orbf
                 "&paging=false"
           )
           indexes = {}
-          raw_events["list_grid"]["headers"].each_with_index do |header, index|
+          raw_events_compat = raw_events["list_grid"] ? raw_events["list_grid"]["rows"] : raw_events["rows"]
+          raw_headers_compat = raw_events["list_grid"] ? raw_events["list_grid"]["headers"] : raw_events["headers"]
+          raw_headers_compat.each_with_index do |header, index|
             indexes[header["column"]] = index
           end
-          events = raw_events["list_grid"]["rows"].map { |e| to_event(e, indexes) }
+          events = raw_events_compat.map { |e| to_event(e, indexes) }
           events.map { |e| to_contract(e) }
         end
       end
