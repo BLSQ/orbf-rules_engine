@@ -23,8 +23,8 @@ module Orbf
         solver.solve!
 
         @exported_values = RulesEngine::Dhis2ValuesPrinter.new(
-          solver.variables,
-          solver.solution,
+          variables: solver.variables,
+          solution:  solver.solution,
           **project.default_combos_ext_ids
         ).print
 

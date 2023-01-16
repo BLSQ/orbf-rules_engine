@@ -71,6 +71,7 @@ module Orbf
         end
 
         def with(hash)
+          # TODO: perf problem here
           new(**hash)
         end
       end

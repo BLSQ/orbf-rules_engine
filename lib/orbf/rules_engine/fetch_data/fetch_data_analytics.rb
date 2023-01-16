@@ -11,19 +11,15 @@ module Orbf
       def call
         return [] if analytics_activity_states.none?
 
-        combined_response = Array(without_yearly_periods).each_slice(MAX_PERIODS_PER_FETCH).inject({}) do |result, period_slice|
-          puts({periods:            period_slice.join(";"),
-          organisation_units: orgunit_ext_ids,
-          data_elements:      data_elements}.to_json)
-
-          analytics_response = dhis2_connection.analytics.list(
+        combined_response = Array(without_yearly_periods).each_slice(MAX_PERIODS_PER_FETCH).each_with_object({}) do |period_slice, result|
+          params = {
             periods:            period_slice.join(";"),
             organisation_units: orgunit_ext_ids,
             data_elements:      data_elements
-          )
+          }
+          analytics_response = dhis2_connection.analytics.fetch_values(params)
           result["rows"] ||= []
           result["rows"] += analytics_response["rows"]
-          result
         end
 
         map_to_data_values(combined_response).uniq
@@ -38,6 +34,7 @@ module Orbf
       def map_to_data_values(analytics_response)
         analytics_response["rows"].each_with_object([]) do |v, array|
           next if v[3] == "NaN"
+
           array.push(
             "dataElement"          => data_element_mappings[v[0]] || v[0],
             "period"               => v[2],

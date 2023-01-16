@@ -164,12 +164,12 @@ RSpec.describe "System" do
     Orbf::RulesEngine::Project.new(
       packages: [
         Orbf::RulesEngine::Package.new(
-          code:                   :facility,
-          kind:                   :zone,
-          frequency:              :quarterly,
-          activities:             activities,
-          groupset_ext_id:        "district_groupset_ext_id",
-          rules:                  [
+          code:                        :facility,
+          kind:                        :zone,
+          frequency:                   :quarterly,
+          activities:                  activities,
+          groupset_ext_id:             "district_groupset_ext_id",
+          rules:                       [
             Orbf::RulesEngine::Rule.new(
               kind:     :activity,
               formulas: [
@@ -293,7 +293,7 @@ RSpec.describe "System" do
     expect(solution["county_total_available_budget_for_fosa_for_2016q1"].round).to eq(121_235.0)
 
     Orbf::RulesEngine::InvoiceCliPrinter.new(solver.variables, solver.solution).print
-    exported_values = Orbf::RulesEngine::Dhis2ValuesPrinter.new(solver.variables, solver.solution).print
+    exported_values = Orbf::RulesEngine::Dhis2ValuesPrinter.new(variables: solver.variables, solution: solver.solution).print
     expect(exported_values).to include(
       dataElement: "dhis2_dataelement_id_fosa_indicators_reported_weighted",
       orgUnit:     "14",

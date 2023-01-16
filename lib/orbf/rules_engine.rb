@@ -3,12 +3,32 @@ require "orbf/rules_engine/version"
 require "dentaku"
 require "json"
 require "dhis2"
+
+# TODO: bad
+module Dhis2
+  module Api
+    class Analytic < Base
+      class << self
+        def fetch_values(client, args)
+          params = [
+            [:dimension, "ou:#{args[:organisation_units]}"],
+            [:dimension, "dx:#{args[:data_elements]}"],
+            [:dimension, "pe:#{args[:periods]}"]
+          ]
+
+          client.get(resource_name, RestClient::ParamsArray.new(params))
+        end
+      end
+    end
+  end
+end
+
 require "set"
 require "active_support/time"
 require "active_support/core_ext/enumerable"
 
 require_relative "./rules_engine/value_object"
-require_relative "./rules_engine/assertions.rb"
+require_relative "./rules_engine/assertions"
 require_relative "./rules_engine/log"
 require_relative "./rules_engine/services/tokenizer"
 require_relative "./rules_engine/services/period_converter"

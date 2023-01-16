@@ -25,7 +25,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
   describe "when no variable" do
     it "export no values" do
-      expect(described_class.new([], {}).print).to eq([])
+      expect(described_class.new(variables: [], solution: {}).print).to eq([])
     end
   end
 
@@ -36,8 +36,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
       it "export no values" do
         result_values = described_class.new(
-          [variable_without_mapping],
-          variable_without_mapping.key => 1.5
+          variables: [variable_without_mapping],
+          solution:  { variable_without_mapping.key => 1.5 }
         ).print
 
         expect(result_values).to eq([])
@@ -51,8 +51,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
       it "export values " do
         result_values = described_class.new(
-          [variable_with_mapping],
-          variable_with_mapping.key => 1.5
+          variables: [variable_with_mapping],
+          solution:  { variable_with_mapping.key => 1.5 }
         ).print
 
         expect(result_values).to eq(
@@ -76,8 +76,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
       end
       it "export values " do
         result_values = described_class.new(
-          [variable_with_mapping],
-          { variable_with_mapping.key => 1.5 },
+          variables:                             [variable_with_mapping],
+          solution:                              { variable_with_mapping.key => 1.5 },
           default_category_option_combo_ext_id:  "coc_id",
           default_attribute_option_combo_ext_id: "aoc_id"
         ).print
@@ -152,8 +152,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
     describe "and NO mapping configured " do
       it "export no values" do
         result_values = described_class.new(
-          [activity_variable_without_mapping],
-          activity_variable_without_mapping.key => 1.5
+          variables: [activity_variable_without_mapping],
+          solution:  { activity_variable_without_mapping.key => 1.5 }
         ).print
         expect(result_values).to eq([])
       end
@@ -190,8 +190,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
       it "export decimal that are actually integer as integer" do
         result_values = described_class.new(
-          [var1, var2],
-          var1.key => 15, var2.key => 15
+          variables: [var1, var2],
+          solution:  { var1.key => 15, var2.key => 15 }
         ).print
         expect(result_values).to eq(
           [
@@ -217,9 +217,11 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         exportable_variable = variables[1]
 
         result_values = described_class.new(
-          variables,
-          activity_variable_with_exportable_formula_code.key => 15.0,
-          exportable_variable.key                            => false
+          variables: variables,
+          solution:  {
+            activity_variable_with_exportable_formula_code.key => 15.0,
+            exportable_variable.key                            => false
+          }
         ).print
 
         expect(result_values).to eq(
@@ -238,9 +240,11 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
         exportable_variable = variables[1]
 
         result_values = described_class.new(
-          variables,
-          activity_variable_with_exportable_formula_code.key => 15.0,
-          exportable_variable.key                            => true
+          variables: variables,
+          solution:  {
+            activity_variable_with_exportable_formula_code.key => 15.0,
+            exportable_variable.key                            => true
+          }
         ).print
 
         expect(result_values).to eq(
@@ -300,7 +304,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
               formulas: [
                 Orbf::RulesEngine::Formula.new(
                   "quality_score", "31", "",
-                  options
+                  **options
                 ),
                 Orbf::RulesEngine::Formula.new(
                   "exportable", "1 == 1", ""
@@ -333,7 +337,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
     describe "and mapping configured with category combo" do
       let(:data_element_id) { "dhis2_data_element_id" }
-      let(:coc_id) { "specific_coc_id"}
+      let(:coc_id) { "specific_coc_id" }
       let(:variable_with_mapping) do
         build_activity_variable(
           activity_mappings: {
@@ -345,19 +349,19 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
       it "export values " do
         result_values = described_class.new(
-          [variable_with_mapping],
-          { variable_with_mapping.key => 53 }
+          variables: [variable_with_mapping],
+          solution:  { variable_with_mapping.key => 53 }
         ).print
 
         expect(result_values).to eq(
           [
             {
-              dataElement:          data_element_id,
-              orgUnit:              "1",
-              period:               "201603",
-              value:                53,
-              comment:              variable_with_mapping.key,
-              categoryOptionCombo:  coc_id
+              dataElement:         data_element_id,
+              orgUnit:             "1",
+              period:              "201603",
+              value:               53,
+              comment:             variable_with_mapping.key,
+              categoryOptionCombo: coc_id
             }
           ]
         )
@@ -366,8 +370,8 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
 
     def expect_exported_value(variable, solution_value, expected_value, period)
       result_values = described_class.new(
-        [variable],
-        variable.key => solution_value
+        variables: [variable],
+        solution:  { variable.key => solution_value }
       ).print
       expect(result_values).to eq(
         [
@@ -411,7 +415,7 @@ RSpec.describe Orbf::RulesEngine::Dhis2ValuesPrinter do
             formulas: [
               Orbf::RulesEngine::Formula.new(
                 "quality_score", "31", "",
-                options
+                **options
               )
             ]
           )
