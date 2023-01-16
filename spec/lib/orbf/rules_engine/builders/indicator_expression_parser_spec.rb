@@ -4,17 +4,17 @@ RSpec.describe Orbf::RulesEngine::IndicatorExpressionParser do
   describe 'more complex' do
     {
       '(7/100)*#{rfeqp2kdOGi.VVZyXr4y4Sv}*(45/100)*((11.2/(34.9+11.2))*#{FVJ2v5RgBgL.TfexVpwPBYN}+(34.9/(34.9+11.2))*#{a0i3MXpBmhT.kwyUVixl5ts})' => [
-        Orbf::RulesEngine::IndicatorExpression.with(
+        Orbf::RulesEngine::IndicatorExpression.new(
           expression:     '#{rfeqp2kdOGi.VVZyXr4y4Sv}',
           data_element:   "rfeqp2kdOGi",
           category_combo: "VVZyXr4y4Sv"
         ),
-        Orbf::RulesEngine::IndicatorExpression.with(
+        Orbf::RulesEngine::IndicatorExpression.new(
           expression: '#{FVJ2v5RgBgL.TfexVpwPBYN}',
           data_element: "FVJ2v5RgBgL",
           category_combo: "TfexVpwPBYN"
         ),
-        Orbf::RulesEngine::IndicatorExpression.with(
+        Orbf::RulesEngine::IndicatorExpression.new(
           expression: '#{a0i3MXpBmhT.kwyUVixl5ts}',
           data_element: "a0i3MXpBmhT",
           category_combo: "kwyUVixl5ts"
@@ -34,12 +34,12 @@ RSpec.describe Orbf::RulesEngine::IndicatorExpressionParser do
       indicator_expressions = described_class.parse_expression(expression)
       expect(indicator_expressions).to eq(
                                          [
-                                           Orbf::RulesEngine::IndicatorExpression.with(
+                                           Orbf::RulesEngine::IndicatorExpression.new(
                                              expression:     '#{dhjgLt7EYmu.se1qWfbtkmx}',
                                              data_element:   "dhjgLt7EYmu",
                                              category_combo: "se1qWfbtkmx"
                                            ),
-                                           Orbf::RulesEngine::IndicatorExpression.with(
+                                           Orbf::RulesEngine::IndicatorExpression.new(
                                              expression:     '#{xtVtnuWBBLB}',
                                              data_element:   "xtVtnuWBBLB",
                                              category_combo: nil
