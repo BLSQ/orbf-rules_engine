@@ -4,11 +4,11 @@ module Orbf
       attributes :periods, :orgunits, :datasets_ext_ids, :package
       attr_reader :periods, :orgunits, :datasets_ext_ids, :package
 
-      def initialize(periods:, orgunits:, datasets_ext_ids:, package:)
-        @periods = periods
-        @orgunits = orgunits
-        @datasets_ext_ids = datasets_ext_ids
-        @package = package
+      def initialize(hash)
+        @periods = hash[:periods]
+        @orgunits = hash[:orgunits]
+        @datasets_ext_ids = hash[:datasets_ext_ids]
+        @package = hash[:package]
         freeze
       end
     end

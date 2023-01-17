@@ -8,9 +8,9 @@ module Orbf
 
       attr_reader :orgunit, :facts
 
-      def initialize(orgunit:, facts:)
-        @orgunit = orgunit
-        @facts = facts
+      def initialize(hash)
+        @orgunit = hash[:orgunit]
+        @facts = hash[:facts]
         freeze
       end
 

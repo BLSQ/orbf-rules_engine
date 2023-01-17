@@ -59,12 +59,12 @@ module Orbf
 
       def self.new_data_element(state:, name:, ext_id:, origin:, category_combo_ext_id: nil)
         with(
-          state:          state,
-          name:           name,
-          ext_id:         ext_id,
-          kind:           Kinds::KIND_DATA_ELEMENT,
-          origin:         origin,
-          formula:        nil,
+          state:                 state,
+          name:                  name,
+          ext_id:                ext_id,
+          kind:                  Kinds::KIND_DATA_ELEMENT,
+          origin:                origin,
+          formula:               nil,
           category_combo_ext_id: category_combo_ext_id
         )
       end
@@ -80,14 +80,15 @@ module Orbf
         )
       end
 
-      def initialize(state: nil, ext_id: nil, name: nil, kind: nil, formula: nil, origin: nil, category_combo_ext_id: nil)
-        @state = state
-        @ext_id = ext_id
-        @name = name
-        @kind = kind
-        @formula = formula
-        @origin =  origin
-        @category_combo_ext_id = category_combo_ext_id
+      def initialize(*_args, **_kwargs)
+        hash = _args[0]
+        @state = hash[:state]
+        @ext_id = hash[:ext_id]
+        @name = hash[:name]
+        @kind = hash[:kind]
+        @formula = hash[:formula]
+        @origin =  hash[:origin]
+        @category_combo_ext_id = hash[:category_combo_ext_id]
 
         after_init
       end
@@ -126,7 +127,7 @@ module Orbf
         raise "State is mandatory #{debug_info}" unless @state
 
         @state = state.to_s
-        Kinds.assert_valid_kind_and_formula(kind, formula,self )
+        Kinds.assert_valid_kind_and_formula(kind, formula, self)
         Origins.assert_valid_origin(origin, self)
       end
     end

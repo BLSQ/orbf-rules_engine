@@ -7,7 +7,8 @@ module Orbf
       class_attribute :_attributes
       self._attributes = []
 
-      def initialize(hash)
+      def initialize(*_args, **kwargs)
+        hash = kwargs
         check_args_present!(hash)
         hash.each do |name, value|
           instance_variable_set("@#{name}", value)
@@ -72,7 +73,7 @@ module Orbf
 
         def with(hash)
           # TODO: perf problem here
-          new(**hash)
+          new(hash)
         end
       end
     end
