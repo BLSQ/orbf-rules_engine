@@ -4,12 +4,12 @@ module Orbf
       attributes :activity, :solution, :problem, :substitued, :variables
       attr_reader :activity, :solution, :problem, :substitued, :variables
 
-      def initialize(activity: nil, solution: nil, problem: nil, substitued: nil, variables: nil)
-        @activity = activity
-        @solution = solution
-        @problem = problem
-        @substitued = substitued
-        @variables = variables
+      def initialize(hash)
+        @activity = hash[:activity]
+        @solution = hash[:solution]
+        @problem = hash[:problem]
+        @substitued = hash[:substitued]
+        @variables = hash[:variables]
         @indexed_variables = variables.index_by { |v| [v.state, v.activity_code] }
         freeze
       end
@@ -23,7 +23,7 @@ module Orbf
         return false unless var&.formula&.exportable_formula_code
 
         val = solution[var.formula.exportable_formula_code]
-        val == false || val == 0
+        [false, 0].include?(val)
       end
 
       def input?(code)
@@ -44,12 +44,12 @@ module Orbf
       attributes :key, :formula, :explanations, :value, :not_exported
       attr_reader :key, :formula, :explanations, :value, :not_exported
 
-      def initialize(key:nil, formula: nil, explanations: nil, value: nil, not_exported:)
-        @key = key
-        @formula = formula
-        @explanations = explanations
-        @value = value
-        @not_exported = not_exported
+      def initialize(hash)
+        @key = hash[:key]
+        @formula = hash[:formula]
+        @explanations = hash[:explanations]
+        @value = hash[:value]
+        @not_exported = hash[:not_exported]
         freeze
       end
 

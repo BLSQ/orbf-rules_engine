@@ -4,8 +4,12 @@ require "allocation_stats"
 RSpec.describe "Liberia System" do
   let(:period) { "2016Q1" }
 
-  let(:project) { YAML.load_file(File.new("./spec/fixtures/rules_engine/lib_project.yml")) }
-  let(:pyramid) { YAML.load_file(File.new("./spec/fixtures/rules_engine/lib_pyramid.yml")) }
+  let(:project) do
+    YAML.unsafe_load_file(
+      "./spec/fixtures/rules_engine/lib_project.yml"
+    )
+  end
+  let(:pyramid) { YAML.unsafe_load_file(File.new("./spec/fixtures/rules_engine/lib_pyramid.yml")) }
 
   let(:fetch_and_solve) do
     Orbf::RulesEngine::FetchAndSolve.new(
@@ -32,7 +36,6 @@ RSpec.describe "Liberia System" do
     RubyProf.start if ENV["PROF"]
     require "objspace"
 
-
     stats = AllocationStats.new if ENV["ALLOC"]
     stats.trace if ENV["ALLOC"]
 
@@ -40,9 +43,7 @@ RSpec.describe "Liberia System" do
     Orbf::RulesEngine::InvoicePrinter.new(fetch_and_solve.solver.variables, fetch_and_solve.solver.solution).print
 
     stats.stop if ENV["ALLOC"]
-    if ENV["ALLOC"]
-      puts stats.allocations(alias_paths: true).group_by(:sourcefile, :sourceline, :class).at_least(100).sort_by_count.to_text
-    end
+    puts stats.allocations(alias_paths: true).group_by(:sourcefile, :sourceline, :class).at_least(100).sort_by_count.to_text if ENV["ALLOC"]
     result = RubyProf.stop if ENV["PROF"]
 
     if ENV["PROF"]
@@ -58,7 +59,7 @@ RSpec.describe "Liberia System" do
     fixture_record(fetch_and_solve.exported_values, :rules_engine, "lib_exported_values.json")
 
     # Only here to help with comparing
-    index_by_unique = ->(json) {
+    index_by_unique = lambda { |json|
       arr = JSON.parse(json)
       arr.index_by do |h|
         [h["period"], h["orgUnit"], h["dataElement"]]

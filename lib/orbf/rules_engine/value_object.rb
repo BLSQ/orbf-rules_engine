@@ -52,6 +52,7 @@ module Orbf
 
       def check_args_present!(hash)
         return if (hash.keys & self.class._attributes).count == self.class._attributes.count
+
         raise "#{self.class} : incorrect number of args no such attributes: extra : #{hash.keys - self.class._attributes} missing: #{self.class._attributes - hash.keys}  possible attributes: #{self.class._attributes}"
       end
 
@@ -70,6 +71,7 @@ module Orbf
         end
 
         def with(hash)
+          # TODO: perf problem here
           new(hash)
         end
       end

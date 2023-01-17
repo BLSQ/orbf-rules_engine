@@ -7,11 +7,11 @@ module Orbf
 
       attr_reader :ext_id, :name, :path, :group_ext_ids, :parent_ext_ids
 
-      def initialize(ext_id:, name:, path:, group_ext_ids:)
-        @ext_id = ext_id
-        @name = name
-        @path = path
-        @group_ext_ids = group_ext_ids || []
+      def initialize(hash)
+        @ext_id = hash[:ext_id]
+        @name = hash[:name]
+        @path = hash[:path]
+        @group_ext_ids = hash[:group_ext_ids] || []
       end
 
       def parent_ext_ids

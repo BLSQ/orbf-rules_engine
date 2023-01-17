@@ -1,6 +1,4 @@
-# coding: utf-8
-
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "orbf/rules_engine/version"
 
@@ -33,13 +31,13 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport"
   spec.add_dependency "colorize"
-  spec.add_dependency "hesabu"
-  spec.add_dependency "dentaku", "3.1.0"
-  spec.add_dependency "dhis2", "2.3.8"
+  spec.add_dependency "dentaku", "3.5.1"
   spec.add_dependency "descriptive_statistics"
+  spec.add_dependency "dhis2", "2.3.8"
+  spec.add_dependency "hesabu"
 
-  spec.add_development_dependency "bundler", "~> 2.3.5"
-  spec.add_development_dependency "ruby-prof"
+  spec.add_development_dependency "allocation_stats"
+  spec.add_development_dependency "bundler", "~> 2.4.1"
   spec.add_development_dependency "byebug"
   spec.add_development_dependency "pronto"
   spec.add_development_dependency "pronto-flay"
@@ -47,8 +45,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pronto-simplecov"
   spec.add_development_dependency "rake", "~> 12.3"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "ruby-prof"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "stackprof"
-  spec.add_development_dependency "allocation_stats"
   spec.add_development_dependency "webmock"
 end

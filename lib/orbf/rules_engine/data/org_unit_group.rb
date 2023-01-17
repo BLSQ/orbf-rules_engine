@@ -5,10 +5,11 @@ module Orbf
     class OrgUnitGroup < Orbf::RulesEngine::ValueObject
       attributes :ext_id, :name, :code
       attr_reader :ext_id, :name, :code
-      def initialize(ext_id:, name:, code:)
-        @ext_id = ext_id
-        @name = name
-        @code = code
+
+      def initialize(hash)
+        @ext_id = hash[:ext_id]
+        @name = hash[:name]
+        @code = hash[:code]
       end
 
       def code_downcase
