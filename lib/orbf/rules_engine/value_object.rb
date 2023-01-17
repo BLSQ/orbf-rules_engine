@@ -7,8 +7,7 @@ module Orbf
       class_attribute :_attributes
       self._attributes = []
 
-      def initialize(*_args, **kwargs)
-        hash = kwargs
+      def initialize(hash)
         check_args_present!(hash)
         hash.each do |name, value|
           instance_variable_set("@#{name}", value)
