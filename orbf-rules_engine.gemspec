@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "hesabu"
 
   spec.add_development_dependency "allocation_stats"
-  spec.add_development_dependency "bundler", "~> 2.3.5"
+  spec.add_development_dependency "bundler", "~> 2.4.1"
   spec.add_development_dependency "byebug"
   spec.add_development_dependency "pronto"
   spec.add_development_dependency "pronto-flay"
