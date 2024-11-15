@@ -95,11 +95,28 @@ module Orbf
         end
       end
 
+
+      class ExtractFinancialNovPeriod < ExtractPeriod
+        def next_date(date)
+          date.next_year
+        end
+
+        def format(date)
+          date.strftime("%YNov")
+        end
+
+        def first_date
+          anniv_date = range.first.beginning_of_year + 9.months
+          range.first < anniv_date ? (anniv_date - 1.year) : anniv_date
+        end
+      end
+
       CLASSES_MAPPING = {
         "monthly"        => ExtractMonthlyPeriod,
         "quarterly"      => ExtractQuarterlyPeriod,
         "yearly"         => ExtractYearlyPeriod,
-        "financial_july" => ExtractFinancialJulyPeriod
+        "financial_july" => ExtractFinancialJulyPeriod,
+        "financial_nov"  => ExtractFinancialNovPeriod
       }.freeze
     end
   end
