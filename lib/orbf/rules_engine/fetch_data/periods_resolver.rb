@@ -21,7 +21,8 @@ module Orbf
       def from_package_frequency(package, invoice_period)
         package.calendar.periods(invoice_period, package.frequency) +
           package.calendar.periods(invoice_period, "yearly") +
-          package.calendar.periods(invoice_period, "financial_july")
+          package.calendar.periods(invoice_period, "financial_july") +
+          package.calendar.periods(invoice_period, "financial_nov")
       end
 
       def from_values_span(package, invoice_period)

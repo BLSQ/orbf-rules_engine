@@ -39,9 +39,32 @@ RSpec.describe Orbf::RulesEngine::PeriodConverter do
     end
   end
 
+  describe "from quarters nov" do
+    it "support NovQ1" do
+      expect(described_class.as_date_range("2017NovQ1")).to eq(jan_2017..end_mar_2017)
+    end
+    it "support NovQ2" do
+      expect(described_class.as_date_range("2017NovQ2")).to eq(april_2017..end_june_2017)
+    end
+    it "support NovQ3" do
+      expect(described_class.as_date_range("2017NovQ3")).to eq(july_2017..end_sept_2017)
+    end
+    it "support NovQ4" do
+      expect(described_class.as_date_range("2017NovQ4")).to eq(oct_2017..end_dec_2017)
+    end
+  end  
+
   describe "from quarters to financial_july" do
-    it "support financial year" do
+    it "support financial year july" do
       expect(described_class.as_date_range("2016July")).to eq(july_2016..end_june_2017)
     end
   end
+
+  describe "from quarters to financial_nov" do
+    it "support financial year nov" do
+      expect(described_class.as_date_range("2016Nov")).to eq(july_2016..end_june_2017)
+    end
+  end
+
+
 end

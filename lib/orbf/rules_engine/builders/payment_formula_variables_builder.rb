@@ -67,7 +67,7 @@ module Orbf
       def temp_variable_monthly_zero_or_quarter_value
         return [] unless payment_rule.monthly?
         orgunits.each_with_object([]) do |orgunit, array|
-          payment_rule.packages.select(&:quarterly?).each do |package|
+          payment_rule.packages.select { |p| p.quarterly? }.each do |package|
             package.package_rules.flat_map(&:formulas).each do |formula|
               index = 0
               package.calendar.each_periods(@invoice_period, "monthly") do |period|

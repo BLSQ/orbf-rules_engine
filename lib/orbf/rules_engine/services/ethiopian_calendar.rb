@@ -5,6 +5,10 @@
 module Orbf
   module RulesEngine
     class EthiopianCalendar
+      def to_invoicing_period(year, quarter)
+        "#{year}Q#{quarter}"
+      end
+
       def each_periods(period, frequency, &block)
         EthiopianPeriodIterator.each_periods(period, frequency, &block)
       end

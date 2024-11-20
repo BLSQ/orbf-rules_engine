@@ -8,6 +8,7 @@ module Orbf
       def initialize(project, orgunit_ext_id, invoicing_period, pyramid: nil, mock_values: nil)
         @orgunit_ext_id = orgunit_ext_id
         @invoicing_period = invoicing_period
+        puts("invoicing_period #{invoicing_period}")
         @project = project
 
         @pyramid = pyramid || CreatePyramid.new(dhis2_connection).call

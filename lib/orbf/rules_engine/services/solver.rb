@@ -29,6 +29,8 @@ module Orbf
           build_problem
         end
 
+        puts JSON.pretty_generate(problem)
+
         begin
           benchmark("solve_time") do
             solve(problem)

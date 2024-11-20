@@ -57,6 +57,14 @@ RSpec.describe Orbf::RulesEngine::PeriodIterator do
         ["2018Nov"]
       )
     end  
+
+    it "converts quarter to various periodicity" do
+
+      expect(described_class.periods("2018Nov", "quarterly_nov")).to eq(
+        ["2018NovQ1", "2018NovQ2", "2018NovQ3", "2018NovQ4"]
+      )
+
+    end    
   end
 
   context "financial july year" do

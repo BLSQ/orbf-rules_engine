@@ -1,7 +1,27 @@
 # frozen_string_literal: true
 
+require "byebug"
+
 module Orbf
   module RulesEngine
+    QUARTERLY_NOV_MONTH_TO_Q = {
+      1  => { quarter: 1, first_month: 11 },
+      12 => { quarter: 1, first_month: 11 },
+      11 => { quarter: 1, first_month: 11 },
+
+      10 => { quarter: 4, first_month: 8 },
+      9  => { quarter: 4, first_month: 8 },
+      8  => { quarter: 4, first_month: 8 },
+
+      7  => { quarter: 3, first_month: 6 },
+      6  => { quarter: 3, first_month: 6 },
+      5  => { quarter: 3, first_month: 6 },
+
+      4  => { quarter: 2, first_month: 2 },
+      3  => { quarter: 2, first_month: 2 },
+      2  => { quarter: 2, first_month: 2 }
+
+    }
     class PeriodIterator
       def self.each_periods(period, frequency, &block)
         periods(period, frequency).each do |p|
@@ -10,7 +30,9 @@ module Orbf
       end
 
       def self.periods(period, frequency)
-        raise "no support for #{frequency} only #{CLASSES_MAPPING.keys.join(',')}" unless CLASSES_MAPPING.key?(frequency)
+        unless CLASSES_MAPPING.key?(frequency)
+          raise "no support for #{frequency} only #{CLASSES_MAPPING.keys.join(',')}"
+        end
 
         @periods ||= {}
         @periods[[period, frequency]] ||= begin
@@ -49,6 +71,22 @@ module Orbf
 
         def first_date
           range.first.beginning_of_month
+        end
+      end
+
+      class ExtractQuarterlyNovPeriod < ExtractPeriod
+        def next_date(date)
+          date + 3.month
+        end
+
+        def format(date)
+          offsets_def = QUARTERLY_NOV_MONTH_TO_Q[date.month]
+          date.strftime("%Y") + "NovQ" + offsets_def[:quarter].to_s
+        end
+
+        def first_date
+          offsets_def = QUARTERLY_NOV_MONTH_TO_Q[range.first.month]
+          range.first.change(month: offsets_def[:first_month])
         end
       end
 
@@ -95,7 +133,6 @@ module Orbf
         end
       end
 
-
       class ExtractFinancialNovPeriod < ExtractPeriod
         def next_date(date)
           date.next_year
@@ -113,6 +150,7 @@ module Orbf
 
       CLASSES_MAPPING = {
         "monthly"        => ExtractMonthlyPeriod,
+        "quarterly_nov"  => ExtractQuarterlyNovPeriod,
         "quarterly"      => ExtractQuarterlyPeriod,
         "yearly"         => ExtractYearlyPeriod,
         "financial_july" => ExtractFinancialJulyPeriod,
