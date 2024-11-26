@@ -5,21 +5,21 @@ require "byebug"
 module Orbf
   module RulesEngine
     QUARTERLY_NOV_MONTH_TO_Q = {
-      1  => { quarter: 1, first_month: 11 },
-      12 => { quarter: 1, first_month: 11 },
-      11 => { quarter: 1, first_month: 11 },
+      1  => { quarter: 1, first_month: 11, year: 0 },
+      12 => { quarter: 1, first_month: 11, year: 1 },
+      11 => { quarter: 1, first_month: 11, year: 1 },
 
-      10 => { quarter: 4, first_month: 8 },
-      9  => { quarter: 4, first_month: 8 },
-      8  => { quarter: 4, first_month: 8 },
+      10 => { quarter: 4, first_month: 8, year: 0},
+      9  => { quarter: 4, first_month: 8, year: 0 },
+      8  => { quarter: 4, first_month: 8, year: 0 },
 
-      7  => { quarter: 3, first_month: 6 },
-      6  => { quarter: 3, first_month: 6 },
-      5  => { quarter: 3, first_month: 6 },
+      7  => { quarter: 3, first_month: 6, year: 0 },
+      6  => { quarter: 3, first_month: 6, year: 0 },
+      5  => { quarter: 3, first_month: 6, year: 0 },
 
-      4  => { quarter: 2, first_month: 2 },
-      3  => { quarter: 2, first_month: 2 },
-      2  => { quarter: 2, first_month: 2 }
+      4  => { quarter: 2, first_month: 2, year: 0 },
+      3  => { quarter: 2, first_month: 2, year: 0 },
+      2  => { quarter: 2, first_month: 2, year: 0 }
 
     }
     class PeriodIterator
@@ -37,7 +37,9 @@ module Orbf
         @periods ||= {}
         @periods[[period, frequency]] ||= begin
           date_range = RulesEngine::PeriodConverter.as_date_range(period)
+          puts "#{frequency}\t#{period} => #{date_range}"
           resulting_periods = extract_periods(date_range, frequency)
+          puts "#{frequency}\t#{period} => #{resulting_periods} vs #{date_range}"
           resulting_periods.freeze
           resulting_periods
         end
@@ -81,12 +83,15 @@ module Orbf
 
         def format(date)
           offsets_def = QUARTERLY_NOV_MONTH_TO_Q[date.month]
-          date.strftime("%Y") + "NovQ" + offsets_def[:quarter].to_s
+          year = date.strftime("%Y").to_i + offsets_def[:year]
+          year.to_s+ "NovQ" + offsets_def[:quarter].to_s
         end
 
         def first_date
           offsets_def = QUARTERLY_NOV_MONTH_TO_Q[range.first.month]
-          range.first.change(month: offsets_def[:first_month])
+          result = range.first.change(month: offsets_def[:first_month])
+          puts("first_date : #{range.first.month} #{result} #{range}")
+          result
         end
       end
 
@@ -135,7 +140,8 @@ module Orbf
 
       class ExtractFinancialNovPeriod < ExtractPeriod
         def next_date(date)
-          date.next_year
+          result = date + 12.months          
+          result
         end
 
         def format(date)
@@ -143,8 +149,9 @@ module Orbf
         end
 
         def first_date
-          anniv_date = range.first.beginning_of_year + 9.months
-          range.first < anniv_date ? (anniv_date - 1.year) : anniv_date
+          anniv_date = range.first.beginning_of_year + 10.months
+          result = range.first < anniv_date ? (anniv_date  ) : anniv_date + 1.year
+          result
         end
       end
 

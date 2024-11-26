@@ -39,32 +39,47 @@ RSpec.describe Orbf::RulesEngine::PeriodConverter do
     end
   end
 
-  describe "from quarters nov" do
-    it "support NovQ1" do
-      expect(described_class.as_date_range("2017NovQ1")).to eq(jan_2017..end_mar_2017)
-    end
-    it "support NovQ2" do
-      expect(described_class.as_date_range("2017NovQ2")).to eq(april_2017..end_june_2017)
-    end
-    it "support NovQ3" do
-      expect(described_class.as_date_range("2017NovQ3")).to eq(july_2017..end_sept_2017)
-    end
-    it "support NovQ4" do
-      expect(described_class.as_date_range("2017NovQ4")).to eq(oct_2017..end_dec_2017)
-    end
-  end  
-
   describe "from quarters to financial_july" do
     it "support financial year july" do
       expect(described_class.as_date_range("2016July")).to eq(july_2016..end_june_2017)
     end
   end
 
-  describe "from quarters to financial_nov" do
+  describe "from financial_nov" do
+    let(:novembre_2015) { Date.parse("01-11-2015") }
+    let(:end_octobre_2016){ Date.parse("01-10-2016").end_of_month }
     it "support financial year nov" do
-      expect(described_class.as_date_range("2016Nov")).to eq(july_2016..end_june_2017)
+      expect(described_class.as_date_range("2016Nov")).to eq(novembre_2015..end_octobre_2016)
     end
   end
 
+  describe "from quarterly nov" do
 
+    let(:novembre_2015) { Date.parse("01-11-2015") }
+    let(:end_janvier_2016) { Date.parse("01-01-2016").end_of_month }
+
+    let(:fev_2016){ Date.parse("01-02-2016") }
+    let(:end_avril_2016){ Date.parse("01-04-2016").end_of_month }
+
+    let(:mai_2016){ Date.parse("01-05-2016") }
+    let(:end_juillet_2016){ Date.parse("01-07-2016").end_of_month }
+
+    let(:aout_2016){ Date.parse("01-08-2016") }
+    let(:end_octobre_2016){ Date.parse("01-10-2016").end_of_month }
+
+
+    it "support quarerly nov 1" do
+      expect(described_class.as_date_range("2016NovQ1")).to eq(novembre_2015..end_janvier_2016)
+    end
+
+    it "support quarerly nov 2" do
+      expect(described_class.as_date_range("2016NovQ2")).to eq(fev_2016..end_avril_2016)
+    end
+    it "support quarerly nov 3" do
+      expect(described_class.as_date_range("2016NovQ3")).to eq(mai_2016..end_juillet_2016)
+    end
+    it "support quarerly nov 4" do
+      expect(described_class.as_date_range("2016NovQ4")).to eq(aout_2016..end_octobre_2016)
+    end
+  end
 end

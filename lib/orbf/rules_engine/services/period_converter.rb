@@ -2,6 +2,20 @@
 
 module Orbf
   module RulesEngine
+    NOVQ = {
+        1 => {
+          first_month: 11
+        },
+        2 => {
+          first_month: 2
+        },
+        3 => {
+          first_month: 5
+        }, 
+        4=> {
+          first_month: 8
+        },
+    }
     class PeriodConverter
       def self.as_date_range(period)
         PARSERS.each do |parser|
@@ -46,9 +60,14 @@ module Orbf
           components = period.split("NovQ")
           quarter = Integer(components.last)
           year = Integer(components.first)
-          month = (3 * (quarter - 1))
+          
+          offset_def = NOVQ[quarter]
+          if (quarter == 1)
+            year = year -1
+          end
+          month = offset_def[:first_month].to_s.rjust(2,"0")
           # we start from november
-          start_date = Date.parse("#{year}-11-01")+ month.months
+          start_date = Date.parse("#{year}-#{month}-01")
           # can't use end_of_quarter since quarters are offset of 1 month
           end_date = start_date + 3.months - 1.day 
           start_date..end_date
@@ -72,8 +91,7 @@ module Orbf
         def self.from(period)
           return unless period.length == 8
           return unless period.include?("July")
-
-          year = period[0..3]
+          year = period[0..3].to_i
           month = 7
           start_date = Date.parse("#{year}-#{month}-01")
           end_date = (start_date - 1.day).end_of_month + 1.year
@@ -87,10 +105,11 @@ module Orbf
           return unless period.length == 7
           return unless period.include?("Nov")
 
-          year = period[0..3]
+          year = period[0..3].to_i
+          year = year - 1
           month = 11
           start_date = Date.parse("#{year}-#{month}-01")
-          end_date = (start_date - 1.day).end_of_month + 1.year
+          end_date = (start_date + 1.year - 1.day).end_of_month
 
           start_date..end_date
         end
