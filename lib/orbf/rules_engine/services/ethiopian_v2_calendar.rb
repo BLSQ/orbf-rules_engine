@@ -1,6 +1,10 @@
 module Orbf
     module RulesEngine
       class EthiopianV2Calendar
+        
+        def support_frequency?(frequency)
+          return true
+        end
   
         def to_invoicing_period(year, quarter)
           "#{year}NovQ#{quarter}"

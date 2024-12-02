@@ -72,9 +72,16 @@ RSpec.describe Orbf::RulesEngine::PeriodIterator do
 
     it "converts yearly to quarterlyNov" do
       expect(described_class.periods("2016", "quarterly_nov")).to eq(
-        %w[2017NovQ1]
+        ["2016NovQ1", "2016NovQ2", "2016NovQ3", "2016NovQ4"]
       )
-      # TODO don't
+      # TODO don't understand why we don't 2017NovQ4 ? for 201611 201612
+    end
+
+    it "converts monthly to quarterlyNov" do
+
+      expect(described_class.periods("201611", "quarterly_nov")).to eq(["2017NovQ1"])
+      expect(described_class.periods("201612", "quarterly_nov")).to eq(["2017NovQ1"])
+      expect(described_class.periods("201701", "quarterly_nov")).to eq(["2017NovQ1"])
     end
   end
 

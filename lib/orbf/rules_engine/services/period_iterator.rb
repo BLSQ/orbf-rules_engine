@@ -1,25 +1,23 @@
 # frozen_string_literal: true
 
-require "byebug"
-
 module Orbf
   module RulesEngine
     QUARTERLY_NOV_MONTH_TO_Q = {
-      1  => { quarter: 1, first_month: 11, year: 0 },
-      12 => { quarter: 1, first_month: 11, year: 1 },
-      11 => { quarter: 1, first_month: 11, year: 1 },
+      1  => { id: 1, quarter: 1, first_month: 11, year: 0 },
+      12 => { id: 12, quarter: 1, first_month: 11, year: 1 },
+      11 => { id: 11, quarter: 1, first_month: 11, year: 1 },
 
-      10 => { quarter: 4, first_month: 8, year: 0},
-      9  => { quarter: 4, first_month: 8, year: 0 },
-      8  => { quarter: 4, first_month: 8, year: 0 },
+      10 => { id: 10, quarter: 4, first_month: 8, year: 0},
+      9  => { id: 9, quarter: 4, first_month: 8, year: 0 },
+      8  => { id: 8, quarter: 4, first_month: 8, year: 0 },
 
-      7  => { quarter: 3, first_month: 6, year: 0 },
-      6  => { quarter: 3, first_month: 6, year: 0 },
-      5  => { quarter: 3, first_month: 6, year: 0 },
+      7  => { id: 7, quarter: 3, first_month: 6, year: 0 },
+      6  => { id: 6, quarter: 3, first_month: 6, year: 0 },
+      5  => { id: 5, quarter: 3, first_month: 6, year: 0 },
 
-      4  => { quarter: 2, first_month: 2, year: 0 },
-      3  => { quarter: 2, first_month: 2, year: 0 },
-      2  => { quarter: 2, first_month: 2, year: 0 }
+      4  => { id: 4, quarter: 2, first_month: 2, year: 0 },
+      3  => { id: 3, quarter: 2, first_month: 2, year: 0 },
+      2  => { id: 2, quarter: 2, first_month: 2, year: 0 }
 
     }
     class PeriodIterator
@@ -37,9 +35,7 @@ module Orbf
         @periods ||= {}
         @periods[[period, frequency]] ||= begin
           date_range = RulesEngine::PeriodConverter.as_date_range(period)
-          puts "#{frequency}\t#{period} => #{date_range}"
           resulting_periods = extract_periods(date_range, frequency)
-          puts "#{frequency}\t#{period} => #{resulting_periods} vs #{date_range}"
           resulting_periods.freeze
           resulting_periods
         end
@@ -54,7 +50,8 @@ module Orbf
           [].tap do |array|
             current_date = first_date
             loop do
-              array.push format(current_date)
+              formatted_dhis2 = format(current_date)
+              array.push(formatted_dhis2) 
               current_date = next_date(current_date)
               break if current_date > range.last
             end
@@ -84,14 +81,16 @@ module Orbf
         def format(date)
           offsets_def = QUARTERLY_NOV_MONTH_TO_Q[date.month]
           year = date.strftime("%Y").to_i + offsets_def[:year]
-          year.to_s+ "NovQ" + offsets_def[:quarter].to_s
+          result = year.to_s+ "NovQ" + offsets_def[:quarter].to_s
+
+          result
         end
 
         def first_date
           offsets_def = QUARTERLY_NOV_MONTH_TO_Q[range.first.month]
           result = range.first.change(month: offsets_def[:first_month])
-          puts("first_date : #{range.first.month} #{result} #{range}")
-          result
+
+          range.first
         end
       end
 
