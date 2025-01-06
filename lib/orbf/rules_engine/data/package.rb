@@ -6,7 +6,8 @@ module Orbf
       module Frequencies
         MONTHLY = "monthly"
         QUARTERLY = "quarterly"
-        FREQUENCIES = [MONTHLY, QUARTERLY].freeze
+        QUARTERLY_NOV = "quarterly_nov"
+        FREQUENCIES = [MONTHLY, QUARTERLY_NOV, QUARTERLY].freeze
 
         def self.assert_valid(package_frequency)
           return if FREQUENCIES.include?(package_frequency)
@@ -73,6 +74,10 @@ module Orbf
 
       def quarterly?
         frequency == Frequencies::QUARTERLY
+      end
+
+      def quarterly_nov?
+        frequency == Frequencies::QUARTERLY_NOV
       end
 
       def calendar

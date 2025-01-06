@@ -42,7 +42,7 @@ RSpec.describe Orbf::RulesEngine::EthiopianPeriodIterator do
         %w[2012Q1]
       )
     end
-    puts "************* case B"
+ 
 
     %w[ 201202 201203 201204 ].each do |month|
        expect(described_class.periods(month, "quarterly")).to eq(

@@ -6,7 +6,8 @@ module Orbf
       module Frequencies
         MONTHLY = "monthly"
         QUARTERLY = "quarterly"
-        FREQUENCIES = [MONTHLY, QUARTERLY].freeze
+        QUARTERLY_NOV = "quarterly_nov"
+        FREQUENCIES = [MONTHLY, QUARTERLY, QUARTERLY_NOV].freeze
 
         def self.assert_valid(payment_rule_frequency)
           return if FREQUENCIES.include?(payment_rule_frequency)

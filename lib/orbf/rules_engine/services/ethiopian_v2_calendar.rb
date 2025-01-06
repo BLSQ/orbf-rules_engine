@@ -1,16 +1,14 @@
 module Orbf
   module RulesEngine
-    class GregorianCalendar
+    class EthiopianV2Calendar
+      include Orbf::RulesEngine::EthiopianConverter
 
-      def support_frequency?(frequency)
-        if frequency == "quarterly_nov" || frequency == "financial_nov" 
-          return false
-        end
-        return true
+      def support_frequency?(_frequency)
+        true
       end
 
       def to_invoicing_period(year, quarter)
-        "#{year}Q#{quarter}"
+        "#{year}NovQ#{quarter}"
       end
 
       def each_periods(period, frequency, &block)
@@ -20,15 +18,6 @@ module Orbf
       def periods(period, frequency)
         PeriodIterator.periods(period, frequency)
       end
-
-      def from_iso(date)
-        date
-      end
-
-      def to_iso(date)
-        date
-      end
-
     end
   end
 end

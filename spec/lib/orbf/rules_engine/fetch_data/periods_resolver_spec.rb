@@ -25,6 +25,33 @@ RSpec.describe Orbf::RulesEngine::PeriodsResolver do
     )
   end
 
+  let(:project_eth) { Orbf::RulesEngine::Project.new({calendar: Orbf::RulesEngine::EthiopianV2Calendar.new }) }
+
+
+  let(:quantity_package_quarterly_nov) do
+    Orbf::RulesEngine::Package.new(
+      project:    project_eth,
+      code:       :quantity,
+      kind:       :single,
+      frequency:  :quarterly_nov,
+      activities: [],
+      rules:      [
+        Orbf::RulesEngine::Rule.new(
+          kind:     :activity,
+          formulas: [
+            Orbf::RulesEngine::Formula.new(
+              "quantity_amount", "42"
+            ),
+            Orbf::RulesEngine::Formula.new(
+              "increase",
+              "safe_div(achieved,sum(%{achieved_previous_year_same_quarter_monthly_values}/4))"
+            )
+          ]
+        )
+      ]
+    )
+  end
+
   let(:activities) do
     [
       Orbf::RulesEngine::Activity.with(
@@ -87,13 +114,19 @@ RSpec.describe Orbf::RulesEngine::PeriodsResolver do
     )
   end
 
+  it "resolve periods from package frequency quarterly_nov" do
+    expect(described_class.new(quantity_package_quarterly_nov, "2016NovQ1").call).to eq(
+      ["201501", "201502", "201503", "2016NovQ1", "2015", "2016", "2015July", "2016Nov"]
+    )
+  end
+
   it "resolve periods from package frequency" do
     expect(described_class.new(quality_package, "2016Q1").call).to eq(%w[2016Q1 2016 2015July])
   end
 
   it "resolve periods from package frequency and activity span _values" do
     expect(described_class.new(quantity_package, "2016Q1").call).to eq(
-      %w[201501 201502 201503 201601 201602 201603 2016 2015July]
+      %w[201501 201502 201503 201601 201602 201603 2016 2015July ]
     )
   end
 

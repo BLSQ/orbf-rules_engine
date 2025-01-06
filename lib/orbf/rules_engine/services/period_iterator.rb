@@ -2,6 +2,24 @@
 
 module Orbf
   module RulesEngine
+    QUARTERLY_NOV_MONTH_TO_Q = {
+      1  => { id: 1, quarter: 1, first_month: 11, year: 0 },
+      12 => { id: 12, quarter: 1, first_month: 11, year: 1 },
+      11 => { id: 11, quarter: 1, first_month: 11, year: 1 },
+
+      10 => { id: 10, quarter: 4, first_month: 8, year: 0},
+      9  => { id: 9, quarter: 4, first_month: 8, year: 0 },
+      8  => { id: 8, quarter: 4, first_month: 8, year: 0 },
+
+      7  => { id: 7, quarter: 3, first_month: 6, year: 0 },
+      6  => { id: 6, quarter: 3, first_month: 6, year: 0 },
+      5  => { id: 5, quarter: 3, first_month: 6, year: 0 },
+
+      4  => { id: 4, quarter: 2, first_month: 2, year: 0 },
+      3  => { id: 3, quarter: 2, first_month: 2, year: 0 },
+      2  => { id: 2, quarter: 2, first_month: 2, year: 0 }
+
+    }
     class PeriodIterator
       def self.each_periods(period, frequency, &block)
         periods(period, frequency).each do |p|
@@ -10,7 +28,9 @@ module Orbf
       end
 
       def self.periods(period, frequency)
-        raise "no support for #{frequency} only #{CLASSES_MAPPING.keys.join(',')}" unless CLASSES_MAPPING.key?(frequency)
+        unless CLASSES_MAPPING.key?(frequency)
+          raise "no support for #{frequency} only #{CLASSES_MAPPING.keys.join(',')}"
+        end
 
         @periods ||= {}
         @periods[[period, frequency]] ||= begin
@@ -30,7 +50,8 @@ module Orbf
           [].tap do |array|
             current_date = first_date
             loop do
-              array.push format(current_date)
+              formatted_dhis2 = format(current_date)
+              array.push(formatted_dhis2) 
               current_date = next_date(current_date)
               break if current_date > range.last
             end
@@ -49,6 +70,27 @@ module Orbf
 
         def first_date
           range.first.beginning_of_month
+        end
+      end
+
+      class ExtractQuarterlyNovPeriod < ExtractPeriod
+        def next_date(date)
+          date + 3.month
+        end
+
+        def format(date)
+          offsets_def = QUARTERLY_NOV_MONTH_TO_Q[date.month]
+          year = date.strftime("%Y").to_i + offsets_def[:year]
+          result = year.to_s+ "NovQ" + offsets_def[:quarter].to_s
+
+          result
+        end
+
+        def first_date
+          offsets_def = QUARTERLY_NOV_MONTH_TO_Q[range.first.month]
+          result = range.first.change(month: offsets_def[:first_month])
+
+          range.first
         end
       end
 
@@ -95,11 +137,30 @@ module Orbf
         end
       end
 
+      class ExtractFinancialNovPeriod < ExtractPeriod
+        def next_date(date)
+          result = date + 12.months          
+          result
+        end
+
+        def format(date)
+          date.strftime("%YNov")
+        end
+
+        def first_date
+          anniv_date = range.first.beginning_of_year + 10.months
+          result = range.first < anniv_date ? (anniv_date  ) : anniv_date + 1.year
+          result
+        end
+      end
+
       CLASSES_MAPPING = {
         "monthly"        => ExtractMonthlyPeriod,
+        "quarterly_nov"  => ExtractQuarterlyNovPeriod,
         "quarterly"      => ExtractQuarterlyPeriod,
         "yearly"         => ExtractYearlyPeriod,
-        "financial_july" => ExtractFinancialJulyPeriod
+        "financial_july" => ExtractFinancialJulyPeriod,
+        "financial_nov"  => ExtractFinancialNovPeriod
       }.freeze
     end
   end

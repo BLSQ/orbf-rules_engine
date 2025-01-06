@@ -15,6 +15,7 @@ module Orbf
           ""           => %w[monthly quarterly yearly],
           "_yearly"    => ["yearly"],
           "_quarterly" => ["quarterly"],
+          "_quarterly_nov" => ["quarterly_nov"],
           "_monthly"   => ["monthly"]
         }.freeze
 
@@ -74,10 +75,11 @@ module Orbf
 
       class CurrentQuarter < Span
         QUARTER_FREQUENCIES = {
-          ""           => %w[monthly],
-          "_yearly"    => ["yearly"],
-          "_quarterly" => ["quarterly"],
-          "_monthly"   => ["monthly"]
+          ""               => %w[monthly],
+          "_yearly"        => ["yearly"],
+          "_quarterly_nov" => ["quarterly_nov"],
+          "_quarterly"     => ["quarterly"],
+          "_monthly"       => ["monthly"]
         }.freeze
 
         def suffix
@@ -86,7 +88,6 @@ module Orbf
 
         def periods(invoicing_period, name, calendar)
           quarter = calendar.periods(invoicing_period, "quarterly").first
-
           frequencies(name, QUARTER_FREQUENCIES).each_with_object([]) do |frequency, arr|
             arr.push(*calendar.periods(quarter, frequency))
           end
@@ -96,6 +97,30 @@ module Orbf
           rule_kind == "activity"
         end
       end
+
+      class CurrentQuarterNov < Span
+        QUARTER_FREQUENCIES = {
+          ""               => %w[monthly],
+        }.freeze
+
+        def suffix
+          "current_quarter_nov"
+        end
+
+        def periods(invoicing_period, name, calendar)
+          quarter = calendar.periods(invoicing_period, "quarterly_nov").first
+
+          results = frequencies(name, QUARTER_FREQUENCIES).each_with_object([]) do |frequency, arr|
+            arr.push(*calendar.periods(quarter, frequency))
+          end
+          results
+        end
+
+        def supports?(rule_kind)
+          rule_kind == "activity"
+        end
+      end
+
 
       class PreviousCycle < Span
         def suffix
@@ -167,7 +192,7 @@ module Orbf
         end
       end
 
-      SPANS = [PreviousYearSameQuarter.new, PreviousYear.new, PreviousCycle.new, CurrentQuarter.new, SlidingWindow.new].freeze
+      SPANS = [PreviousYearSameQuarter.new, PreviousYear.new, PreviousCycle.new, CurrentQuarterNov.new, CurrentQuarter.new,  SlidingWindow.new].freeze
     end
   end
 end

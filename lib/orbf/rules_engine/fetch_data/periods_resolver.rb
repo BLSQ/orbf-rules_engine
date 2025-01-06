@@ -9,9 +9,11 @@ module Orbf
       end
 
       def call
-        from_values_span(package, invoice_period).merge(
+        periods = from_values_span(package, invoice_period).merge(
           from_package_frequency(package, invoice_period)
         ).merge(from_forced_quarterly_access(package, invoice_period)).to_a
+
+        periods
       end
 
       private
@@ -19,9 +21,16 @@ module Orbf
       attr_reader :package, :invoice_period
 
       def from_package_frequency(package, invoice_period)
-        package.calendar.periods(invoice_period, package.frequency) +
+        package_results = package.calendar.periods(invoice_period, package.frequency) +
           package.calendar.periods(invoice_period, "yearly") +
-          package.calendar.periods(invoice_period, "financial_july")
+          package.calendar.periods(invoice_period, "financial_july") 
+
+        # don't send "newer" period types to the api if not need/supported
+        if package.calendar.support_frequency?("financial_nov")
+          package_results += package.calendar.periods(invoice_period, "financial_nov")
+        end
+
+        return package_results
       end
 
       def from_values_span(package, invoice_period)

@@ -37,7 +37,6 @@ module Orbf
           next if raw_orgunits.empty?
 
           orgunits = decorate_with_facts(raw_orgunits)
-
           hash[package] = PackageArguments.with(
             periods:          PeriodsResolver.new(package, invoicing_period).call,
             orgunits:         OrgUnits.new(
