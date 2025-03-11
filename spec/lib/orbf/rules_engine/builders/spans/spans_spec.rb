@@ -177,7 +177,9 @@ RSpec.describe "spans" do
       ["last_1_quarters_exclusive", %w[2015Q4]],
       ["last_3_quarters_exclusive", %w[2015Q2 2015Q3 2015Q4]],
       ["last_3_months", %w[201511 201512 201601]],
-      ["last_2_months_exclusive", %w[201511 201512]]
+      ["last_2_months_exclusive", %w[201511 201512]],
+      ["last_15_months", %w[201411 201412] + 1.upto(12).map{|i| "2015%02d" % i} + %w[201601]]
+
     ].each do |suffix, expected|
 
       it "#{suffix}_window_values for 2016Q1 should return #{expected}" do
