@@ -44,7 +44,11 @@ module Orbf
 
       def orgunits_in_groups(group_ext_ids)
         Array(group_ext_ids).each_with_object(Set.new) do |ext_id, set|
-          set.merge(org_units_by_group_id[ext_id])
+          if org_units_by_group_id[ext_id]
+             set.merge(org_units_by_group_id[ext_id])
+          else 
+            puts("missing group in snapshot", ext_id)
+          end
         end
       end
 
