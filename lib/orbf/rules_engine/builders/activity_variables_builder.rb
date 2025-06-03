@@ -52,7 +52,8 @@ module Orbf
 
                   if using_is_null?(flattened_dependencies, state)
                     express = expression.is_null ? "1" : "0"
-                    array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express, orgunit_id, period)
+                    array.push register_vars(package, activity.activity_code, suffix_is_null(suffixed_state), express,
+                                             orgunit_id, period)
                   end
                 end
               end
@@ -87,7 +88,7 @@ module Orbf
       def de_values(activity_state, period, dependencies)
         orgunits.each do |orgunit|
           keys = build_keys_with_yearly([orgunit.ext_id, period, activity_state.ext_id])
-          if (dependencies.include?(activity_state.state+"_quarterly")) 
+          if dependencies.include?(activity_state.state + "_quarterly")
             quarter = package.calendar.periods(period, "quarterly").first
             keys = [[orgunit.ext_id, quarter, activity_state.ext_id]] + keys
           end
@@ -100,6 +101,7 @@ module Orbf
         parents_with_level.each do |hash|
           codes = [
             "#{activity_state.state}_level_#{hash[:level]}",
+            "#{activity_state.state}_level_#{hash[:level]}_quarterly_nov",
             "#{activity_state.state}_level_#{hash[:level]}_quarterly"
           ]
           codes.each do |code|
@@ -108,6 +110,9 @@ module Orbf
             keys = if code.end_with?("_quarterly")
                      quarter = package.calendar.periods(period, "quarterly").first
                      [[hash[:id], quarter, activity_state.ext_id]]
+                   elsif code.end_with?("_quarterly_nov")
+                     quarter_nov = package.calendar.periods(period, "quarterly_nov").first
+                     [[hash[:id], quarter_nov, activity_state.ext_id]]
                    else
                      build_keys_with_yearly([hash[:id], period, activity_state.ext_id])
                    end
@@ -180,9 +185,7 @@ module Orbf
           [orgunit, package.calendar.periods(period, "financial_july").first, de]
         ]
 
-        if period.include?("Q")
-          keys << package.calendar.periods(period, "monthly").map { |pe| [orgunit, pe, de] }
-        end
+        keys << package.calendar.periods(period, "monthly").map { |pe| [orgunit, pe, de] } if period.include?("Q")
 
         keys
       end
