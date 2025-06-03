@@ -65,6 +65,10 @@ module Orbf
             level = dependency[-1].to_i
             parent_id = orgunit.parent_ext_ids[level - 1]
             subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
+          elsif dependency.end_with?("_level_1_quarterly_nov", "_level_2_quarterly_nov", "_level_3_quarterly_nov", "_level_4_quarterly_nov", "_level_5_quarterly_nov")
+            level = dependency[-15].to_i
+            parent_id = orgunit.parent_ext_ids[level - 1]
+            subs[dependency] = suffix_for_id_activity(package.code, activity.activity_code, dependency, parent_id, period)
           elsif dependency.end_with?("_level_1_quarterly", "_level_2_quarterly", "_level_3_quarterly", "_level_4_quarterly", "_level_5_quarterly")
             level = dependency[-11].to_i
             parent_id = orgunit.parent_ext_ids[level - 1]
