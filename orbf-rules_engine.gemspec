@@ -31,13 +31,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activesupport", "5.2.6.2"
-  spec.add_dependency "colorize", "0.8.1"
+  spec.add_dependency "activesupport", ">= 5.2", "< 9"
+  spec.add_dependency "colorize", ">= 0.8.1"
   spec.add_dependency "hesabu"
   spec.add_dependency "dentaku", "3.1.0"
   spec.add_dependency "dhis2", "2.3.8"
-  spec.add_dependency "descriptive_statistics", "2.5.1"
-  spec.add_dependency "bigdecimal", "1.3.4"
+  spec.add_dependency "descriptive_statistics", "~> 2.5"
+  spec.add_dependency "bigdecimal", ">= 1.3.4"
 
   spec.add_development_dependency "bundler", "~> 2.3.5"
   spec.add_development_dependency "ruby-prof"
