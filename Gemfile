@@ -13,10 +13,8 @@ else
   # will not be used higher up the chain, so if an application (orbf2)
   # is using orbf-rules-engine, it will use the latest released gem
   # (unless specified otherwise)
-  gem "hesabu", github: "BLSQ/hesabu"
+  gem "hesabu", github: "BLSQ/hesabu", branch: "ruby_rails_upgrade" # ruby 4 / json 3, go 1.27
 end
 
 # ruby 3 keyword arguments fix, legacy-v2 based
 gem "dhis2", github: "BLSQ/dhis2", branch: "ruby_rails_upgrade"
-# hesabu uses JSON.fast_generate, removed in json 3
-gem "json", "< 3"
