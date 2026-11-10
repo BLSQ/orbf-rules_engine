@@ -15,3 +15,8 @@ else
   # (unless specified otherwise)
   gem "hesabu", github: "BLSQ/hesabu"
 end
+
+# ruby 3 keyword arguments fix, legacy-v2 based
+gem "dhis2", github: "BLSQ/dhis2", branch: "ruby_rails_upgrade"
+# hesabu uses JSON.fast_generate, removed in json 3
+gem "json", "< 3"

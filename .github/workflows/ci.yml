@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         # keep the ruby orbf2 runs in production, plus the upgrade targets
-        ruby: ["2.5.8", "2.7.8"]
+        ruby: ["2.7.8", "3.2"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby

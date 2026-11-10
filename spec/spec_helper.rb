@@ -42,3 +42,8 @@ end
 def fixture_content(*path_elements)
   File.read(fixture_path(*path_elements))
 end
+
+# fixtures serialize ruby objects: psych 4 (ruby >= 3.1) refuses them in YAML.load_file
+def load_yaml_fixture(path)
+  YAML.respond_to?(:unsafe_load_file) ? YAML.unsafe_load_file(path) : YAML.load_file(path)
+end
