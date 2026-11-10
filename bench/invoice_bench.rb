@@ -11,7 +11,6 @@
 # bench/results.jsonl.
 
 require "bundler/setup"
-require "benchmark"
 require "digest"
 require "json"
 require "time"
@@ -20,6 +19,13 @@ require_relative "../lib/orbf/rules_engine"
 
 ITERATIONS = Integer(ARGV[0] || 5)
 FIXTURES = File.expand_path("../spec/fixtures/rules_engine", __dir__)
+
+# monotonic wall time of the block (benchmark is not a default gem since ruby 4.0)
+def realtime
+  started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  yield
+  Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+end
 
 def load_fixture(name)
   path = File.join(FIXTURES, name)
@@ -39,12 +45,12 @@ end
 def run_phases(fas)
   times = {}
   args = vals = solver = exported = nil
-  times[:resolve_arguments] = Benchmark.realtime { args = fas.send(:resolve_package_arguments) }
-  times[:fetch_data] = Benchmark.realtime { vals = fas.send(:fetch_data, args) }
+  times[:resolve_arguments] = realtime { args = fas.send(:resolve_package_arguments) }
+  times[:fetch_data] = realtime { vals = fas.send(:fetch_data, args) }
   fas.instance_variable_set(:@dhis2_values, vals)
-  times[:build_equations] = Benchmark.realtime { solver = fas.send(:new_solver, args) }
-  times[:solve] = Benchmark.realtime { solver.solve! }
-  times[:export] = Benchmark.realtime do
+  times[:build_equations] = realtime { solver = fas.send(:new_solver, args) }
+  times[:solve] = realtime { solver.solve! }
+  times[:export] = realtime do
     exported = Orbf::RulesEngine::Dhis2ValuesPrinter.new(
       solver.variables, solver.solution, **fas.send(:project).default_combos_ext_ids
     ).print
