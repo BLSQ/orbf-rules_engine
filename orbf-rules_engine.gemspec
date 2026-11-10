@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 5.2", "< 9"
   spec.add_dependency "colorize", ">= 0.8.1"
   spec.add_dependency "hesabu"
-  spec.add_dependency "dentaku", "3.1.0"
+  spec.add_dependency "dentaku", "3.4.2"
   spec.add_dependency "dhis2", "2.3.8"
   spec.add_dependency "descriptive_statistics", "~> 2.5"
   spec.add_dependency "bigdecimal", ">= 1.3.4"
