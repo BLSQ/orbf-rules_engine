@@ -46,7 +46,7 @@ def run_phases(fas)
   times[:solve] = Benchmark.realtime { solver.solve! }
   times[:export] = Benchmark.realtime do
     exported = Orbf::RulesEngine::Dhis2ValuesPrinter.new(
-      solver.variables, solver.solution, fas.send(:project).default_combos_ext_ids
+      solver.variables, solver.solution, **fas.send(:project).default_combos_ext_ids
     ).print
   end
   times[:total] = times.values.sum
