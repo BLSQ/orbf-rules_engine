@@ -38,6 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dhis2", "2.3.8"
   spec.add_dependency "descriptive_statistics", "~> 2.5"
   spec.add_dependency "bigdecimal", ">= 1.3.4"
+  spec.add_dependency "csv" # decision tables, no longer a default gem since ruby 3.4
 
   spec.add_development_dependency "bundler", ">= 2.3"
   spec.add_development_dependency "ruby-prof"
