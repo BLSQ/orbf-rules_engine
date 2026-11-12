@@ -88,6 +88,7 @@ report = {
   ruby:            RUBY_VERSION,
   yjit:            defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enabled?) && RubyVM::YJIT.enabled?,
   gems:            %w[activesupport dentaku hesabu bigdecimal].map { |g| [g, Gem.loaded_specs[g]&.version&.to_s] }.to_h,
+  hesabucli:       `#{Hesabu::HESABUCLI} -v`.strip, # the go binary (hesabu gem version does not change with it)
   iterations:      ITERATIONS,
   equations:       solver.solution.size,
   exported_values: exported.size,
