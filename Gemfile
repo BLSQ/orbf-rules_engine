@@ -16,5 +16,5 @@ else
   gem "hesabu", github: "BLSQ/hesabu" # master: ruby 4 / json 3, hesabucli go-hesabu v0.1.0
 end
 
-# ruby 3 keyword arguments fix, legacy-v2 based
-gem "dhis2", github: "BLSQ/dhis2", branch: "ruby_rails_upgrade"
+# legacy-v2 (2.3.8, see gemspec): the dhis2 api client orbf2 uses, ruby 3/4 fixes included
+gem "dhis2", github: "BLSQ/dhis2", branch: "legacy-v2"
