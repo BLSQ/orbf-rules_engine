@@ -13,7 +13,7 @@ else
   # will not be used higher up the chain, so if an application (orbf2)
   # is using orbf-rules-engine, it will use the latest released gem
   # (unless specified otherwise)
-  gem "hesabu", github: "BLSQ/hesabu", branch: "ruby_rails_upgrade" # ruby 4 / json 3, go 1.27
+  gem "hesabu", github: "BLSQ/hesabu" # master: ruby 4 / json 3, hesabucli go-hesabu v0.1.0
 end
 
 # ruby 3 keyword arguments fix, legacy-v2 based
