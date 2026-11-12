@@ -23,6 +23,10 @@ same reason the equations are solved in Go: hesabu hands them to the `hesabucli`
 
 ## How it works: instantiate, expand, problem, solve
 
+The formulas are declarative: they say what to compute, not how or in which order. A formula can use any
+other formula or value, wherever it is defined; the solver works out the order from the dependencies
+(a cycle between equations is reported as an error).
+
 Every value is a variable named `<package>_<activity>_<state or formula>_for_<org unit>_and_<period>`.
 Examples from [spec/sigl_system_spec.rb](spec/sigl_system_spec.rb), package `sigl_zone`, activity `act1`:
 
