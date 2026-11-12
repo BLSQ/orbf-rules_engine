@@ -4,8 +4,10 @@ require "dentaku"
 require "json"
 require "dhis2"
 require "set"
+# same core extensions as when running inside rails (orbf2)
+require "active_support"
+require "active_support/core_ext"
 require "active_support/time"
-require "active_support/core_ext/enumerable"
 
 require_relative "./rules_engine/value_object"
 require_relative "./rules_engine/assertions.rb"

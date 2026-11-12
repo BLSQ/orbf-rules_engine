@@ -13,5 +13,8 @@ else
   # will not be used higher up the chain, so if an application (orbf2)
   # is using orbf-rules-engine, it will use the latest released gem
   # (unless specified otherwise)
-  gem "hesabu", github: "BLSQ/hesabu"
+  gem "hesabu", github: "BLSQ/hesabu" # master: ruby 4 / json 3, hesabucli go-hesabu v0.1.0
 end
+
+# legacy-v2 (2.3.8, see gemspec): the dhis2 api client orbf2 uses, ruby 3/4 fixes included
+gem "dhis2", github: "BLSQ/dhis2", branch: "legacy-v2"

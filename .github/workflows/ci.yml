@@ -10,11 +10,17 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # keep the ruby orbf2 runs in production, plus the upgrade targets
+        ruby: ["4.0"]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby (uses .ruby-version)
+    - uses: actions/checkout@v7
+    - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
+        ruby-version: ${{ matrix.ruby }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
     # Runs a single command using the runners shell
