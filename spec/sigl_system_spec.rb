@@ -198,9 +198,9 @@ RSpec.describe "SIGL System" do
     solution = solver.solution
     non_nil_count = ->(arr) { arr.compact.size }
 
-    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201601"]).to eq(non_nil_count.call([nil, 12, 11, 10, 9, 8]))
-    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201602"]).to eq(non_nil_count.call([nil, nil, 12, 11, 10, 9]))
-    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201603"]).to eq(non_nil_count.call([nil, nil, nil, 12, 11, 10]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201601"]).to eq(non_nil_count.call([500, 12, 11, 10, 9, 8]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201602"]).to eq(non_nil_count.call([nil, 500, 12, 11, 10, 9]))
+    expect(solution["sigl_zone_act1_number_of_months_with_data_for_1_and_201603"]).to eq(non_nil_count.call([nil, nil, 500, 12, 11, 10]))
   end
 
   it "has a solution" do
