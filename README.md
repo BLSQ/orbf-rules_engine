@@ -1,56 +1,46 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/3efa31b8965568095798/maintainability)](https://codeclimate.com/github/BLSQ/orbf-rules_engine/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/3efa31b8965568095798/test_coverage)](https://codeclimate.com/github/BLSQ/orbf-rules_engine/test_coverage)
-[![Build Status](https://travis-ci.org/BLSQ/orbf-rules_engine.svg?branch=master)](https://travis-ci.org/BLSQ/orbf-rules_engine)
+[![Test](https://github.com/BLSQ/orbf-rules_engine/actions/workflows/ci.yml/badge.svg)](https://github.com/BLSQ/orbf-rules_engine/actions/workflows/ci.yml)
 
-# Orbf::RulesEngine
+# orbf-rules_engine
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/orbf/rules_engine`. To experiment with that code, run `bin/console` for an interactive prompt.
+Computes Results-Based Financing (RBF) invoices for [orbf2](https://github.com/BLSQ/orbf2) (OpenRBF 2.0).
 
-TODO: Delete this and the text above, and describe your gem
+Given a project (packages, activities, formulas, payment rules), an org unit and a period, `Orbf::RulesEngine::FetchAndSolve`:
 
-## Installation
+1. resolves the org units concerned (contracts, groups, zones),
+2. fetches their values from DHIS2 (data value sets, analytics),
+3. builds the equations (current and past periods, sums, decision tables),
+4. solves them,
+5. returns the values to publish back to DHIS2.
 
-Add this line to your application's Gemfile:
+orbf2 stores the projects, runs this engine (simulations, invoices) and publishes the results.
 
-```ruby
-gem 'orbf-rules_engine'
-```
+The engine lives outside of Rails on purpose: plain Ruby objects in, values out, no database or other
+persistence side effects, so the same calculation serves simulations, invoices and tests.
 
-And then execute:
+It is also kept fast and lean: one invoice can mean tens of thousands of equations (32k for the Liberia
+benchmark), so check the time and the memory allocations when changing it (see Development). For the
+same reason the equations are solved in Go: hesabu hands them to the `hesabucli` binary of go-hesabu.
 
-    $ bundle
+## Dependencies
 
-Or install it yourself as:
-
-    $ gem install orbf-rules_engine
-
-## Usage
-
-TODO: Write usage instructions here
+- [hesabu](https://github.com/BLSQ/hesabu): solves the equations with [go-hesabu](https://github.com/BLSQ/go-hesabu) (`hesabucli`, Go)
+- [dhis2](https://github.com/BLSQ/dhis2) (branch `legacy-v2`): DHIS2 API client
+- [dentaku](https://github.com/rubysolo/dentaku): parses the formulas
+- activesupport
 
 ## Development
 
+Ruby 4.0.
 
 ```
 bundle install
 bundle exec rspec
+bundle exec ruby bench/invoice_bench.rb 10   # invoice benchmark, appends to bench/results.jsonl
+PROF=true bundle exec rspec spec/lib_spec.rb   # profile (ALLOC=true: allocations)
 ```
 
-verify no degradation in performance or allocation
-
-```
-PROF=true bundle exec rspec ./spec/lib_spec.rb
-ALLOC=true bundle exec rspec ./spec/lib_spec.rb
-```
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/orbf-rules_engine. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+`HESABU_DEV_MODE=1` uses a local `../hesabu` checkout.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Orbf::RulesEngine project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/orbf-rules_engine/blob/master/CODE_OF_CONDUCT.md).
+[MIT](https://opensource.org/licenses/MIT)
