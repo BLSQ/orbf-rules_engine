@@ -21,11 +21,30 @@ It is also kept fast and lean: one invoice can mean tens of thousands of equatio
 benchmark), so check the time and the memory allocations when changing it (see Development). For the
 same reason the equations are solved in Go: hesabu hands them to the `hesabucli` binary of go-hesabu.
 
+## How it works: instantiate, expand, problem, solve
+
+Every value is a variable named `<package>_<activity>_<state or formula>_for_<org unit>_and_<period>`.
+Examples from [spec/sigl_system_spec.rb](spec/sigl_system_spec.rb), package `sigl_zone`, activity `act1`:
+
+- **instantiate**: a formula, written once per package, becomes one equation per org unit, activity and
+  period. `balance = stock_start - stock_end` gives
+  `sigl_zone_act1_balance_for_1_and_201601 = sigl_zone_act1_stock_start_for_1_and_201601 - sigl_zone_act1_stock_end_for_1_and_201601`
+- **expand**: `%{..._values}` placeholders become the list of variables they cover
+  - over periods (spans, windows): `AVG(%{consumed_last_6_months_window_values})` gives
+    `AVG(sigl_zone_act1_consumed_for_1_and_201508, ..., sigl_zone_act1_consumed_for_1_and_201601)`
+  - over org units (zones): `SUM(%{balance_values})` gives
+    `SUM(sigl_zone_act1_balance_for_1_and_201601, sigl_zone_act1_balance_for_2_and_201601)`
+- **problem**: all the equations in one `{variable => expression}` hash, the DHIS2 values as constants
+  (`sigl_zone_act1_consumed_for_1_and_201601 => 500`); 288 equations in this spec, 32k for the Liberia benchmark
+- **solve**: hesabu orders and evaluates the problem (project `engine_version` 3; older ones use dentaku),
+  eg balance `10`, zone total `30`, 6 months average `91.67`
+- **export**: the solved formulas mapped to DHIS2 data elements are the values orbf2 publishes
+
 ## Dependencies
 
 - [hesabu](https://github.com/BLSQ/hesabu): solves the equations with [go-hesabu](https://github.com/BLSQ/go-hesabu) (`hesabucli`, Go)
 - [dhis2](https://github.com/BLSQ/dhis2) (branch `legacy-v2`): DHIS2 API client
-- [dentaku](https://github.com/rubysolo/dentaku): parses the formulas
+- [dentaku](https://github.com/rubysolo/dentaku): parses the formulas (and solves them for `engine_version` < 3)
 - activesupport
 
 ## Development
